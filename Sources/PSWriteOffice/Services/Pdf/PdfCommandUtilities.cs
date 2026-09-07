@@ -118,7 +118,7 @@ internal static class PdfCommandUtilities
         PdfDocument? document,
         string parameterSetName,
         string documentParameterSet,
-        Action<PdfItemCompose> action)
+        Action<PdfContentBuilder> action)
     {
         if (parameterSetName == documentParameterSet)
         {
@@ -137,7 +137,7 @@ internal static class PdfCommandUtilities
         PdfDocument? document,
         string parameterSetName,
         string documentParameterSet,
-        Action<PdfPageCompose> action)
+        Action<PdfPageBuilder> action)
     {
         if (parameterSetName == documentParameterSet)
         {

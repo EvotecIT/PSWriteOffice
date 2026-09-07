@@ -53,7 +53,7 @@ public sealed class ConvertFromOfficeOneNoteCommand : PSCmdlet
 
     /// <summary>Semantic layout and PDF settings used for .pdf output.</summary>
     [Parameter]
-    public OneNotePdfSaveOptions? PdfOptions { get; set; }
+    public OneNoteToPdfOptions? PdfOptions { get; set; }
 
     /// <summary>Fail when the selected projection reports an approximation or omission.</summary>
     [Parameter]
@@ -132,7 +132,7 @@ public sealed class ConvertFromOfficeOneNoteCommand : PSCmdlet
 
     private object WritePdf(object source, string output)
     {
-        var options = PdfOptions ?? new OneNotePdfSaveOptions { ProjectionOptions = ProjectionOptions ?? new OneNoteMarkdownOptions() };
+        var options = PdfOptions ?? new OneNoteToPdfOptions { ProjectionOptions = ProjectionOptions ?? new OneNoteMarkdownOptions() };
         var result = source switch
         {
             OneNoteSection section => section.ToPdfDocumentResult(options),

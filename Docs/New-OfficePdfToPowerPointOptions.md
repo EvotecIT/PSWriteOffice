@@ -4,14 +4,14 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# New-OfficePdfPowerPointImportOptions
+# New-OfficePdfToPowerPointOptions
 ## SYNOPSIS
 Creates discoverable PDF-to-PowerPoint reconstruction settings.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficePdfPowerPointImportOptions [-Mode <PdfPowerPointImportMode>] [-PageRange <string>] [-Dpi <Double>] [-MaxPages <Int32>] [-MaxPixelsPerPage <Int64>] [-MaxOutputBytesPerPage <Int64>] [-MaxTotalOutputBytes <Int64>] [-MaxEditableObjectsPerPage <Int32>] [-MaxRows <Int32>] [-MergePageContinuations] [-SuppressRepeatedBodyHeaderRows] [-MaxRowsPerSlide <Int32>] [-MaxColumnsPerSlide <Int32>] [-TableStyle <PowerPointTableStylePreset>] [-IncludeSourceTitles] [-IncludeColumnHeaderRows] [-BandedRows] [-AlignNumericColumns] [-EmptyPresentationTitle <string>] [-EmptyPresentationMessage <string>] [<CommonParameters>]
+New-OfficePdfToPowerPointOptions [-Mode <PdfPowerPointImportMode>] [-PageRange <string>] [-Dpi <Double>] [-MaxPages <Int32>] [-MaxPixelsPerPage <Int64>] [-MaxOutputBytesPerPage <Int64>] [-MaxTotalOutputBytes <Int64>] [-MaxEditableObjectsPerPage <Int32>] [-MaxRows <Int32>] [-MergePageContinuations] [-SuppressRepeatedBodyHeaderRows] [-MaxRowsPerSlide <Int32>] [-MaxColumnsPerSlide <Int32>] [-TableStyle <PowerPointTableStylePreset>] [-IncludeSourceTitles] [-IncludeColumnHeaderRows] [-BandedRows] [-AlignNumericColumns] [-EmptyPresentationTitle <string>] [-EmptyPresentationMessage <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -21,7 +21,7 @@ Creates discoverable PDF-to-PowerPoint reconstruction settings.
 
 ### EXAMPLE 1
 ```powershell
-PS> $options = New-OfficePdfPowerPointImportOptions -PageRange '1-5' -MaxPages 5 -IncludeSourceTitles
+PS> $options = New-OfficePdfToPowerPointOptions -PageRange '1-5' -MaxPages 5 -IncludeSourceTitles
 ConvertTo-OfficePdfPowerPoint -Path .\Source.pdf -OutputPath .\Slides.pptx -Options $options
 ```
 
@@ -357,7 +357,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.PowerPoint.Pdf.PdfPowerPointImportOptions`
+- `OfficeIMO.PowerPoint.Pdf.PdfToPowerPointOptions`
 
 ## RELATED LINKS
 

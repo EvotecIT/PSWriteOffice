@@ -565,7 +565,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Excel.Pdf.ExcelPdfSaveOptions`
+- `OfficeIMO.Excel.Pdf.ExcelToPdfOptions`
 
 ## RELATED LINKS
 

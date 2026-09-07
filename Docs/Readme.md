@@ -1150,9 +1150,6 @@ Creates discoverable PDF-table-to-Excel reconstruction settings.
 ### [New-OfficePdfImageOptions](New-OfficePdfImageOptions.md)
 Creates discoverable thumbnail and rendering settings for Export-OfficePdfImage.
 
-### [New-OfficePdfPowerPointImportOptions](New-OfficePdfPowerPointImportOptions.md)
-Creates discoverable PDF-to-PowerPoint reconstruction settings.
-
 ### [New-OfficePdfSignature](New-OfficePdfSignature.md)
 Prepares an existing PDF for external digital signing by appending a signature field, /ByteRange, and reserved /Contents placeholder.
 
@@ -1168,11 +1165,14 @@ Creates a typed text or choice field for a PDF table cell.
 ### [New-OfficePdfTableCellImage](New-OfficePdfTableCellImage.md)
 Creates a typed image for a PDF table cell.
 
+### [New-OfficePdfToPowerPointOptions](New-OfficePdfToPowerPointOptions.md)
+Creates discoverable PDF-to-PowerPoint reconstruction settings.
+
+### [New-OfficePdfToWordOptions](New-OfficePdfToWordOptions.md)
+Creates discoverable PDF-to-Word reconstruction settings.
+
 ### [New-OfficePdfVisualComparisonOptions](New-OfficePdfVisualComparisonOptions.md)
 Creates discoverable rendering and tolerance settings for Compare-OfficePdfVisual.
-
-### [New-OfficePdfWordImportOptions](New-OfficePdfWordImportOptions.md)
-Creates discoverable PDF-to-Word reconstruction settings.
 
 ### [New-OfficePowerPoint](New-OfficePowerPoint.md)
 Creates a PowerPoint presentation using the DSL.

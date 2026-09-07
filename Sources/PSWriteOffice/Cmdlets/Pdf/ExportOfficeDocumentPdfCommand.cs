@@ -65,23 +65,23 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
 
     /// <summary>Word-specific PDF options.</summary>
     [Parameter]
-    public WordPdfSaveOptions? WordOptions { get; set; }
+    public WordToPdfOptions? WordOptions { get; set; }
 
     /// <summary>Excel-specific PDF options.</summary>
     [Parameter]
-    public ExcelPdfSaveOptions? ExcelOptions { get; set; }
+    public ExcelToPdfOptions? ExcelOptions { get; set; }
 
     /// <summary>PowerPoint-specific PDF options.</summary>
     [Parameter]
-    public PowerPointPdfSaveOptions? PowerPointOptions { get; set; }
+    public PowerPointToPdfOptions? PowerPointOptions { get; set; }
 
     /// <summary>Markdown-specific PDF options.</summary>
     [Parameter]
-    public MarkdownPdfSaveOptions? MarkdownOptions { get; set; }
+    public MarkdownToPdfOptions? MarkdownOptions { get; set; }
 
     /// <summary>RTF-specific PDF options.</summary>
     [Parameter]
-    public RtfPdfSaveOptions? RtfOptions { get; set; }
+    public RtfToPdfOptions? RtfOptions { get; set; }
 
     /// <summary>Variable name that receives structured PDF conversion warnings.</summary>
     [Parameter]
@@ -174,15 +174,15 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     private PdfSaveResult SaveDocument(object document, string outputPath, string? sourcePath) {
         switch (document) {
             case WordDocument word:
-                return word.SaveAsPdf(outputPath, WordOptions ?? new WordPdfSaveOptions());
+                return word.SaveAsPdf(outputPath, WordOptions ?? new WordToPdfOptions());
             case ExcelDocument excel:
-                return excel.SaveAsPdf(outputPath, ExcelOptions ?? new ExcelPdfSaveOptions());
+                return excel.SaveAsPdf(outputPath, ExcelOptions ?? new ExcelToPdfOptions());
             case PowerPointPresentation powerPoint:
-                return powerPoint.SaveAsPdf(outputPath, PowerPointOptions ?? new PowerPointPdfSaveOptions());
+                return powerPoint.SaveAsPdf(outputPath, PowerPointOptions ?? new PowerPointToPdfOptions());
             case MarkdownDoc markdown:
                 return markdown.SaveAsPdf(outputPath, PrepareMarkdownOptions(sourcePath));
             case RtfDocument rtf:
-                return rtf.SaveAsPdf(outputPath, RtfOptions ?? new RtfPdfSaveOptions());
+                return rtf.SaveAsPdf(outputPath, RtfOptions ?? new RtfToPdfOptions());
             default:
                 throw new PSArgumentException(
                     $"Document type '{document?.GetType().FullName ?? "<null>"}' cannot be exported to PDF. Use a WordDocument, ExcelDocument, PowerPointPresentation, MarkdownDoc, or RtfDocument.",
@@ -190,8 +190,8 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
         }
     }
 
-    private MarkdownPdfSaveOptions PrepareMarkdownOptions(string? sourcePath) {
-        var options = MarkdownOptions?.Clone() ?? new MarkdownPdfSaveOptions();
+    private MarkdownToPdfOptions PrepareMarkdownOptions(string? sourcePath) {
+        var options = MarkdownOptions?.Clone() ?? new MarkdownToPdfOptions();
         if (options.ResourcePolicy.AllowLocalFileAccess &&
             string.IsNullOrWhiteSpace(options.BaseDirectory) &&
             !string.IsNullOrWhiteSpace(sourcePath)) {

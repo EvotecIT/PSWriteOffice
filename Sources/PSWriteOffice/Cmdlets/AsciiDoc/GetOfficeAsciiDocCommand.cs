@@ -37,11 +37,11 @@ public sealed class GetOfficeAsciiDocCommand : PSCmdlet
         {
             var path = SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path);
             if (!File.Exists(path)) throw new FileNotFoundException($"File '{path}' was not found.", path);
-            result = AsciiDocDocument.Load(path, Options);
+            result = AsciiDocDocument.LoadResult(path, Options);
         }
         else
         {
-            result = AsciiDocDocument.Parse(Text ?? string.Empty, Options);
+            result = AsciiDocDocument.ParseResult(Text ?? string.Empty, Options);
         }
 
         WriteObject(AsResult.IsPresent ? result : result.Document);

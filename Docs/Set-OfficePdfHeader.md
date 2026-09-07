@@ -74,7 +74,7 @@ Accept wildcard characters: False
 ```
 
 ### -Compose
-Advanced header composer. The script receives a PdfHeaderCompose and can configure
+Advanced header composer. The script receives a PdfHeaderBuilder and can configure
 default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.
 
 ```yaml

@@ -41,7 +41,7 @@ public sealed class ConvertToOfficePdfPowerPointCommand : PSCmdlet
 
     /// <summary>Advanced OfficeIMO PDF-to-PowerPoint reconstruction options.</summary>
     [Parameter]
-    public PdfPowerPointImportOptions? Options { get; set; }
+    public PdfToPowerPointOptions? Options { get; set; }
 
     /// <summary>Overwrite an existing output file.</summary>
     [Parameter]
@@ -76,7 +76,9 @@ public sealed class ConvertToOfficePdfPowerPointCommand : PSCmdlet
                 PdfCommandUtilities.CreateReadOptions(Password, IgnorePermissionRestrictions.IsPresent));
             outputOperation = true;
             PdfCommandUtilities.EnsureDirectory(outputPath);
-            var report = document.SaveAsPowerPoint(outputPath, Options);
+            var outputResult = document.SaveAsPowerPoint(outputPath, Options).RequireSuccess();
+            var report = outputResult.Report
+                ?? throw new InvalidOperationException("PDF-to-PowerPoint conversion completed without a conversion report.");
             if (Open.IsPresent)
             {
                 FileOpenService.Open(outputPath);

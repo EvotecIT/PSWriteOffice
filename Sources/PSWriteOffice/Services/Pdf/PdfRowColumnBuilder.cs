@@ -10,7 +10,7 @@ namespace PSWriteOffice.Services.Pdf;
 
 internal static class PdfRowColumnBuilder
 {
-    internal static void AddContent(PdfRowColumnCompose column, object specification)
+    internal static void AddContent(PdfContentBuilder column, object specification)
     {
         if (TryGetValue(specification, out var content, "Content", "Blocks"))
         {
@@ -44,7 +44,7 @@ internal static class PdfRowColumnBuilder
         AddShorthand(column, specification);
     }
 
-    private static void AddItem(PdfRowColumnCompose column, object specification)
+    private static void AddItem(PdfContentBuilder column, object specification)
     {
         var type = GetString(specification, "Type", "Kind", "Block");
         if (string.IsNullOrWhiteSpace(type))
@@ -94,7 +94,7 @@ internal static class PdfRowColumnBuilder
         }
     }
 
-    private static void AddShorthand(PdfRowColumnCompose column, object specification)
+    private static void AddShorthand(PdfContentBuilder column, object specification)
     {
         if (TryGetString(specification, out var bookmark, "Bookmark", "Name"))
         {
@@ -141,7 +141,7 @@ internal static class PdfRowColumnBuilder
         }
     }
 
-    private static void AddHeading(PdfRowColumnCompose column, object specification)
+    private static void AddHeading(PdfContentBuilder column, object specification)
     {
         var text = GetString(specification, "Text", "Heading", "Title") ?? string.Empty;
         var level = GetInt(specification, "Level", "HeadingLevel") ?? GetLevelFromType(specification);
@@ -162,7 +162,7 @@ internal static class PdfRowColumnBuilder
         }
     }
 
-    private static void AddParagraph(PdfRowColumnCompose column, object specification)
+    private static void AddParagraph(PdfContentBuilder column, object specification)
     {
         if (TryGetRuns(specification, out var runs))
         {
@@ -173,7 +173,7 @@ internal static class PdfRowColumnBuilder
         column.Paragraph(p => p.Text(GetRequiredString(specification, "Text", "Paragraph")), GetAlign(specification), GetColor(specification, "Color"));
     }
 
-    private static void AddList(PdfRowColumnCompose column, object specification, bool numbered, object? explicitValue = null)
+    private static void AddList(PdfContentBuilder column, object specification, bool numbered, object? explicitValue = null)
     {
         var items = GetStringArray(explicitValue ?? GetValue(specification, "List", "Bullets", "Items"));
         if (numbered || GetBool(specification, "Numbered"))

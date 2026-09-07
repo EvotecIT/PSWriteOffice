@@ -64265,9 +64265,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Semantic layout and PDF settings used for .pdf output.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">OneNotePdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">OneNoteToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>OneNotePdfSaveOptions</maml:name>
+            <maml:name>OneNoteToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -64388,9 +64388,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:description>
           <maml:para>Semantic layout and PDF settings used for .pdf output.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">OneNotePdfSaveOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">OneNoteToPdfOptions</command:parameterValue>
         <dev:type>
-          <maml:name>OneNotePdfSaveOptions</maml:name>
+          <maml:name>OneNoteToPdfOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -64716,9 +64716,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Optional OfficeIMO HTML to PDF save options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">HtmlPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">HtmlToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>HtmlPdfSaveOptions</maml:name>
+            <maml:name>HtmlToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -64833,9 +64833,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Optional OfficeIMO HTML to PDF save options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">HtmlPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">HtmlToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>HtmlPdfSaveOptions</maml:name>
+            <maml:name>HtmlToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -64974,9 +64974,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:description>
           <maml:para>Optional OfficeIMO HTML to PDF save options.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">HtmlPdfSaveOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">HtmlToPdfOptions</command:parameterValue>
         <dev:type>
-          <maml:name>HtmlPdfSaveOptions</maml:name>
+          <maml:name>HtmlToPdfOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -72755,9 +72755,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Advanced OfficeIMO PDF-table-to-Excel options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfExcelTableImportOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfTablesToExcelOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfExcelTableImportOptions</maml:name>
+            <maml:name>PdfTablesToExcelOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -72854,9 +72854,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:description>
           <maml:para>Advanced OfficeIMO PDF-table-to-Excel options.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfExcelTableImportOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfTablesToExcelOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfExcelTableImportOptions</maml:name>
+          <maml:name>PdfTablesToExcelOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -73440,9 +73440,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Optional OfficeIMO PDF to HTML save options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfHtmlSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfToHtmlOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfHtmlSaveOptions</maml:name>
+            <maml:name>PdfToHtmlOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -73643,9 +73643,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:description>
           <maml:para>Optional OfficeIMO PDF to HTML save options.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfHtmlSaveOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfToHtmlOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfHtmlSaveOptions</maml:name>
+          <maml:name>PdfToHtmlOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -74286,9 +74286,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
           <maml:description>
             <maml:para>Advanced OfficeIMO PDF-to-PowerPoint reconstruction options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfPowerPointImportOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfToPowerPointOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfPowerPointImportOptions</maml:name>
+            <maml:name>PdfToPowerPointOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -74385,9 +74385,9 @@ cells. This keeps existing-document editing simple without forcing callers back 
         <maml:description>
           <maml:para>Advanced OfficeIMO PDF-to-PowerPoint reconstruction options.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfPowerPointImportOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfToPowerPointOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfPowerPointImportOptions</maml:name>
+          <maml:name>PdfToPowerPointOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -75827,9 +75827,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>Advanced OfficeIMO PDF-to-Word reconstruction options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfWordImportOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfToWordOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PdfWordImportOptions</maml:name>
+            <maml:name>PdfToWordOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -75926,9 +75926,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:description>
           <maml:para>Advanced OfficeIMO PDF-to-Word reconstruction options.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfWordImportOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfToWordOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PdfWordImportOptions</maml:name>
+          <maml:name>PdfToWordOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -83925,9 +83925,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>Excel-specific PDF options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">ExcelPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ExcelToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>ExcelPdfSaveOptions</maml:name>
+            <maml:name>ExcelToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -83937,9 +83937,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>Markdown-specific PDF options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">MarkdownPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MarkdownToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>MarkdownPdfSaveOptions</maml:name>
+            <maml:name>MarkdownToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84021,9 +84021,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>PowerPoint-specific PDF options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PowerPointPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PowerPointToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PowerPointPdfSaveOptions</maml:name>
+            <maml:name>PowerPointToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84033,9 +84033,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>RTF-specific PDF options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">RtfPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">RtfToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>RtfPdfSaveOptions</maml:name>
+            <maml:name>RtfToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84045,9 +84045,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>Word-specific PDF options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">WordPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>WordPdfSaveOptions</maml:name>
+            <maml:name>WordToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84060,9 +84060,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>Excel-specific PDF options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">ExcelPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ExcelToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>ExcelPdfSaveOptions</maml:name>
+            <maml:name>ExcelToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84084,9 +84084,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>Markdown-specific PDF options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">MarkdownPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MarkdownToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>MarkdownPdfSaveOptions</maml:name>
+            <maml:name>MarkdownToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84168,9 +84168,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>PowerPoint-specific PDF options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PowerPointPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PowerPointToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>PowerPointPdfSaveOptions</maml:name>
+            <maml:name>PowerPointToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84180,9 +84180,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>RTF-specific PDF options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">RtfPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">RtfToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>RtfPdfSaveOptions</maml:name>
+            <maml:name>RtfToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84192,9 +84192,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <maml:description>
             <maml:para>Word-specific PDF options.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">WordPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">WordToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>WordPdfSaveOptions</maml:name>
+            <maml:name>WordToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84219,9 +84219,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:description>
           <maml:para>Excel-specific PDF options.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">ExcelPdfSaveOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">ExcelToPdfOptions</command:parameterValue>
         <dev:type>
-          <maml:name>ExcelPdfSaveOptions</maml:name>
+          <maml:name>ExcelToPdfOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -84243,9 +84243,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:description>
           <maml:para>Markdown-specific PDF options.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">MarkdownPdfSaveOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">MarkdownToPdfOptions</command:parameterValue>
         <dev:type>
-          <maml:name>MarkdownPdfSaveOptions</maml:name>
+          <maml:name>MarkdownToPdfOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -84327,9 +84327,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:description>
           <maml:para>PowerPoint-specific PDF options.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PowerPointPdfSaveOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PowerPointToPdfOptions</command:parameterValue>
         <dev:type>
-          <maml:name>PowerPointPdfSaveOptions</maml:name>
+          <maml:name>PowerPointToPdfOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -84339,9 +84339,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:description>
           <maml:para>RTF-specific PDF options.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">RtfPdfSaveOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">RtfToPdfOptions</command:parameterValue>
         <dev:type>
-          <maml:name>RtfPdfSaveOptions</maml:name>
+          <maml:name>RtfToPdfOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -84351,9 +84351,9 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <maml:description>
           <maml:para>Word-specific PDF options.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">WordPdfSaveOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">WordToPdfOptions</command:parameterValue>
         <dev:type>
-          <maml:name>WordPdfSaveOptions</maml:name>
+          <maml:name>WordToPdfOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -144266,7 +144266,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.Excel.Pdf.ExcelPdfSaveOptions</maml:name>
+          <maml:name>OfficeIMO.Excel.Pdf.ExcelToPdfOptions</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -146346,9 +146346,9 @@ This does not discover, bypass, or crack a missing password.</maml:para>
           <maml:description>
             <maml:para>Existing Markdown PDF options to clone and override.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">MarkdownPdfSaveOptions</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">MarkdownToPdfOptions</command:parameterValue>
           <dev:type>
-            <maml:name>MarkdownPdfSaveOptions</maml:name>
+            <maml:name>MarkdownToPdfOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -146614,9 +146614,9 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <maml:description>
           <maml:para>Existing Markdown PDF options to clone and override.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">MarkdownPdfSaveOptions</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">MarkdownToPdfOptions</command:parameterValue>
         <dev:type>
-          <maml:name>MarkdownPdfSaveOptions</maml:name>
+          <maml:name>MarkdownToPdfOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -146729,14 +146729,14 @@ This does not discover, bypass, or crack a missing password.</maml:para>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>OfficeIMO.Markdown.Pdf.MarkdownPdfSaveOptions</maml:name>
+          <maml:name>OfficeIMO.Markdown.Pdf.MarkdownToPdfOptions</maml:name>
         </dev:type>
       </command:inputType>
     </command:inputTypes>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.Markdown.Pdf.MarkdownPdfSaveOptions</maml:name>
+          <maml:name>OfficeIMO.Markdown.Pdf.MarkdownToPdfOptions</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -148928,7 +148928,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.Excel.Pdf.PdfExcelTableImportOptions</maml:name>
+          <maml:name>OfficeIMO.Excel.Pdf.PdfTablesToExcelOptions</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -149342,553 +149342,6 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         </maml:introduction>
         <dev:code>$options = New-OfficePdfImageOptions -ThumbnailMaxDimension 320 -MaximumOutputWidth 640&#xD;
             Export-OfficePdfImage -Path .\Report.pdf -OutputPath .\Thumbnails -Options $options</dev:code>
-        <dev:remarks>
-          <maml:para></maml:para>
-        </dev:remarks>
-      </command:example>
-    </command:examples>
-    <command:relatedLinks />
-  </command:command>
-  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
-    <command:details>
-      <command:name>New-OfficePdfPowerPointImportOptions</command:name>
-      <command:verb>New</command:verb>
-      <command:noun>OfficePdfPowerPointImportOptions</command:noun>
-      <maml:description>
-        <maml:para>Creates discoverable PDF-to-PowerPoint reconstruction settings.</maml:para>
-      </maml:description>
-    </command:details>
-    <maml:description>
-      <maml:para>Creates discoverable PDF-to-PowerPoint reconstruction settings.</maml:para>
-    </maml:description>
-    <command:syntax>
-      <command:syntaxItem parameterSetName="__AllParameterSets">
-        <maml:name>New-OfficePdfPowerPointImportOptions</maml:name>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>AlignNumericColumns</maml:name>
-          <maml:description>
-            <maml:para>Right-align inferred numeric columns.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>BandedRows</maml:name>
-          <maml:description>
-            <maml:para>Enable banded-row styling.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Dpi</maml:name>
-          <maml:description>
-            <maml:para>Raster resolution used by visual import.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
-          <dev:type>
-            <maml:name>Double</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>EmptyPresentationMessage</maml:name>
-          <maml:description>
-            <maml:para>Message used when no supported content is detected.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-          <dev:type>
-            <maml:name>String</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>EmptyPresentationTitle</maml:name>
-          <maml:description>
-            <maml:para>Title used when no supported content is detected.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-          <dev:type>
-            <maml:name>String</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>IncludeColumnHeaderRows</maml:name>
-          <maml:description>
-            <maml:para>Add inferred column headers.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>IncludeSourceTitles</maml:name>
-          <maml:description>
-            <maml:para>Add source-page titles.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxColumnsPerSlide</maml:name>
-          <maml:description>
-            <maml:para>Maximum columns written to one slide; zero means unlimited.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-          <dev:type>
-            <maml:name>Int32</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxEditableObjectsPerPage</maml:name>
-          <maml:description>
-            <maml:para>Maximum editable objects reconstructed per page.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-          <dev:type>
-            <maml:name>Int32</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxOutputBytesPerPage</maml:name>
-          <maml:description>
-            <maml:para>Maximum encoded bytes per rendered page.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
-          <dev:type>
-            <maml:name>Int64</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxPages</maml:name>
-          <maml:description>
-            <maml:para>Maximum pages imported.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-          <dev:type>
-            <maml:name>Int32</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxPixelsPerPage</maml:name>
-          <maml:description>
-            <maml:para>Maximum pixels per rendered page.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
-          <dev:type>
-            <maml:name>Int64</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxRows</maml:name>
-          <maml:description>
-            <maml:para>Maximum body rows imported per table; zero means unlimited.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-          <dev:type>
-            <maml:name>Int32</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxRowsPerSlide</maml:name>
-          <maml:description>
-            <maml:para>Maximum rows written to one slide; zero means unlimited.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-          <dev:type>
-            <maml:name>Int32</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxTotalOutputBytes</maml:name>
-          <maml:description>
-            <maml:para>Maximum aggregate encoded output bytes.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
-          <dev:type>
-            <maml:name>Int64</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MergePageContinuations</maml:name>
-          <maml:description>
-            <maml:para>Merge compatible table segments across pages.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Mode</maml:name>
-          <maml:description>
-            <maml:para>Visual, editable-table, hybrid, editable-content, or automatic import mode.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfPowerPointImportMode</command:parameterValue>
-          <command:parameterValueGroup>
-            <command:parameterValue required="false" variableLength="false">VisualPages</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">EditableTables</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">HybridVisualAndEditableTables</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">EditableContent</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
-          </command:parameterValueGroup>
-          <dev:type>
-            <maml:name>PdfPowerPointImportMode</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>PageRange</maml:name>
-          <maml:description>
-            <maml:para>Optional one-based page ranges such as 1-3,5.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-          <dev:type>
-            <maml:name>String</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>SuppressRepeatedBodyHeaderRows</maml:name>
-          <maml:description>
-            <maml:para>Suppress repeated body header rows.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>TableStyle</maml:name>
-          <maml:description>
-            <maml:para>PowerPoint table style.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">PowerPointTableStylePreset</command:parameterValue>
-          <dev:type>
-            <maml:name>PowerPointTableStylePreset</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-      </command:syntaxItem>
-    </command:syntax>
-    <command:parameters>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>AlignNumericColumns</maml:name>
-        <maml:description>
-          <maml:para>Right-align inferred numeric columns.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>BandedRows</maml:name>
-        <maml:description>
-          <maml:para>Enable banded-row styling.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Dpi</maml:name>
-        <maml:description>
-          <maml:para>Raster resolution used by visual import.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
-        <dev:type>
-          <maml:name>Double</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>EmptyPresentationMessage</maml:name>
-        <maml:description>
-          <maml:para>Message used when no supported content is detected.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-        <dev:type>
-          <maml:name>String</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>EmptyPresentationTitle</maml:name>
-        <maml:description>
-          <maml:para>Title used when no supported content is detected.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-        <dev:type>
-          <maml:name>String</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>IncludeColumnHeaderRows</maml:name>
-        <maml:description>
-          <maml:para>Add inferred column headers.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>IncludeSourceTitles</maml:name>
-        <maml:description>
-          <maml:para>Add source-page titles.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxColumnsPerSlide</maml:name>
-        <maml:description>
-          <maml:para>Maximum columns written to one slide; zero means unlimited.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-        <dev:type>
-          <maml:name>Int32</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxEditableObjectsPerPage</maml:name>
-        <maml:description>
-          <maml:para>Maximum editable objects reconstructed per page.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-        <dev:type>
-          <maml:name>Int32</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxOutputBytesPerPage</maml:name>
-        <maml:description>
-          <maml:para>Maximum encoded bytes per rendered page.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
-        <dev:type>
-          <maml:name>Int64</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxPages</maml:name>
-        <maml:description>
-          <maml:para>Maximum pages imported.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-        <dev:type>
-          <maml:name>Int32</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxPixelsPerPage</maml:name>
-        <maml:description>
-          <maml:para>Maximum pixels per rendered page.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
-        <dev:type>
-          <maml:name>Int64</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxRows</maml:name>
-        <maml:description>
-          <maml:para>Maximum body rows imported per table; zero means unlimited.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-        <dev:type>
-          <maml:name>Int32</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxRowsPerSlide</maml:name>
-        <maml:description>
-          <maml:para>Maximum rows written to one slide; zero means unlimited.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
-        <dev:type>
-          <maml:name>Int32</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxTotalOutputBytes</maml:name>
-        <maml:description>
-          <maml:para>Maximum aggregate encoded output bytes.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
-        <dev:type>
-          <maml:name>Int64</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MergePageContinuations</maml:name>
-        <maml:description>
-          <maml:para>Merge compatible table segments across pages.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Mode</maml:name>
-        <maml:description>
-          <maml:para>Visual, editable-table, hybrid, editable-content, or automatic import mode.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfPowerPointImportMode</command:parameterValue>
-        <command:parameterValueGroup>
-          <command:parameterValue required="false" variableLength="false">VisualPages</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">EditableTables</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">HybridVisualAndEditableTables</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">EditableContent</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
-        </command:parameterValueGroup>
-        <dev:type>
-          <maml:name>PdfPowerPointImportMode</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>PageRange</maml:name>
-        <maml:description>
-          <maml:para>Optional one-based page ranges such as 1-3,5.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-        <dev:type>
-          <maml:name>String</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>SuppressRepeatedBodyHeaderRows</maml:name>
-        <maml:description>
-          <maml:para>Suppress repeated body header rows.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>TableStyle</maml:name>
-        <maml:description>
-          <maml:para>PowerPoint table style.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">PowerPointTableStylePreset</command:parameterValue>
-        <dev:type>
-          <maml:name>PowerPointTableStylePreset</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-    </command:parameters>
-    <command:inputTypes>
-      <command:inputType>
-        <dev:type>
-          <maml:name>None</maml:name>
-        </dev:type>
-      </command:inputType>
-    </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>OfficeIMO.PowerPoint.Pdf.PdfPowerPointImportOptions</maml:name>
-        </dev:type>
-      </command:returnValue>
-    </command:returnValues>
-    <maml:alertSet>
-      <maml:alert>
-        <maml:para></maml:para>
-      </maml:alert>
-    </maml:alertSet>
-    <command:examples>
-      <command:example>
-        <maml:title>Import selected PDF pages as bounded slide content.</maml:title>
-        <maml:introduction>
-          <maml:para>PS&gt; </maml:para>
-        </maml:introduction>
-        <dev:code>$options = New-OfficePdfPowerPointImportOptions -PageRange '1-5' -MaxPages 5 -IncludeSourceTitles&#xD;
-            ConvertTo-OfficePdfPowerPoint -Path .\Source.pdf -OutputPath .\Slides.pptx -Options $options</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -151488,39 +150941,47 @@ Use -NoSave or omit -Path when a document object should be returned for further 
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
-      <command:name>New-OfficePdfVisualComparisonOptions</command:name>
+      <command:name>New-OfficePdfToPowerPointOptions</command:name>
       <command:verb>New</command:verb>
-      <command:noun>OfficePdfVisualComparisonOptions</command:noun>
+      <command:noun>OfficePdfToPowerPointOptions</command:noun>
       <maml:description>
-        <maml:para>Creates discoverable rendering and tolerance settings for Compare-OfficePdfVisual.</maml:para>
+        <maml:para>Creates discoverable PDF-to-PowerPoint reconstruction settings.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates discoverable rendering and tolerance settings for Compare-OfficePdfVisual.</maml:para>
+      <maml:para>Creates discoverable PDF-to-PowerPoint reconstruction settings.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
-        <maml:name>New-OfficePdfVisualComparisonOptions</maml:name>
+        <maml:name>New-OfficePdfToPowerPointOptions</maml:name>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Alignment</maml:name>
+          <maml:name>AlignNumericColumns</maml:name>
           <maml:description>
-            <maml:para>Page alignment used for differently sized renders.</maml:para>
+            <maml:para>Right-align inferred numeric columns.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">PdfVisualPageAlignment</command:parameterValue>
-          <command:parameterValueGroup>
-            <command:parameterValue required="false" variableLength="false">TopLeft</command:parameterValue>
-            <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
-          </command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
-            <maml:name>PdfVisualPageAlignment</maml:name>
+            <maml:name>SwitchParameter</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>AllowedDifferenceRatio</maml:name>
+          <maml:name>BandedRows</maml:name>
           <maml:description>
-            <maml:para>Maximum differing-pixel ratio treated as equal.</maml:para>
+            <maml:para>Enable banded-row styling.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Dpi</maml:name>
+          <maml:description>
+            <maml:para>Raster resolution used by visual import.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
           <dev:type>
@@ -151530,9 +150991,9 @@ Use -NoSave or omit -Path when a document object should be returned for further 
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>BackgroundColor</maml:name>
+          <maml:name>EmptyPresentationMessage</maml:name>
           <maml:description>
-            <maml:para>Background color name or hex value.</maml:para>
+            <maml:para>Message used when no supported content is detected.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -151542,21 +151003,45 @@ Use -NoSave or omit -Path when a document object should be returned for further 
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>ChannelTolerance</maml:name>
+          <maml:name>EmptyPresentationTitle</maml:name>
           <maml:description>
-            <maml:para>Maximum per-channel byte difference treated as equal.</maml:para>
+            <maml:para>Title used when no supported content is detected.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Byte</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
           <dev:type>
-            <maml:name>Byte</maml:name>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxPages</maml:name>
+          <maml:name>IncludeColumnHeaderRows</maml:name>
           <maml:description>
-            <maml:para>Maximum pages compared.</maml:para>
+            <maml:para>Add inferred column headers.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IncludeSourceTitles</maml:name>
+          <maml:description>
+            <maml:para>Add source-page titles.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaxColumnsPerSlide</maml:name>
+          <maml:description>
+            <maml:para>Maximum columns written to one slide; zero means unlimited.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -151566,13 +151051,73 @@ Use -NoSave or omit -Path when a document object should be returned for further 
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxPixelsPerImage</maml:name>
+          <maml:name>MaxEditableObjectsPerPage</maml:name>
           <maml:description>
-            <maml:para>Maximum pixels accepted per rendered image.</maml:para>
+            <maml:para>Maximum editable objects reconstructed per page.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaxOutputBytesPerPage</maml:name>
+          <maml:description>
+            <maml:para>Maximum encoded bytes per rendered page.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
             <maml:name>Int64</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaxPages</maml:name>
+          <maml:description>
+            <maml:para>Maximum pages imported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaxPixelsPerPage</maml:name>
+          <maml:description>
+            <maml:para>Maximum pixels per rendered page.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <dev:type>
+            <maml:name>Int64</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaxRows</maml:name>
+          <maml:description>
+            <maml:para>Maximum body rows imported per table; zero means unlimited.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaxRowsPerSlide</maml:name>
+          <maml:description>
+            <maml:para>Maximum rows written to one slide; zero means unlimited.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -151580,7 +151125,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MaxTotalOutputBytes</maml:name>
           <maml:description>
-            <maml:para>Maximum total bytes retained for comparison artifacts.</maml:para>
+            <maml:para>Maximum aggregate encoded output bytes.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
           <dev:type>
@@ -151590,25 +151135,68 @@ Use -NoSave or omit -Path when a document object should be returned for further 
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>MaxTotalPixels</maml:name>
+          <maml:name>MergePageContinuations</maml:name>
           <maml:description>
-            <maml:para>Maximum pixels accepted across the comparison.</maml:para>
+            <maml:para>Merge compatible table segments across pages.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
-            <maml:name>Int64</maml:name>
+            <maml:name>SwitchParameter</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-          <maml:name>Scale</maml:name>
+          <maml:name>Mode</maml:name>
           <maml:description>
-            <maml:para>Render scale applied before comparison.</maml:para>
+            <maml:para>Visual, editable-table, hybrid, editable-content, or automatic import mode.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">PdfPowerPointImportMode</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">VisualPages</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">EditableTables</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">HybridVisualAndEditableTables</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">EditableContent</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
+          </command:parameterValueGroup>
           <dev:type>
-            <maml:name>Double</maml:name>
+            <maml:name>PdfPowerPointImportMode</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PageRange</maml:name>
+          <maml:description>
+            <maml:para>Optional one-based page ranges such as 1-3,5.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SuppressRepeatedBodyHeaderRows</maml:name>
+          <maml:description>
+            <maml:para>Suppress repeated body header rows.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TableStyle</maml:name>
+          <maml:description>
+            <maml:para>PowerPoint table style.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PowerPointTableStylePreset</command:parameterValue>
+          <dev:type>
+            <maml:name>PowerPointTableStylePreset</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -151617,25 +151205,33 @@ Use -NoSave or omit -Path when a document object should be returned for further 
     </command:syntax>
     <command:parameters>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Alignment</maml:name>
+        <maml:name>AlignNumericColumns</maml:name>
         <maml:description>
-          <maml:para>Page alignment used for differently sized renders.</maml:para>
+          <maml:para>Right-align inferred numeric columns.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">PdfVisualPageAlignment</command:parameterValue>
-        <command:parameterValueGroup>
-          <command:parameterValue required="false" variableLength="false">TopLeft</command:parameterValue>
-          <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
-        </command:parameterValueGroup>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
-          <maml:name>PdfVisualPageAlignment</maml:name>
+          <maml:name>SwitchParameter</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>AllowedDifferenceRatio</maml:name>
+        <maml:name>BandedRows</maml:name>
         <maml:description>
-          <maml:para>Maximum differing-pixel ratio treated as equal.</maml:para>
+          <maml:para>Enable banded-row styling.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Dpi</maml:name>
+        <maml:description>
+          <maml:para>Raster resolution used by visual import.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
         <dev:type>
@@ -151645,9 +151241,9 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>BackgroundColor</maml:name>
+        <maml:name>EmptyPresentationMessage</maml:name>
         <maml:description>
-          <maml:para>Background color name or hex value.</maml:para>
+          <maml:para>Message used when no supported content is detected.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -151657,21 +151253,45 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>ChannelTolerance</maml:name>
+        <maml:name>EmptyPresentationTitle</maml:name>
         <maml:description>
-          <maml:para>Maximum per-channel byte difference treated as equal.</maml:para>
+          <maml:para>Title used when no supported content is detected.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Byte</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         <dev:type>
-          <maml:name>Byte</maml:name>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxPages</maml:name>
+        <maml:name>IncludeColumnHeaderRows</maml:name>
         <maml:description>
-          <maml:para>Maximum pages compared.</maml:para>
+          <maml:para>Add inferred column headers.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>IncludeSourceTitles</maml:name>
+        <maml:description>
+          <maml:para>Add source-page titles.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaxColumnsPerSlide</maml:name>
+        <maml:description>
+          <maml:para>Maximum columns written to one slide; zero means unlimited.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -151681,13 +151301,73 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxPixelsPerImage</maml:name>
+        <maml:name>MaxEditableObjectsPerPage</maml:name>
         <maml:description>
-          <maml:para>Maximum pixels accepted per rendered image.</maml:para>
+          <maml:para>Maximum editable objects reconstructed per page.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaxOutputBytesPerPage</maml:name>
+        <maml:description>
+          <maml:para>Maximum encoded bytes per rendered page.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
           <maml:name>Int64</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaxPages</maml:name>
+        <maml:description>
+          <maml:para>Maximum pages imported.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaxPixelsPerPage</maml:name>
+        <maml:description>
+          <maml:para>Maximum pixels per rendered page.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+        <dev:type>
+          <maml:name>Int64</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaxRows</maml:name>
+        <maml:description>
+          <maml:para>Maximum body rows imported per table; zero means unlimited.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaxRowsPerSlide</maml:name>
+        <maml:description>
+          <maml:para>Maximum rows written to one slide; zero means unlimited.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -151695,7 +151375,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>MaxTotalOutputBytes</maml:name>
         <maml:description>
-          <maml:para>Maximum total bytes retained for comparison artifacts.</maml:para>
+          <maml:para>Maximum aggregate encoded output bytes.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
         <dev:type>
@@ -151705,25 +151385,68 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>MaxTotalPixels</maml:name>
+        <maml:name>MergePageContinuations</maml:name>
         <maml:description>
-          <maml:para>Maximum pixels accepted across the comparison.</maml:para>
+          <maml:para>Merge compatible table segments across pages.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
-          <maml:name>Int64</maml:name>
+          <maml:name>SwitchParameter</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
-        <maml:name>Scale</maml:name>
+        <maml:name>Mode</maml:name>
         <maml:description>
-          <maml:para>Render scale applied before comparison.</maml:para>
+          <maml:para>Visual, editable-table, hybrid, editable-content, or automatic import mode.</maml:para>
         </maml:description>
-        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">PdfPowerPointImportMode</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">VisualPages</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">EditableTables</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">HybridVisualAndEditableTables</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">EditableContent</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Auto</command:parameterValue>
+        </command:parameterValueGroup>
         <dev:type>
-          <maml:name>Double</maml:name>
+          <maml:name>PdfPowerPointImportMode</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PageRange</maml:name>
+        <maml:description>
+          <maml:para>Optional one-based page ranges such as 1-3,5.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SuppressRepeatedBodyHeaderRows</maml:name>
+        <maml:description>
+          <maml:para>Suppress repeated body header rows.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TableStyle</maml:name>
+        <maml:description>
+          <maml:para>PowerPoint table style.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PowerPointTableStylePreset</command:parameterValue>
+        <dev:type>
+          <maml:name>PowerPointTableStylePreset</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -151739,7 +151462,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.Pdf.PdfVisualComparisonOptions</maml:name>
+          <maml:name>OfficeIMO.PowerPoint.Pdf.PdfToPowerPointOptions</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -151750,12 +151473,12 @@ Use -NoSave or omit -Path when a document object should be returned for further 
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>Compare PDFs with a small rendering tolerance.</maml:title>
+        <maml:title>Import selected PDF pages as bounded slide content.</maml:title>
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$options = New-OfficePdfVisualComparisonOptions -ChannelTolerance 2 -AllowedDifferenceRatio 0.001 -MaxPages 50&#xD;
-            Compare-OfficePdfVisual -ReferencePath .\Expected.pdf -DifferencePath .\Actual.pdf -Options $options</dev:code>
+        <dev:code>$options = New-OfficePdfToPowerPointOptions -PageRange '1-5' -MaxPages 5 -IncludeSourceTitles&#xD;
+            ConvertTo-OfficePdfPowerPoint -Path .\Source.pdf -OutputPath .\Slides.pptx -Options $options</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -151765,9 +151488,9 @@ Use -NoSave or omit -Path when a document object should be returned for further 
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
-      <command:name>New-OfficePdfWordImportOptions</command:name>
+      <command:name>New-OfficePdfToWordOptions</command:name>
       <command:verb>New</command:verb>
-      <command:noun>OfficePdfWordImportOptions</command:noun>
+      <command:noun>OfficePdfToWordOptions</command:noun>
       <maml:description>
         <maml:para>Creates discoverable PDF-to-Word reconstruction settings.</maml:para>
       </maml:description>
@@ -151777,7 +151500,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
-        <maml:name>New-OfficePdfWordImportOptions</maml:name>
+        <maml:name>New-OfficePdfToWordOptions</maml:name>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>AlignNumericColumns</maml:name>
           <maml:description>
@@ -152558,7 +152281,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.Word.Pdf.PdfWordImportOptions</maml:name>
+          <maml:name>OfficeIMO.Word.Pdf.PdfToWordOptions</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -152573,8 +152296,285 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$options = New-OfficePdfWordImportOptions -ImportHeadings -ImportParagraphs -ImportLists -ImportTables&#xD;
+        <dev:code>$options = New-OfficePdfToWordOptions -ImportHeadings -ImportParagraphs -ImportLists -ImportTables&#xD;
             ConvertTo-OfficePdfWord -Path .\Source.pdf -OutputPath .\Rebuilt.docx -Options $options</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>New-OfficePdfVisualComparisonOptions</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>OfficePdfVisualComparisonOptions</command:noun>
+      <maml:description>
+        <maml:para>Creates discoverable rendering and tolerance settings for Compare-OfficePdfVisual.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Creates discoverable rendering and tolerance settings for Compare-OfficePdfVisual.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>New-OfficePdfVisualComparisonOptions</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Alignment</maml:name>
+          <maml:description>
+            <maml:para>Page alignment used for differently sized renders.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfVisualPageAlignment</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">TopLeft</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>PdfVisualPageAlignment</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AllowedDifferenceRatio</maml:name>
+          <maml:description>
+            <maml:para>Maximum differing-pixel ratio treated as equal.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>BackgroundColor</maml:name>
+          <maml:description>
+            <maml:para>Background color name or hex value.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ChannelTolerance</maml:name>
+          <maml:description>
+            <maml:para>Maximum per-channel byte difference treated as equal.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Byte</command:parameterValue>
+          <dev:type>
+            <maml:name>Byte</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaxPages</maml:name>
+          <maml:description>
+            <maml:para>Maximum pages compared.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaxPixelsPerImage</maml:name>
+          <maml:description>
+            <maml:para>Maximum pixels accepted per rendered image.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <dev:type>
+            <maml:name>Int64</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaxTotalOutputBytes</maml:name>
+          <maml:description>
+            <maml:para>Maximum total bytes retained for comparison artifacts.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <dev:type>
+            <maml:name>Int64</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaxTotalPixels</maml:name>
+          <maml:description>
+            <maml:para>Maximum pixels accepted across the comparison.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <dev:type>
+            <maml:name>Int64</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Scale</maml:name>
+          <maml:description>
+            <maml:para>Render scale applied before comparison.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Alignment</maml:name>
+        <maml:description>
+          <maml:para>Page alignment used for differently sized renders.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfVisualPageAlignment</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">TopLeft</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Center</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>PdfVisualPageAlignment</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>AllowedDifferenceRatio</maml:name>
+        <maml:description>
+          <maml:para>Maximum differing-pixel ratio treated as equal.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>BackgroundColor</maml:name>
+        <maml:description>
+          <maml:para>Background color name or hex value.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ChannelTolerance</maml:name>
+        <maml:description>
+          <maml:para>Maximum per-channel byte difference treated as equal.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Byte</command:parameterValue>
+        <dev:type>
+          <maml:name>Byte</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaxPages</maml:name>
+        <maml:description>
+          <maml:para>Maximum pages compared.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaxPixelsPerImage</maml:name>
+        <maml:description>
+          <maml:para>Maximum pixels accepted per rendered image.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+        <dev:type>
+          <maml:name>Int64</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaxTotalOutputBytes</maml:name>
+        <maml:description>
+          <maml:para>Maximum total bytes retained for comparison artifacts.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+        <dev:type>
+          <maml:name>Int64</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaxTotalPixels</maml:name>
+        <maml:description>
+          <maml:para>Maximum pixels accepted across the comparison.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+        <dev:type>
+          <maml:name>Int64</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Scale</maml:name>
+        <maml:description>
+          <maml:para>Render scale applied before comparison.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Pdf.PdfVisualComparisonOptions</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Compare PDFs with a small rendering tolerance.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$options = New-OfficePdfVisualComparisonOptions -ChannelTolerance 2 -AllowedDifferenceRatio 0.001 -MaxPages 50&#xD;
+            Compare-OfficePdfVisual -ReferencePath .\Expected.pdf -DifferencePath .\Actual.pdf -Options $options</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -154217,7 +154217,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.PowerPoint.Pdf.PowerPointPdfSaveOptions</maml:name>
+          <maml:name>OfficeIMO.PowerPoint.Pdf.PowerPointToPdfOptions</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -154957,7 +154957,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.Rtf.Pdf.RtfPdfSaveOptions</maml:name>
+          <maml:name>OfficeIMO.Rtf.Pdf.RtfToPdfOptions</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -158645,7 +158645,7 @@ Use -NoSave or omit -Path when a document object should be returned for further 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>OfficeIMO.Word.Pdf.WordPdfSaveOptions</maml:name>
+          <maml:name>OfficeIMO.Word.Pdf.WordToPdfOptions</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -187575,7 +187575,7 @@ Use low opacity for watermark-like page texture and -Clear to remove a previousl
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Compose</maml:name>
           <maml:description>
-            <maml:para>Advanced footer composer. The script receives a PdfFooterCompose and can configure&#xD;
+            <maml:para>Advanced footer composer. The script receives a PdfFooterBuilder and can configure&#xD;
 default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ScriptBlock</command:parameterValue>
@@ -187645,7 +187645,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Compose</maml:name>
           <maml:description>
-            <maml:para>Advanced footer composer. The script receives a PdfFooterCompose and can configure&#xD;
+            <maml:para>Advanced footer composer. The script receives a PdfFooterBuilder and can configure&#xD;
 default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ScriptBlock</command:parameterValue>
@@ -187727,7 +187727,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Compose</maml:name>
         <maml:description>
-          <maml:para>Advanced footer composer. The script receives a PdfFooterCompose and can configure&#xD;
+          <maml:para>Advanced footer composer. The script receives a PdfFooterBuilder and can configure&#xD;
 default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">ScriptBlock</command:parameterValue>
@@ -188202,7 +188202,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Compose</maml:name>
           <maml:description>
-            <maml:para>Advanced header composer. The script receives a PdfHeaderCompose and can configure&#xD;
+            <maml:para>Advanced header composer. The script receives a PdfHeaderBuilder and can configure&#xD;
 default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ScriptBlock</command:parameterValue>
@@ -188272,7 +188272,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>Compose</maml:name>
           <maml:description>
-            <maml:para>Advanced header composer. The script receives a PdfHeaderCompose and can configure&#xD;
+            <maml:para>Advanced header composer. The script receives a PdfHeaderBuilder and can configure&#xD;
 default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">ScriptBlock</command:parameterValue>
@@ -188354,7 +188354,7 @@ default, first-page, and even-page text, zones, images, shapes, rich text, and p
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>Compose</maml:name>
         <maml:description>
-          <maml:para>Advanced header composer. The script receives a PdfHeaderCompose and can configure&#xD;
+          <maml:para>Advanced header composer. The script receives a PdfHeaderBuilder and can configure&#xD;
 default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">ScriptBlock</command:parameterValue>

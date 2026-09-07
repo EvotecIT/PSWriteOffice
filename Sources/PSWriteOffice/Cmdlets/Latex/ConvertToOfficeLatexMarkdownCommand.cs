@@ -39,7 +39,7 @@ public sealed class ConvertToOfficeLatexMarkdownCommand : PSCmdlet
         var document = Document;
         if (ParameterSetName == ParameterSetPath)
         {
-            var parsed = LatexDocument.Load(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path));
+            var parsed = LatexDocument.LoadResult(SessionState.Path.GetUnresolvedProviderPathFromPSPath(Path));
             if (FailOnLoss.IsPresent && (!parsed.IsLossless || parsed.HasErrors))
             {
                 throw new InvalidDataException("LaTeX parsing reported errors or could not retain the complete source losslessly.");

@@ -85,7 +85,7 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
 
     /// <summary>Optional OfficeIMO PDF to HTML save options.</summary>
     [Parameter]
-    public PdfHtmlSaveOptions? Options { get; set; }
+    public PdfToHtmlOptions? Options { get; set; }
 
     /// <inheritdoc />
     protected override void ProcessRecord()
@@ -93,7 +93,7 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
         try
         {
             string inputPath = PdfCommandUtilities.ResolvePath(this, Path);
-            PdfHtmlSaveOptions options = BuildOptions();
+            PdfToHtmlOptions options = BuildOptions();
             string html = LoadLogicalDocument(inputPath).ToHtml(options);
 
             if (!string.IsNullOrWhiteSpace(OutputPath))
@@ -118,9 +118,9 @@ public sealed class ConvertToOfficePdfHtmlCommand : PSCmdlet
         }
     }
 
-    private PdfHtmlSaveOptions BuildOptions()
+    private PdfToHtmlOptions BuildOptions()
     {
-        PdfHtmlSaveOptions options = Options ?? new PdfHtmlSaveOptions();
+        PdfToHtmlOptions options = Options ?? new PdfToHtmlOptions();
         if (Options == null)
         {
             options.Profile = Profile;

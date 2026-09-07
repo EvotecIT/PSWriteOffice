@@ -11,12 +11,12 @@ Exports a Word, Excel, PowerPoint, Markdown, or RTF document to PDF.
 ## SYNTAX
 ### Document (Default)
 ```powershell
-Export-OfficeDocumentPdf [-Document] <Object> [-Path] <string> [-Password <string>] [-WordOptions <WordPdfSaveOptions>] [-ExcelOptions <ExcelPdfSaveOptions>] [-PowerPointOptions <PowerPointPdfSaveOptions>] [-MarkdownOptions <MarkdownPdfSaveOptions>] [-RtfOptions <RtfPdfSaveOptions>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeDocumentPdf [-Document] <Object> [-Path] <string> [-Password <string>] [-WordOptions <WordToPdfOptions>] [-ExcelOptions <ExcelToPdfOptions>] [-PowerPointOptions <PowerPointToPdfOptions>] [-MarkdownOptions <MarkdownToPdfOptions>] [-RtfOptions <RtfToPdfOptions>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Export-OfficeDocumentPdf [-InputPath] <string> [-Path] <string> [-Password <string>] [-WordOptions <WordPdfSaveOptions>] [-ExcelOptions <ExcelPdfSaveOptions>] [-PowerPointOptions <PowerPointPdfSaveOptions>] [-MarkdownOptions <MarkdownPdfSaveOptions>] [-RtfOptions <RtfPdfSaveOptions>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeDocumentPdf [-InputPath] <string> [-Path] <string> [-Password <string>] [-WordOptions <WordToPdfOptions>] [-ExcelOptions <ExcelToPdfOptions>] [-PowerPointOptions <PowerPointToPdfOptions>] [-MarkdownOptions <MarkdownToPdfOptions>] [-RtfOptions <RtfToPdfOptions>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -66,7 +66,7 @@ Accept wildcard characters: False
 Excel-specific PDF options.
 
 ```yaml
-Type: ExcelPdfSaveOptions
+Type: ExcelToPdfOptions
 Parameter Sets: Document, Path
 Aliases: None
 Possible values:
@@ -98,7 +98,7 @@ Accept wildcard characters: False
 Markdown-specific PDF options.
 
 ```yaml
-Type: MarkdownPdfSaveOptions
+Type: MarkdownToPdfOptions
 Parameter Sets: Document, Path
 Aliases: None
 Possible values:
@@ -210,7 +210,7 @@ Accept wildcard characters: False
 PowerPoint-specific PDF options.
 
 ```yaml
-Type: PowerPointPdfSaveOptions
+Type: PowerPointToPdfOptions
 Parameter Sets: Document, Path
 Aliases: None
 Possible values:
@@ -226,7 +226,7 @@ Accept wildcard characters: False
 RTF-specific PDF options.
 
 ```yaml
-Type: RtfPdfSaveOptions
+Type: RtfToPdfOptions
 Parameter Sets: Document, Path
 Aliases: None
 Possible values:
@@ -242,7 +242,7 @@ Accept wildcard characters: False
 Word-specific PDF options.
 
 ```yaml
-Type: WordPdfSaveOptions
+Type: WordToPdfOptions
 Parameter Sets: Document, Path
 Aliases: None
 Possible values:

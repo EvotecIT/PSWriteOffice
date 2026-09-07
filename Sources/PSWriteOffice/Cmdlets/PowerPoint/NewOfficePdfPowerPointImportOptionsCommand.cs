@@ -9,12 +9,12 @@ namespace PSWriteOffice.Cmdlets.PowerPoint;
 /// <example>
 ///   <summary>Import selected PDF pages as bounded slide content.</summary>
 ///   <prefix>PS&gt; </prefix>
-///   <code>$options = New-OfficePdfPowerPointImportOptions -PageRange '1-5' -MaxPages 5 -IncludeSourceTitles
+///   <code>$options = New-OfficePdfToPowerPointOptions -PageRange '1-5' -MaxPages 5 -IncludeSourceTitles
 /// ConvertTo-OfficePdfPowerPoint -Path .\Source.pdf -OutputPath .\Slides.pptx -Options $options</code>
 /// </example>
-[Cmdlet(VerbsCommon.New, "OfficePdfPowerPointImportOptions")]
-[OutputType(typeof(PdfPowerPointImportOptions))]
-public sealed class NewOfficePdfPowerPointImportOptionsCommand : PSCmdlet {
+[Cmdlet(VerbsCommon.New, "OfficePdfToPowerPointOptions")]
+[OutputType(typeof(PdfToPowerPointOptions))]
+public sealed class NewOfficePdfToPowerPointOptionsCommand : PSCmdlet {
     /// <summary>Visual, editable-table, hybrid, editable-content, or automatic import mode.</summary>
     [Parameter] public PdfPowerPointImportMode? Mode { get; set; }
     /// <summary>Optional one-based page ranges such as 1-3,5.</summary>
@@ -58,7 +58,7 @@ public sealed class NewOfficePdfPowerPointImportOptionsCommand : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var options = new PdfPowerPointImportOptions();
+        var options = new PdfToPowerPointOptions();
         if (Mode.HasValue) options.Mode = Mode.Value;
         if (!string.IsNullOrWhiteSpace(PageRange))
         {

@@ -130,7 +130,7 @@ public sealed class JoinOfficePdfCommand : PSCmdlet
             FlattenVisualAnnotations = FlattenVisualAnnotations.IsPresent,
             ResizePages = resizeOptions
         };
-        var result = PdfDocument.MergeWithReport(mergeOptions, documents);
+        var result = PdfDocument.MergeResult(mergeOptions, documents);
         result.ToDocument().Save(outputPath).RequireSuccess();
 
         if (PassThruReport.IsPresent)

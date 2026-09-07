@@ -14,7 +14,7 @@ namespace PSWriteOffice.Cmdlets.Word;
 /// Export-OfficeDocumentPdf -InputPath .\Report.docx -Path .\Report.pdf -WordOptions $options</code>
 /// </example>
 [Cmdlet(VerbsCommon.New, "OfficeWordPdfOptions")]
-[OutputType(typeof(WordPdfSaveOptions))]
+[OutputType(typeof(WordToPdfOptions))]
 public sealed class NewOfficeWordPdfOptionsCommand : PSCmdlet {
     /// <summary>Underlying low-level OfficeIMO PDF options.</summary>
     [Parameter]
@@ -98,7 +98,7 @@ public sealed class NewOfficeWordPdfOptionsCommand : PSCmdlet {
 
     /// <inheritdoc />
     protected override void ProcessRecord() {
-        var options = new WordPdfSaveOptions();
+        var options = new WordToPdfOptions();
         if (PdfOptions != null) options.PdfOptions = PdfOptions;
         if (!string.IsNullOrWhiteSpace(FontFamily)) options.FontFamily = FontFamily;
         if (PageSize.HasValue) options.PageSize = PageSize.Value;

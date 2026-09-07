@@ -50,7 +50,7 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
     public string Text { get; set; } = "Page {page}/{pages}";
 
     /// <summary>
-    /// Advanced footer composer. The script receives a <see cref="PdfFooterCompose"/> and can configure
+    /// Advanced footer composer. The script receives a <see cref="PdfFooterBuilder"/> and can configure
     /// default, first-page, and even-page text, zones, images, shapes, rich text, and page tokens.
     /// </summary>
     [Parameter]
@@ -100,7 +100,7 @@ public sealed class SetOfficePdfFooterCommand : PSCmdlet
         }
     }
 
-    private void ApplyAlignment(PdfFooterCompose footer)
+    private void ApplyAlignment(PdfFooterBuilder footer)
     {
         switch (Align)
         {

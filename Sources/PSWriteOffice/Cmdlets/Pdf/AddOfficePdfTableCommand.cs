@@ -271,7 +271,7 @@ public sealed class AddOfficePdfTableCommand : PSCmdlet
         }
     }
 
-    private void RenderTable(PdfItemCompose content, object[] inputRows)
+    private void RenderTable(PdfContentBuilder content, object[] inputRows)
     {
         var projectedRows = TableViewProjection.Project(inputRows, View);
         var normalizationOptions = PdfCommandUtilities.CreateTableNormalizationOptions(

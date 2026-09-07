@@ -9,8 +9,8 @@ internal sealed class PdfDslContext : IDisposable
 {
     private static readonly System.Threading.AsyncLocal<PdfDslContext?> Current = new();
     private readonly PdfDslContext? _previous;
-    private readonly List<Action<PdfItemCompose>> _contentActions = new();
-    private readonly List<Action<PdfPageCompose>> _pageActions = new();
+    private readonly List<Action<PdfContentBuilder>> _contentActions = new();
+    private readonly List<Action<PdfPageBuilder>> _pageActions = new();
     private readonly List<Func<PdfDocument, PdfDocument>> _documentActions = new();
 
     private PdfDslContext(PdfOptions options)
@@ -30,10 +30,10 @@ internal sealed class PdfDslContext : IDisposable
             $"No active PDF DSL context. Use {cmdlet.MyInvocation.InvocationName} inside New-OfficePdf {{ ... }} or pass -Document.");
     }
 
-    public void AddContent(Action<PdfItemCompose> action)
+    public void AddContent(Action<PdfContentBuilder> action)
         => _contentActions.Add(action ?? throw new ArgumentNullException(nameof(action)));
 
-    public void ConfigurePage(Action<PdfPageCompose> action)
+    public void ConfigurePage(Action<PdfPageBuilder> action)
         => _pageActions.Add(action ?? throw new ArgumentNullException(nameof(action)));
 
     public void ConfigureDocument(Action<PdfDocument> action)
@@ -75,7 +75,7 @@ internal sealed class PdfDslContext : IDisposable
         return document;
     }
 
-    private void ApplyContent(PdfItemCompose content)
+    private void ApplyContent(PdfContentBuilder content)
     {
         foreach (var action in _contentActions)
         {

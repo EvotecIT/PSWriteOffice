@@ -34,7 +34,7 @@ internal interface IMarkdownWriteOptionSource
 
 internal interface IMarkdownPdfOptionSource
 {
-    MarkdownPdfSaveOptions? MarkdownPdfOptions { get; }
+    MarkdownToPdfOptions? MarkdownPdfOptions { get; }
     OfficeIMO.Pdf.PdfOptions? PdfOptions { get; }
     OfficeVisualThemeKind? PdfTheme { get; }
     string? PdfFontFamily { get; }
@@ -161,9 +161,9 @@ internal static class MarkdownOptionUtilities
         return options;
     }
 
-    internal static MarkdownPdfSaveOptions BuildPdfOptions(IMarkdownPdfOptionSource source, PSCmdlet command, string? fallbackBaseDirectory)
+    internal static MarkdownToPdfOptions BuildPdfOptions(IMarkdownPdfOptionSource source, PSCmdlet command, string? fallbackBaseDirectory)
     {
-        var options = source.MarkdownPdfOptions?.Clone() ?? new MarkdownPdfSaveOptions();
+        var options = source.MarkdownPdfOptions?.Clone() ?? new MarkdownToPdfOptions();
 
         if (source.PdfOptions != null) options.PdfOptions = source.PdfOptions;
         if (source.PdfTheme.HasValue) options.Theme = MarkdownVisualTheme.Create(source.PdfTheme.Value);
