@@ -2,7 +2,7 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 3.0.6
+Help Version: 3.0.7
 Locale: en-US
 ---
 # PSWriteOffice Module
