@@ -13,6 +13,10 @@ updates:
     all-dependencies:
       patterns:
       - '*'
+  ignore:
+  - dependency-name: Microsoft.PowerShell.SDK
+    versions:
+    - '>=7.5.0'
 - package-ecosystem: github-actions
   directory: /
   schedule:
