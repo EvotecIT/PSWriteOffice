@@ -1,4 +1,3 @@
-using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
 using PSWriteOffice.Services.Pdf;
@@ -44,7 +43,7 @@ public sealed class NewOfficePdfTableCellImageCommand : PSCmdlet
     /// <inheritdoc />
     protected override void ProcessRecord()
     {
-        var bytes = File.ReadAllBytes(PdfCommandUtilities.ResolvePath(this, Path));
+        var bytes = PdfImageDocumentSource.FromFile(PdfCommandUtilities.ResolvePath(this, Path)).GetBytes();
         WriteObject(new PdfTableCellImage(bytes, Width, Height, linkUri: LinkUri, linkContents: LinkContents));
     }
 }

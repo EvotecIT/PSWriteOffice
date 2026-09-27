@@ -24,6 +24,8 @@ Start here when you want to create polished documents from PowerShell: workbooks
 
 Use the [scenario-driven example library](Examples/README.md) for complete Word, Excel, PowerPoint, PDF, Markdown, Visio, RTF, CSV, Reader, and multi-format scripts.
 
+See the [release notes](RELEASE_NOTES.md) for the upcoming OfficeIMO 3.4.4 update and compatibility notes.
+
 ## Platform Areas 🧭
 
 | Area | Status | What it covers now |

@@ -120,8 +120,10 @@ Describe 'Protected-content capability discovery' {
 
         $catalog = Get-OfficeProtectionCapability -AsJson | ConvertFrom-Json
         $catalog.id | Should -Be 'OfficeIMO.ProtectedContent'
-        $catalog.schemaVersion | Should -Be 1
+        $catalog.schemaVersion | Should -Be 2
         @($catalog.capabilities).Count | Should -Be $all.Count
+        $catalog.capabilities[0].inspect | Should -BeIn @('Supported', 'Unsupported', 'NotApplicable', 'Partial')
+        $catalog.capabilities[0].PSObject.Properties.Name | Should -Contain 'unsupportedOperations'
     }
 
     It 'rejects ambiguous text output requests' {

@@ -1,4 +1,3 @@
-using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
 using PSWriteOffice.Services.Pdf;
@@ -57,7 +56,7 @@ public sealed class AddOfficePdfImageCommand : PSCmdlet
     protected override void ProcessRecord()
     {
         var imagePath = PdfCommandUtilities.ResolvePath(this, Path);
-        var imageBytes = File.ReadAllBytes(imagePath);
+        var imageBytes = PdfImageDocumentSource.FromFile(imagePath).GetBytes();
         var document = PdfCommandUtilities.ComposeContent(this, Document, ParameterSetName, ParameterSetDocument,
             content => content.Image(imageBytes, Width, Height, Align, null, null, null, null, null, null, null, AlternativeText));
         if (PassThru.IsPresent && document != null)
