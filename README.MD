@@ -643,6 +643,9 @@ Get-OfficePowerPointShape -Presentation $ppt -Index 0
 
 ## Recent Highlights 🆕
 
+- Excel saves preserve carriage returns and CRLF in cell text.
+- PDF image composition, table-cell images, backgrounds, stamps, and watermarks accept encoded image files up to 128 MiB. Electronic-invoice XML is limited to 16 MiB. OfficeIMO's bounded readers reject oversized inputs before buffering the entire payload.
+- `Get-OfficeProtectionCapability -AsJson` returns schema version 2. JSON consumers should read operation dispositions and `unsupportedOperations` rather than assuming the previous catalog shape.
 - Word to Markdown and Markdown to Word are now surfaced directly through `OfficeIMO.Word.Markdown`.
 - PDF now has first-class creation, composition, merge/split, page movement, metadata, forms, stamping, attachment, extraction, editable Word/Excel/PowerPoint reconstruction, HTML conversion, and compliance inspection cmdlets. Deeper PDF engine features still belong in `OfficeIMO.Pdf` first.
 - RTF now has create/read/update/replace cmdlets, Word/HTML/PDF bridges, and semantic Reader chunks through the `OfficeIMO.Reader.Rtf` adapter.

@@ -1,4 +1,3 @@
-using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Pdf;
 using PSWriteOffice.Services.Pdf;
@@ -70,8 +69,7 @@ public sealed class SetOfficePdfElectronicInvoiceCommand : PSCmdlet
         }
 
         var invoicePath = PdfCommandUtilities.ResolvePath(this, Path);
-        var invoiceBytes = File.ReadAllBytes(invoicePath);
         PdfCommandUtilities.ConfigureOptions(this, options =>
-            options.ConfigureElectronicInvoiceGroundwork(Profile, invoiceBytes, ConformanceLevel, Version, Relationship, Description));
+            options.ConfigureElectronicInvoiceGroundworkFile(Profile, invoicePath, ConformanceLevel, Version, Relationship, Description));
     }
 }

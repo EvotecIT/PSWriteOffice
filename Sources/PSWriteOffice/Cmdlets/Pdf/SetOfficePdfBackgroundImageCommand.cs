@@ -1,4 +1,3 @@
-using System.IO;
 using System.Management.Automation;
 using OfficeIMO.Drawing;
 using OfficeIMO.Pdf;
@@ -69,7 +68,7 @@ public sealed class SetOfficePdfBackgroundImageCommand : PSCmdlet
             }
 
             var imagePath = PdfCommandUtilities.ResolvePath(this, Path!);
-            imageBytes = File.ReadAllBytes(imagePath);
+            imageBytes = PdfImageDocumentSource.FromFile(imagePath).GetBytes();
         }
 
         var document = PdfCommandUtilities.ComposePage(this, Document, ParameterSetName, ParameterSetDocument, page =>

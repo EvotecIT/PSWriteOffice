@@ -148,9 +148,9 @@ public sealed class AddOfficePdfStampCommand : PSWriteOffice.Cmdlets.OfficeMutat
             BehindContent = Watermark.IsPresent
         };
         PdfCommandUtilities.ApplyPageRange(options, PageRange);
-        var imageBytes = File.ReadAllBytes(PdfCommandUtilities.ResolvePath(this, Image!));
+        using var imageStream = File.OpenRead(PdfCommandUtilities.ResolvePath(this, Image!));
         return Watermark.IsPresent
-            ? document.Stamp.ImageWatermark(imageBytes, options)
-            : document.Stamp.Image(imageBytes, options);
+            ? document.Stamp.ImageWatermark(imageStream, options)
+            : document.Stamp.Image(imageStream, options);
     }
 }

@@ -11,7 +11,7 @@
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <OfficeIMOVersion>3.4.3</OfficeIMOVersion>
+        <OfficeIMOVersion>3.4.4</OfficeIMOVersion>
     </PropertyGroup>
 
     <PropertyGroup>
