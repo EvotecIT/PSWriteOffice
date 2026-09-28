@@ -31,7 +31,7 @@ internal static class WordTextRunService
         WordUnderlineStyle? underline,
         bool strike,
         string? color,
-        int? fontSize,
+        double? fontSize,
         string? fontName)
     {
         var run = paragraph.AddFormattedText(text, bold, italic);
@@ -66,7 +66,7 @@ internal static class WordTextRunService
             spec.Strike,
             spec.Color,
             spec.BackgroundColor,
-            spec.FontSize.HasValue ? (int)Math.Round(spec.FontSize.Value) : null,
+            spec.FontSize,
             spec.FontName);
         ApplyBaseline(run, spec.Baseline);
     }
@@ -135,7 +135,7 @@ internal static class WordTextRunService
 
         if (spec.FontSize.HasValue)
         {
-            var halfPoints = ((int)Math.Round(spec.FontSize.Value) * 2).ToString(CultureInfo.InvariantCulture);
+            var halfPoints = ToHalfPoints(spec.FontSize.Value).ToString(CultureInfo.InvariantCulture);
             properties.FontSize = new FontSize { Val = halfPoints };
         }
 
@@ -179,7 +179,17 @@ internal static class WordTextRunService
         return properties;
     }
 
-    private static void ApplyAdditionalStyle(WordParagraph run, bool strike, string? color, string? backgroundColor, int? fontSize, string? fontName)
+    private static int ToHalfPoints(double fontSize)
+    {
+        if (double.IsNaN(fontSize) || double.IsInfinity(fontSize) || fontSize < 0D || fontSize > int.MaxValue / 2D)
+        {
+            throw new ArgumentOutOfRangeException(nameof(fontSize));
+        }
+
+        return checked((int)Math.Round(fontSize * 2D, MidpointRounding.AwayFromZero));
+    }
+
+    private static void ApplyAdditionalStyle(WordParagraph run, bool strike, string? color, string? backgroundColor, double? fontSize, string? fontName)
     {
         if (strike)
         {
@@ -196,7 +206,7 @@ internal static class WordTextRunService
 
         if (fontSize.HasValue)
         {
-            run.SetFontSize(fontSize.Value);
+            run.FontSizePoints = fontSize.Value;
         }
 
         if (!string.IsNullOrWhiteSpace(fontName))

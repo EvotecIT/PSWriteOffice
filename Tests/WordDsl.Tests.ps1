@@ -694,6 +694,27 @@ Describe 'Word DSL surface' {
         $documentXml.SelectSingleNode('//w:u[@w:val="dotted"]', $namespaceManager) | Should -Not -BeNullOrEmpty
     }
 
+    It 'preserves half-point Word font sizes through text, rich runs, links, and style updates' {
+        $path = Join-Path $TestDrive 'DslHalfPointWordFonts.docx'
+        WordNew -Path $path {
+            WordParagraph { WordText -Text 'DirectHalf' -FontSize 10.5 }
+            WordParagraph -Run @(
+                WordTextRun 'RichHalf' -FontSize 10.5
+                WordTextRun 'LinkHalf' -LinkUri 'https://example.org/half' -FontSize 10.5
+            )
+            $styled = WordParagraph -Text 'StyledHalf' -PassThru
+            @($styled.GetRuns())[0] | Set-OfficeWordTextStyle -FontSize 10.5
+        } | Out-Null
+
+        $documentXml = Get-ZipXmlDocumentLocal -Path $path -Entry 'word/document.xml'
+        $namespaceManager = New-Object System.Xml.XmlNamespaceManager($documentXml.NameTable)
+        $namespaceManager.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+        foreach ($text in 'DirectHalf', 'RichHalf', 'LinkHalf', 'StyledHalf') {
+            $documentXml.SelectSingleNode("//w:r[w:t='$text']/w:rPr/w:sz[@w:val='21']", $namespaceManager) |
+                Should -Not -BeNullOrEmpty
+        }
+    }
+
     It 'rejects mismatched columnar Word rich text formatting arrays' {
         $path = Join-Path $TestDrive 'DslRichTextRunsWordMismatch.docx'
 
