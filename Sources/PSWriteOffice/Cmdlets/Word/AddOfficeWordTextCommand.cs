@@ -64,7 +64,7 @@ public sealed class AddOfficeWordTextCommand : PSCmdlet
 
     /// <summary>Font size in points.</summary>
     [Parameter]
-    public int? FontSize { get; set; }
+    public double? FontSize { get; set; }
 
     /// <summary>Font name or family.</summary>
     [Parameter]
