@@ -1,0 +1,14 @@
+param(
+    [Parameter(Mandatory)]
+    [string] $InputPath,
+
+    [Parameter(Mandatory)]
+    [string] $OutputPath
+)
+
+Import-Module PSWriteOffice -ErrorAction Stop
+
+# Use this policy for trusted templates whose requested fonts are installed on the host.
+$options = New-OfficeWordPdfOptions -AllowDocumentFontEmbedding -IncludePageNumbers:$false
+$report = Export-OfficeDocumentPdf -InputPath $InputPath -Path $OutputPath -WordOptions $options -PassThru
+$report.Warnings | Format-Table Code, Message

@@ -228,6 +228,16 @@ $iWorkReport, $oneNoteReport | Select-Object HasLoss, Diagnostics
 
 ### Word
 
+To export a trusted template with its installed fonts, enable document-font embedding and retain the conversion report:
+
+```powershell
+$options = New-OfficeWordPdfOptions -AllowDocumentFontEmbedding -IncludePageNumbers:$false
+$report = Export-OfficeDocumentPdf -InputPath .\Template.docx -Path .\Template.pdf -WordOptions $options -PassThru
+$report.Warnings | Format-Table Code, Message
+```
+
+System-font embedding is enabled by default and must remain enabled for this option. Balanced conversion substitutes standard PDF fonts for document-selected fonts unless document-font embedding is allowed; substitution can change table text widths, line breaks, and baselines. Use `-FontFamily` when you intentionally want a conversion-wide default instead of retaining each template font.
+
 ```powershell
 New-OfficeWord -Path .\Report.docx {
     WordSection {
