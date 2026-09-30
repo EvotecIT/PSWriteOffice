@@ -29,7 +29,7 @@ Describe 'Office document PDF exports' {
         $balanced.ResourcePolicy.AllowSystemFontEmbedding | Should -BeTrue
         $balanced.ResourcePolicy.AllowDocumentFontEmbedding | Should -BeFalse
 
-        $template = New-OfficeWordPdfOptions -AllowDocumentFontEmbedding
+        $template = New-OfficeWordPdfOptions -AllowSystemFontEmbedding -AllowDocumentFontEmbedding
         $template.ResourcePolicy.AllowSystemFontEmbedding | Should -BeTrue
         $template.ResourcePolicy.AllowDocumentFontEmbedding | Should -BeTrue
 

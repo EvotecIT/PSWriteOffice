@@ -29,7 +29,7 @@ Export-OfficeDocumentPdf -InputPath .\Briefing.pptx -Path .\Briefing.pdf -PowerP
 ## PARAMETERS
 
 ### -AllowDocumentFontEmbedding
-Allow embedding fonts stored in the presentation.
+Allow embedding installed fonts selected by a trusted presentation. System-font embedding must also be enabled.
 
 ```yaml
 Type: SwitchParameter

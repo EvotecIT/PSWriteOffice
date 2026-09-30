@@ -29,7 +29,7 @@ Export-OfficeDocumentPdf -InputPath .\Report.xlsx -Path .\Report.pdf -ExcelOptio
 ## PARAMETERS
 
 ### -AllowDocumentFontEmbedding
-Allow embedding fonts stored in the workbook.
+Allow embedding installed fonts selected by a trusted workbook. System-font embedding must also be enabled.
 
 ```yaml
 Type: SwitchParameter

@@ -151,7 +151,7 @@ public sealed class NewOfficeExcelPdfOptionsCommand : PSCmdlet {
     [Parameter]
     public SwitchParameter AllowSystemFontEmbedding { get; set; }
 
-    /// <summary>Allow embedding fonts stored in the workbook.</summary>
+    /// <summary>Allow embedding installed fonts selected by a trusted workbook. System-font embedding must also be enabled.</summary>
     [Parameter]
     public SwitchParameter AllowDocumentFontEmbedding { get; set; }
 
