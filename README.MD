@@ -232,7 +232,7 @@ To export a trusted template with its installed fonts, enable document-font embe
 
 ```powershell
 $options = New-OfficeWordPdfOptions -AllowDocumentFontEmbedding -IncludePageNumbers:$false
-$report = Export-OfficeDocumentPdf -InputPath .\Template.docx -Path .\Template.pdf -WordOptions $options -PassThru
+Export-OfficeDocumentPdf -InputPath .\Template.docx -Path .\Template.pdf -WordOptions $options -PdfConversionReportVariable report
 $report.Warnings | Format-Table Code, Message
 ```
 
