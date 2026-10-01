@@ -44,33 +44,40 @@ Use the [scenario-driven example library](Examples/README.md) for complete Word,
 | Confluence Cloud | New | ADF and storage-format page reads, dry-run create/update plans, loss-aware Markdown/HTML conversion, managed sections, and attachment transfer |
 | Package and provenance evidence | New | Inspect Open XML and compound-package active content under bounded policies; collect structural, text-integrity, and optional C2PA provider evidence without inferring authorship |
 
-## DOC, TXT, archives and printer queues
+## PDF export, file batches and printer queues
 
-`Export-OfficeDocumentPdf` accepts `.doc` and `.txt` files in Windows PowerShell 5.1 and PowerShell 7.4 or newer. TXT content is literal; Markdown and HTML syntax are retained as text. Legacy DOC conversion blocks known import loss unless explicitly accepted, and `-SourceConversionReportVariable` exposes the import reports separately from PDF rendering diagnostics.
-
-PDF export destinations must end in `.pdf`. Update scripts that previously used extensionless destinations or another extension before exporting.
+`Export-OfficeDocumentPdf` exports DOC, DOCX, TXT, XLSX, PPTX, HTML, Markdown and RTF. Use a live OfficeIMO document, `-InputPath` and `-Path` for one file, or `-InputDirectory` and `-OutputDirectory` for a mixed batch. Selected path arrays and `Get-ChildItem -File` pipelines use the same batch path. Directory and selected-file batches require PowerShell 7.4 or newer; single-file export also supports Windows PowerShell 5.1.
 
 ```powershell
-Export-OfficeDocumentPdf -InputPath .\Archive.doc -Path .\Archive.pdf `
-  -SourceConversionReportVariable ImportReports
 $textOptions = New-OfficeTextPdfOptions -EncodingName utf-8 -TabSize 4
 Export-OfficeDocumentPdf -InputPath .\Report.txt -Path .\Report.pdf -TextOptions $textOptions
+
+Export-OfficeDocumentPdf -InputDirectory .\Documents -OutputDirectory .\PDF `
+  -TextOptions $textOptions -MaximumConcurrency 2
+
+# Optional checkpoints retain verified completed artifacts across restarts.
+Export-OfficeDocumentPdf -InputDirectory .\Documents -OutputDirectory .\PDF `
+  -CheckpointDirectory .\PDF-State -WordOptions (New-OfficeWordPdfOptions -Title 'Reports')
+
+Get-ChildItem .\Documents -File | Export-OfficeDocumentPdf -OutputDirectory .\SelectedPDF `
+  -ItemResults -SummaryVariable summary
+$summary
 ```
 
-`Export-OfficePdfArchive`, `Get-OfficePrinter` and `Send-OfficePdfPrinter` require PowerShell 7.4 or newer because they consume the modern .NET workflow and printer services:
+Typed `WordOptions`, `ExcelOptions`, `PowerPointOptions`, `HtmlOptions`, `MarkdownOptions`, `RtfOptions` and `TextOptions` apply to their matching formats. TXT preserves HTML and Markdown syntax literally. `-Password` opens encrypted Office inputs and is not stored in checkpoint state. Known legacy DOC import loss blocks output unless `-AllowLegacyImportLoss` accepts it; diagnostics retain the reductions. Single-file report variables expose source and PDF reports separately.
+
+Ordinary batches accept `-ConflictPolicy Fail`, `Rename` or `Replace`. Checkpoint jobs require `Fail` and separate source, output and checkpoint folders. Restart verifies source, rendering settings, supported local resources and output hashes; completed artifacts are never replaced automatically. Execution budgets and concurrency may change. Compatible engine updates retain verified recorded artifacts without claiming to rerender them. Use `-RetryFailed` for recorded failures, including corrected failed inputs. Remote resources and runtime conversion callbacks require an ordinary batch without checkpoints.
+
+The default result is a bounded summary of selected, completed, reused, failed and skipped files. `-ItemResults` streams per-file outcomes instead; `-SummaryVariable` retains the summary in either mode. Filter with `-SourceExtensions` and `-NoRecurse`. Source/output byte limits and file/concurrency limits are explicit. `-WhatIf` creates no batch output or state. Single-file destinations must end in `.pdf`.
+
+`Get-OfficePrinter` and `Send-OfficePdfPrinter` require PowerShell 7.4 or newer:
 
 ```powershell
-Export-OfficePdfArchive -InputDirectory .\Documents -OutputDirectory .\PDF `
-  -CheckpointDirectory .\PDF-State -MaximumConcurrency 2
 Get-OfficePrinter
-Get-OfficePrinter -PaperSources 'Office printer'
-Send-OfficePdfPrinter -Path .\Report.pdf -PrinterName 'Office printer' `
-  -Pages '1-3' -PagesPerSheet 2 -Duplex LongEdge
+Send-OfficePdfPrinter -Path .\Report.pdf -PrinterName 'Office printer' -PassThru
 ```
 
-Rerunning an archive verifies completed source and PDF hashes. Use `-RetryFailed` for corrected failed inputs. Completed inputs and outputs are never replaced automatically; changed settings or engine binaries require a new checkpoint and output directory. Source, output and state trees must be separate local folders. `-WhatIf` creates no PDF output, checkpoint state or print job. Known DOC import reductions require `-AllowLegacyImportLoss` and remain visible in diagnostics.
-
-The printer command returns a queue acceptance receipt, not a physical-delivery confirmation. Check the queue before retrying an interrupted submission. Windows file printers require `-OutputFilePath` naming a new file; macOS/Linux delivery uses CUPS command-line tools.
+A print receipt proves queue acceptance; physical delivery remains unconfirmed. Windows file printers require an explicit new output file. Check the queue after interrupted submission before retrying. Printing uses the shared OfficeIMO PDF/printer services and retains their platform requirements.
 
 ## Advanced document workflows
 

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Threading;
+using System.Threading.Tasks;
 using OfficeIMO.Excel;
 using OfficeIMO.Excel.Pdf;
 using OfficeIMO.Markdown;
@@ -14,6 +15,8 @@ using OfficeIMO.Rtf;
 using OfficeIMO.Rtf.Pdf;
 using OfficeIMO.Word;
 using OfficeIMO.Word.Pdf;
+using OfficeIMO.Html;
+using OfficeIMO.Html.Pdf;
 using PSWriteOffice.Services;
 using PSWriteOffice.Services.Excel;
 using PSWriteOffice.Services.Pdf;
@@ -22,8 +25,8 @@ using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
-/// <summary>Exports a Word, Excel, PowerPoint, Markdown, RTF, or literal text document to PDF.</summary>
-/// <para>Accepts either a live OfficeIMO document from the pipeline or a supported source file.</para>
+/// <summary>Exports Word, Excel, PowerPoint, HTML, Markdown, RTF, and literal text documents to PDF.</summary>
+/// <para>Accepts live OfficeIMO documents, individual files, directories, and selected file pipelines. Directory and file batches require PowerShell 7.4 or newer.</para>
 /// <example>
 ///   <summary>Export a live Word document.</summary>
 ///   <prefix>PS&gt; </prefix>
@@ -39,26 +42,39 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 ///   <prefix>PS&gt; </prefix>
 ///   <code>$options = New-OfficeMarkdownPdfOptions -Title 'Service report' -IncludeLocalImages -BaseDirectory .\Assets
 /// Export-OfficeDocumentPdf -InputPath .\Report.md -Path .\Report.pdf -MarkdownOptions $options</code>
-///   <para>The New-Office*PdfOptions commands build every format-specific options object; no hashtable or .NET constructor is required.</para>
+///   <para>Typed conversion options also apply to the matching formats in a mixed batch.</para>
+/// </example>
+/// <example>
+///   <summary>Export a directory with optional checkpoints.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Export-OfficeDocumentPdf -InputDirectory .\Documents -OutputDirectory .\PDF -CheckpointDirectory .\PDF-State</code>
+/// </example>
+/// <example>
+///   <summary>Stream selected file outcomes and retain the final summary.</summary>
+///   <prefix>PS&gt; </prefix>
+///   <code>Get-ChildItem .\Documents -File | Export-OfficeDocumentPdf -OutputDirectory .\PDF -ItemResults -SummaryVariable summary</code>
 /// </example>
 [Cmdlet(VerbsData.Export, "OfficeDocumentPdf", DefaultParameterSetName = ParameterSetDocument, SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
-public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
+#if !FRAMEWORK
+[OutputType(typeof(OfficeIMO.Workflows.OfficeConversionBatchResult), typeof(OfficeIMO.Workflows.OfficeConversionBatchItemResult))]
+#endif
+public sealed partial class ExportOfficeDocumentPdfCommand : AsyncPSCmdlet {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
-    private readonly CancellationTokenSource _cancellation = new();
 
-    /// <summary>Live Word, Excel, PowerPoint, Markdown, or RTF document to export. Saved FileInfo and path strings from the pipeline are opened automatically.</summary>
+    /// <summary>Live Word, Excel, PowerPoint, HTML, Markdown, or RTF document to export. Saved FileInfo and path strings from the pipeline are opened automatically.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, ParameterSetName = ParameterSetDocument)]
     public object Document { get; set; } = null!;
 
-    /// <summary>Source .doc, .docx, .txt, .xlsx, .pptx, .md, .markdown, or .rtf file.</summary>
+    /// <summary>Source .doc, .docx, .txt, .xlsx, .pptx, .html, .htm, .xhtml, .md, .markdown, or .rtf file.</summary>
     [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, Position = 0, ParameterSetName = ParameterSetPath)]
     [Alias("SourcePath", "FullName")]
     public string InputPath { get; set; } = string.Empty;
 
     /// <summary>Destination PDF path.</summary>
-    [Parameter(Mandatory = true, Position = 1)]
+    [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetDocument)]
+    [Parameter(Mandatory = true, Position = 1, ParameterSetName = ParameterSetPath)]
     [Alias("OutputPath", "FilePath")]
     public string Path { get; set; } = string.Empty;
 
@@ -86,6 +102,10 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     [Parameter]
     public RtfToPdfOptions? RtfOptions { get; set; }
 
+    /// <summary>HTML-specific PDF rendering options.</summary>
+    [Parameter]
+    public HtmlToPdfOptions? HtmlOptions { get; set; }
+
     /// <summary>Literal text layout and strict decoding options. Applies only to TXT sources.</summary>
     [Parameter]
     public PdfPlainTextOptions? TextOptions { get; set; }
@@ -100,28 +120,44 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     public long MaximumInputBytes { get; set; } = 64L * 1024 * 1024;
 
     /// <summary>Variable receiving source-stage reports separately from PDF rendering diagnostics.</summary>
-    [Parameter]
+    [Parameter(ParameterSetName = ParameterSetDocument)]
+    [Parameter(ParameterSetName = ParameterSetPath)]
     public string? SourceConversionReportVariable { get; set; }
 
     /// <summary>Variable name that receives structured PDF conversion warnings.</summary>
-    [Parameter]
+    [Parameter(ParameterSetName = ParameterSetDocument)]
+    [Parameter(ParameterSetName = ParameterSetPath)]
     public string? PdfWarningVariable { get; set; }
 
     /// <summary>Variable name that receives the structured PDF conversion report.</summary>
-    [Parameter]
+    [Parameter(ParameterSetName = ParameterSetDocument)]
+    [Parameter(ParameterSetName = ParameterSetPath)]
     public string? PdfConversionReportVariable { get; set; }
 
     /// <summary>Open the PDF after exporting it.</summary>
-    [Parameter]
+    [Parameter(ParameterSetName = ParameterSetDocument)]
+    [Parameter(ParameterSetName = ParameterSetPath)]
     [Alias("Show")]
     public SwitchParameter Open { get; set; }
 
     /// <summary>Emit the saved PDF file.</summary>
-    [Parameter]
+    [Parameter(ParameterSetName = ParameterSetDocument)]
+    [Parameter(ParameterSetName = ParameterSetPath)]
     public SwitchParameter PassThru { get; set; }
 
     /// <inheritdoc />
-    protected override void ProcessRecord() {
+    protected override async Task ProcessRecordAsync() {
+        if (ParameterSetName == ParameterSetDirectory) { await ExportBatchAsync(null); return; }
+        if (ParameterSetName == ParameterSetFiles) {
+            foreach (object selected in InputPaths) {
+                object value = UnwrapDocument(selected);
+                string input = value is FileInfo file ? file.FullName : value is string path ? path
+                    : throw new PSArgumentException("InputPaths accepts source path strings or FileInfo objects.");
+                if (_batchInputs.Count >= MaximumFiles) throw new PSArgumentException("Selected files exceed MaximumFiles.");
+                _batchInputs.Add(PdfCommandUtilities.ResolvePath(this, input));
+            }
+            return;
+        }
         var outputPath = PdfCommandUtilities.ResolvePath(this, Path);
         if (!string.Equals(System.IO.Path.GetExtension(outputPath), ".pdf", StringComparison.OrdinalIgnoreCase))
             throw new PSArgumentException("The destination must use the .pdf extension.", nameof(Path));
@@ -180,8 +216,8 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
                 return extension == ".doc"
                     ? LegacyDocPdfConverter.ToPdfDocumentResult(source, WordOptions,
                         new OfficeIMO.Word.LegacyDoc.LegacyDocImportOptions { MaxInputBytes = (int)Math.Min(int.MaxValue, MaximumInputBytes) },
-                        AllowLegacyImportLoss.IsPresent ? OfficeIMO.OfficeConversionLossPolicy.Allow : OfficeIMO.OfficeConversionLossPolicy.Block, _cancellation.Token)
-                    : PdfPlainTextConverter.ToPdfDocumentResult(source, TextOptions, MaximumInputBytes, _cancellation.Token);
+                        AllowLegacyImportLoss.IsPresent ? OfficeIMO.OfficeConversionLossPolicy.Allow : OfficeIMO.OfficeConversionLossPolicy.Block, CancelToken)
+                    : PdfPlainTextConverter.ToPdfDocumentResult(source, TextOptions, MaximumInputBytes, CancelToken);
             }
             case ".docx": {
                     var document = WordDocumentService.LoadDocument(sourcePath, readOnly: true, autoSave: false, Password);
@@ -205,28 +241,35 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
             case ".rtf":
                 closeOwnedDocument = null;
                 return RtfDocument.Load(sourcePath);
+            case ".html":
+            case ".htm":
+            case ".xhtml":
+                closeOwnedDocument = null;
+                return HtmlConversionDocument.Load(sourcePath);
             default:
-                throw new PSArgumentException("Supported PDF source extensions are .doc, .docx, .txt, .xlsx, .pptx, .md, .markdown, and .rtf.", nameof(InputPath));
+                throw new PSArgumentException("Supported PDF source extensions are .doc, .docx, .txt, .xlsx, .pptx, .html, .htm, .xhtml, .md, .markdown, and .rtf.", nameof(InputPath));
         }
     }
 
     private PdfSaveResult SaveDocument(object document, string outputPath, string? sourcePath) {
         switch (document) {
             case PdfDocumentConversionResult converted:
-                return converted.SaveResult(outputPath, _cancellation.Token);
+                return converted.SaveResult(outputPath, CancelToken);
             case WordDocument word:
-                return word.SaveAsPdf(outputPath, WordOptions ?? new WordToPdfOptions(), _cancellation.Token);
+                return word.SaveAsPdf(outputPath, WordOptions ?? new WordToPdfOptions(), CancelToken);
             case ExcelDocument excel:
-                return excel.SaveAsPdf(outputPath, ExcelOptions ?? new ExcelToPdfOptions(), _cancellation.Token);
+                return excel.SaveAsPdf(outputPath, ExcelOptions ?? new ExcelToPdfOptions(), CancelToken);
             case PowerPointPresentation powerPoint:
-                return powerPoint.SaveAsPdf(outputPath, PowerPointOptions ?? new PowerPointToPdfOptions(), _cancellation.Token);
+                return powerPoint.SaveAsPdf(outputPath, PowerPointOptions ?? new PowerPointToPdfOptions(), CancelToken);
             case MarkdownDoc markdown:
-                return markdown.SaveAsPdf(outputPath, PrepareMarkdownOptions(sourcePath), _cancellation.Token);
+                return markdown.SaveAsPdf(outputPath, PrepareMarkdownOptions(sourcePath), CancelToken);
             case RtfDocument rtf:
-                return rtf.SaveAsPdf(outputPath, RtfOptions ?? new RtfToPdfOptions(), _cancellation.Token);
+                return rtf.SaveAsPdf(outputPath, RtfOptions ?? new RtfToPdfOptions(), CancelToken);
+            case HtmlConversionDocument html:
+                return html.ToPdfDocumentResult(HtmlOptions, CancelToken).SaveResult(outputPath, CancelToken);
             default:
                 throw new PSArgumentException(
-                    $"Document type '{document?.GetType().FullName ?? "<null>"}' cannot be exported to PDF. Use a WordDocument, ExcelDocument, PowerPointPresentation, MarkdownDoc, or RtfDocument.",
+                    $"Document type '{document?.GetType().FullName ?? "<null>"}' cannot be exported to PDF. Use a WordDocument, ExcelDocument, PowerPointPresentation, HtmlConversionDocument, MarkdownDoc, or RtfDocument.",
                     nameof(Document));
         }
     }
@@ -251,8 +294,7 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     }
 
     /// <inheritdoc />
-    protected override void StopProcessing() { _cancellation.Cancel(); base.StopProcessing(); }
-
-    /// <inheritdoc />
-    protected override void EndProcessing() { _cancellation.Dispose(); base.EndProcessing(); }
+    protected override async Task EndProcessingAsync() {
+        if (ParameterSetName == ParameterSetFiles && _batchInputs.Count > 0) await ExportBatchAsync(_batchInputs.ToArray());
+    }
 }

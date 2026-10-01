@@ -2,7 +2,7 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 3.0.9
+Help Version: 3.0.10
 Locale: en-US
 ---
 # PSWriteOffice Module
@@ -620,7 +620,7 @@ Runs a script block against editable worksheet rows.
 Exports objects or a CSV document to a CSV file.
 
 ### [Export-OfficeDocumentPdf](Export-OfficeDocumentPdf.md)
-Exports a Word, Excel, PowerPoint, Markdown, RTF, or literal text document to PDF.
+Exports Word, Excel, PowerPoint, HTML, Markdown, RTF, and literal text documents to PDF.
 
 ### [Export-OfficeExcel](Export-OfficeExcel.md)
 Exports PowerShell objects to an Excel workbook using an operator-friendly surface.
@@ -639,9 +639,6 @@ Exports one worksheet range as an image file.
 
 ### [Export-OfficeHtmlImage](Export-OfficeHtmlImage.md)
 Exports an HTML render surface as PNG or SVG with structured diagnostics.
-
-### [Export-OfficePdfArchive](Export-OfficePdfArchive.md)
-Converts a local DOC/DOCX/TXT directory to PDF with durable restart checks. Requires PowerShell 7.
 
 ### [Export-OfficePdfImage](Export-OfficePdfImage.md)
 Exports PDF pages through the shared PNG, JPEG, TIFF, SVG, or WebP image contract.
@@ -1134,6 +1131,9 @@ Creates discoverable sheet selection and rendering settings for Export-OfficeExc
 
 ### [New-OfficeHtmlConversionOptions](New-OfficeHtmlConversionOptions.md)
 Creates discoverable parsing, trust, and document settings for HTML conversion.
+
+### [New-OfficeHtmlPdfOptions](New-OfficeHtmlPdfOptions.md)
+Creates typed HTML rendering options for Export-OfficeDocumentPdf.
 
 ### [New-OfficeHtmlRenderOptions](New-OfficeHtmlRenderOptions.md)
 Creates discoverable layout, resource-limit, and rendering settings for HTML image export.

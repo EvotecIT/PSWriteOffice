@@ -81,25 +81,58 @@ public sealed class DocumentPdfCmdletTests {
     }
 
     [Fact]
-    public void ArchiveCmdletResumesAndWhatIfCreatesNoState() {
+    public void DirectoryBatchResumesAndWhatIfCreatesNoState() {
         string root = Path.Combine(Path.GetTempPath(), "pswriteoffice-archive-" + Guid.NewGuid().ToString("N"));
         string input = Path.Combine(root, "source"), output = Path.Combine(root, "output"), checkpoint = Path.Combine(root, "checkpoint");
         Directory.CreateDirectory(input);
         try {
             File.WriteAllText(Path.Combine(input, "one.txt"), "Archive cmdlet evidence");
             var state = InitialSessionState.CreateDefault();
-            state.Commands.Add(new SessionStateCmdletEntry("Export-OfficePdfArchive", typeof(ExportOfficePdfArchiveCommand), null));
+            state.Commands.Add(new SessionStateCmdletEntry("Export-OfficeDocumentPdf", typeof(ExportOfficeDocumentPdfCommand), null));
             using var runspace = RunspaceFactory.CreateRunspace(state); runspace.Open();
             using var shell = PowerShell.Create(); shell.Runspace = runspace;
-            void AddCommand() => shell.AddCommand("Export-OfficePdfArchive").AddParameter("InputDirectory", input)
+            void AddCommand() => shell.AddCommand("Export-OfficeDocumentPdf").AddParameter("InputDirectory", input)
                 .AddParameter("OutputDirectory", output).AddParameter("CheckpointDirectory", checkpoint);
             AddCommand(); shell.AddParameter("WhatIf"); shell.Invoke();
             Assert.False(Directory.Exists(output)); Assert.False(Directory.Exists(checkpoint));
             shell.Commands.Clear(); AddCommand();
             Assert.Single(shell.Invoke()); Assert.False(shell.HadErrors, string.Join("\n", shell.Streams.Error));
             shell.Commands.Clear(); AddCommand();
-            var resumed = Assert.IsType<OfficeIMO.Workflows.OfficePdfArchiveResult>(Assert.Single(shell.Invoke()).BaseObject);
+            var resumed = Assert.IsType<OfficeIMO.Workflows.OfficeConversionBatchResult>(Assert.Single(shell.Invoke()).BaseObject);
             Assert.Equal(1, resumed.Reused);
+        } finally { Directory.Delete(root, true); }
+    }
+
+    [Fact]
+    public void FileInfoPipelineStreamsMixedOutcomesAndRetainsSummaryAndNativeOptions() {
+        string root = Path.Combine(Path.GetTempPath(), "pswriteoffice-batch-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try {
+            File.WriteAllText(Path.Combine(root, "one.txt"), "<h1>literal pipeline text</h1>");
+            File.WriteAllText(Path.Combine(root, "two.html"), "<h1>HTML pipeline text</h1>");
+            File.WriteAllText(Path.Combine(root, "three.bin"), "Skipped input");
+            var state = InitialSessionState.CreateDefault();
+            state.Commands.Add(new SessionStateCmdletEntry("Export-OfficeDocumentPdf", typeof(ExportOfficeDocumentPdfCommand), null));
+            state.Commands.Add(new SessionStateCmdletEntry("New-OfficeHtmlPdfOptions", typeof(NewOfficeHtmlPdfOptionsCommand), null));
+            using var runspace = RunspaceFactory.CreateRunspace(state); runspace.Open();
+            using var shell = PowerShell.Create(); shell.Runspace = runspace;
+            runspace.SessionStateProxy.SetVariable("source", root);
+            runspace.SessionStateProxy.SetVariable("destination", Path.Combine(root, "output"));
+            runspace.SessionStateProxy.SetVariable("textSettings", new PdfPlainTextOptions {
+                PdfOptions = new PdfOptions { PageWidth = 240, PageHeight = 180, DefaultFontSize = 14 }
+            });
+            shell.AddScript("$htmlSettings = New-OfficeHtmlPdfOptions -Margin 12 -InteractiveFormControls $false; Get-ChildItem -LiteralPath $source -File | Export-OfficeDocumentPdf -OutputDirectory $destination -TextOptions $textSettings -HtmlOptions $htmlSettings -ItemResults -SummaryVariable summary");
+            var results = shell.Invoke();
+            Assert.False(shell.HadErrors, string.Join("\n", shell.Streams.Error));
+            var items = results.Select(item => Assert.IsType<OfficeIMO.Workflows.OfficeConversionBatchItemResult>(item.BaseObject)).ToArray();
+            Assert.Equal(3, items.Length);
+            Assert.Single(items, item => item.Skipped);
+            var summary = Assert.IsType<OfficeIMO.Workflows.OfficeConversionBatchResult>(runspace.SessionStateProxy.GetVariable("summary"));
+            Assert.Equal(2, summary.Completed); Assert.Equal(1, summary.Skipped); Assert.Equal(0, summary.Failed);
+            var textPdf = PdfDocument.Load(Path.Combine(root, "output", "one.txt.pdf")).Read();
+            Assert.NotEmpty(textPdf.Pages);
+            Assert.All(textPdf.Pages, page => Assert.Equal(240, page.Width));
+            Assert.Contains("HTML pipeline text", PdfDocument.Load(Path.Combine(root, "output", "two.html.pdf")).Read().Text);
         } finally { Directory.Delete(root, true); }
     }
 }
