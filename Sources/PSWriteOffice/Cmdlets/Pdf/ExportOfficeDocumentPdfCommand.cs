@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Management.Automation;
+using System.Threading;
 using OfficeIMO.Excel;
 using OfficeIMO.Excel.Pdf;
 using OfficeIMO.Markdown;
@@ -20,7 +22,7 @@ using PSWriteOffice.Services.Word;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
-/// <summary>Exports a Word, Excel, PowerPoint, Markdown, or RTF document to PDF.</summary>
+/// <summary>Exports a Word, Excel, PowerPoint, Markdown, RTF, or literal text document to PDF.</summary>
 /// <para>Accepts either a live OfficeIMO document from the pipeline or a supported source file.</para>
 /// <example>
 ///   <summary>Export a live Word document.</summary>
@@ -44,12 +46,13 @@ namespace PSWriteOffice.Cmdlets.Pdf;
 public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     private const string ParameterSetDocument = "Document";
     private const string ParameterSetPath = "Path";
+    private readonly CancellationTokenSource _cancellation = new();
 
     /// <summary>Live Word, Excel, PowerPoint, Markdown, or RTF document to export. Saved FileInfo and path strings from the pipeline are opened automatically.</summary>
     [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, ParameterSetName = ParameterSetDocument)]
     public object Document { get; set; } = null!;
 
-    /// <summary>Source .docx, .xlsx, .pptx, .md, .markdown, or .rtf file.</summary>
+    /// <summary>Source .doc, .docx, .txt, .xlsx, .pptx, .md, .markdown, or .rtf file.</summary>
     [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, Position = 0, ParameterSetName = ParameterSetPath)]
     [Alias("SourcePath", "FullName")]
     public string InputPath { get; set; } = string.Empty;
@@ -83,6 +86,23 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     [Parameter]
     public RtfToPdfOptions? RtfOptions { get; set; }
 
+    /// <summary>Literal text layout and strict decoding options. Applies only to TXT sources.</summary>
+    [Parameter]
+    public PdfPlainTextOptions? TextOptions { get; set; }
+
+    /// <summary>Accept reported legacy DOC import loss. Known loss otherwise blocks conversion.</summary>
+    [Parameter]
+    public SwitchParameter AllowLegacyImportLoss { get; set; }
+
+    /// <summary>Maximum source bytes for DOC and TXT import.</summary>
+    [Parameter]
+    [ValidateRange(1, long.MaxValue)]
+    public long MaximumInputBytes { get; set; } = 64L * 1024 * 1024;
+
+    /// <summary>Variable receiving source-stage reports separately from PDF rendering diagnostics.</summary>
+    [Parameter]
+    public string? SourceConversionReportVariable { get; set; }
+
     /// <summary>Variable name that receives structured PDF conversion warnings.</summary>
     [Parameter]
     public string? PdfWarningVariable { get; set; }
@@ -103,6 +123,8 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     /// <inheritdoc />
     protected override void ProcessRecord() {
         var outputPath = PdfCommandUtilities.ResolvePath(this, Path);
+        if (!string.Equals(System.IO.Path.GetExtension(outputPath), ".pdf", StringComparison.OrdinalIgnoreCase))
+            throw new PSArgumentException("The destination must use the .pdf extension.", nameof(Path));
         if (!PdfCommandUtilities.ShouldWrite(this, outputPath, "Export document to PDF")) {
             return;
         }
@@ -127,6 +149,10 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
             PdfSaveResult result = SaveDocument(document, outputPath, sourcePath);
             PdfCommandUtilities.SetVariable(this, PdfWarningVariable, result.Warnings);
             PdfCommandUtilities.SetVariable(this, PdfConversionReportVariable, result.Report);
+            PdfCommandUtilities.SetVariable(this, SourceConversionReportVariable, result.ConversionReports.Take(result.ConversionReports.Count - 1).ToArray());
+            foreach (var report in result.ConversionReports.Take(result.ConversionReports.Count - 1))
+                foreach (var finding in report.FidelityDiagnostics)
+                    WriteWarning(finding.Code + " [" + finding.Source + "]: " + finding.Message);
             result.RequireSuccess();
         } finally {
             closeOwnedDocument?.Invoke();
@@ -143,7 +169,20 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
 
     private object LoadDocument(string inputPath, out Action? closeOwnedDocument, out string sourcePath) {
         sourcePath = PdfCommandUtilities.ResolveExistingFilePath(this, inputPath);
+        string extension = System.IO.Path.GetExtension(sourcePath).ToLowerInvariant();
+        if (TextOptions != null && extension != ".txt") throw new PSArgumentException("TextOptions requires a TXT source.");
+        if (AllowLegacyImportLoss.IsPresent && extension != ".doc") throw new PSArgumentException("AllowLegacyImportLoss requires a DOC source.");
         switch (System.IO.Path.GetExtension(sourcePath).ToLowerInvariant()) {
+            case ".doc":
+            case ".txt": {
+                closeOwnedDocument = null;
+                using var source = File.OpenRead(sourcePath);
+                return extension == ".doc"
+                    ? LegacyDocPdfConverter.ToPdfDocumentResult(source, WordOptions,
+                        new OfficeIMO.Word.LegacyDoc.LegacyDocImportOptions { MaxInputBytes = (int)Math.Min(int.MaxValue, MaximumInputBytes) },
+                        AllowLegacyImportLoss.IsPresent ? OfficeIMO.OfficeConversionLossPolicy.Allow : OfficeIMO.OfficeConversionLossPolicy.Block, _cancellation.Token)
+                    : PdfPlainTextConverter.ToPdfDocumentResult(source, TextOptions, MaximumInputBytes, _cancellation.Token);
+            }
             case ".docx": {
                     var document = WordDocumentService.LoadDocument(sourcePath, readOnly: true, autoSave: false, Password);
                     closeOwnedDocument = () => WordDocumentService.CloseDocument(document);
@@ -167,12 +206,14 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
                 closeOwnedDocument = null;
                 return RtfDocument.Load(sourcePath);
             default:
-                throw new PSArgumentException("Supported PDF source extensions are .docx, .xlsx, .pptx, .md, .markdown, and .rtf.", nameof(InputPath));
+                throw new PSArgumentException("Supported PDF source extensions are .doc, .docx, .txt, .xlsx, .pptx, .md, .markdown, and .rtf.", nameof(InputPath));
         }
     }
 
     private PdfSaveResult SaveDocument(object document, string outputPath, string? sourcePath) {
         switch (document) {
+            case PdfDocumentConversionResult converted:
+                return converted.SaveResult(outputPath);
             case WordDocument word:
                 return word.SaveAsPdf(outputPath, WordOptions ?? new WordToPdfOptions());
             case ExcelDocument excel:
@@ -208,4 +249,10 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
 
         return document;
     }
+
+    /// <inheritdoc />
+    protected override void StopProcessing() { _cancellation.Cancel(); base.StopProcessing(); }
+
+    /// <inheritdoc />
+    protected override void EndProcessing() { _cancellation.Dispose(); base.EndProcessing(); }
 }

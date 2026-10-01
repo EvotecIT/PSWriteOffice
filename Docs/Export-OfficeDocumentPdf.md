@@ -6,17 +6,17 @@ schema: 2.0.0
 ---
 # Export-OfficeDocumentPdf
 ## SYNOPSIS
-Exports a Word, Excel, PowerPoint, Markdown, or RTF document to PDF.
+Exports a Word, Excel, PowerPoint, Markdown, RTF, or literal text document to PDF.
 
 ## SYNTAX
 ### Document (Default)
 ```powershell
-Export-OfficeDocumentPdf [-Document] <Object> [-Path] <string> [-Password <string>] [-WordOptions <WordToPdfOptions>] [-ExcelOptions <ExcelToPdfOptions>] [-PowerPointOptions <PowerPointToPdfOptions>] [-MarkdownOptions <MarkdownToPdfOptions>] [-RtfOptions <RtfToPdfOptions>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeDocumentPdf [-Document] <Object> [-Path] <string> [-Password <string>] [-WordOptions <WordToPdfOptions>] [-ExcelOptions <ExcelToPdfOptions>] [-PowerPointOptions <PowerPointToPdfOptions>] [-MarkdownOptions <MarkdownToPdfOptions>] [-RtfOptions <RtfToPdfOptions>] [-TextOptions <PdfPlainTextOptions>] [-AllowLegacyImportLoss] [-MaximumInputBytes <long>] [-SourceConversionReportVariable <string>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### Path
 ```powershell
-Export-OfficeDocumentPdf [-InputPath] <string> [-Path] <string> [-Password <string>] [-WordOptions <WordToPdfOptions>] [-ExcelOptions <ExcelToPdfOptions>] [-PowerPointOptions <PowerPointToPdfOptions>] [-MarkdownOptions <MarkdownToPdfOptions>] [-RtfOptions <RtfToPdfOptions>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+Export-OfficeDocumentPdf [-InputPath] <string> [-Path] <string> [-Password <string>] [-WordOptions <WordToPdfOptions>] [-ExcelOptions <ExcelToPdfOptions>] [-PowerPointOptions <PowerPointToPdfOptions>] [-MarkdownOptions <MarkdownToPdfOptions>] [-RtfOptions <RtfToPdfOptions>] [-TextOptions <PdfPlainTextOptions>] [-AllowLegacyImportLoss] [-MaximumInputBytes <long>] [-SourceConversionReportVariable <string>] [-PdfWarningVariable <string>] [-PdfConversionReportVariable <string>] [-Open] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,6 +45,22 @@ Export-OfficeDocumentPdf -InputPath .\Report.md -Path .\Report.pdf -MarkdownOpti
 The New-Office*PdfOptions commands build every format-specific options object; no hashtable or .NET constructor is required.
 
 ## PARAMETERS
+
+### -AllowLegacyImportLoss
+Accept reported legacy DOC import loss. Known loss otherwise blocks conversion.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Document, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -Document
 Live Word, Excel, PowerPoint, Markdown, or RTF document to export. Saved FileInfo and path strings from the pipeline are opened automatically.
@@ -79,7 +95,7 @@ Accept wildcard characters: False
 ```
 
 ### -InputPath
-Source .docx, .xlsx, .pptx, .md, .markdown, or .rtf file.
+Source .doc, .docx, .txt, .xlsx, .pptx, .md, .markdown, or .rtf file.
 
 ```yaml
 Type: String
@@ -99,6 +115,22 @@ Markdown-specific PDF options.
 
 ```yaml
 Type: MarkdownToPdfOptions
+Parameter Sets: Document, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaximumInputBytes
+Maximum source bytes for DOC and TXT import.
+
+```yaml
+Type: Int64
 Parameter Sets: Document, Path
 Aliases: None
 Possible values:
@@ -227,6 +259,38 @@ RTF-specific PDF options.
 
 ```yaml
 Type: RtfToPdfOptions
+Parameter Sets: Document, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -SourceConversionReportVariable
+Variable receiving source-stage reports separately from PDF rendering diagnostics.
+
+```yaml
+Type: String
+Parameter Sets: Document, Path
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TextOptions
+Literal text layout and strict decoding options. Applies only to TXT sources.
+
+```yaml
+Type: PdfPlainTextOptions
 Parameter Sets: Document, Path
 Aliases: None
 Possible values:

@@ -44,6 +44,32 @@ Use the [scenario-driven example library](Examples/README.md) for complete Word,
 | Confluence Cloud | New | ADF and storage-format page reads, dry-run create/update plans, loss-aware Markdown/HTML conversion, managed sections, and attachment transfer |
 | Package and provenance evidence | New | Inspect Open XML and compound-package active content under bounded policies; collect structural, text-integrity, and optional C2PA provider evidence without inferring authorship |
 
+## DOC, TXT, archives and printer queues
+
+`Export-OfficeDocumentPdf` accepts `.doc` and `.txt` files in Windows PowerShell 5.1 and PowerShell 7.4 or newer. TXT content is literal; Markdown and HTML syntax are retained as text. Legacy DOC conversion blocks known import loss unless explicitly accepted, and `-SourceConversionReportVariable` exposes the import reports separately from PDF rendering diagnostics.
+
+```powershell
+Export-OfficeDocumentPdf -InputPath .\Archive.doc -Path .\Archive.pdf `
+  -SourceConversionReportVariable ImportReports
+$textOptions = New-OfficeTextPdfOptions -EncodingName utf-8 -TabSize 4
+Export-OfficeDocumentPdf -InputPath .\Report.txt -Path .\Report.pdf -TextOptions $textOptions
+```
+
+`Export-OfficePdfArchive`, `Get-OfficePrinter` and `Send-OfficePdfPrinter` require PowerShell 7.4 or newer because they consume the modern .NET workflow and printer services:
+
+```powershell
+Export-OfficePdfArchive -InputDirectory .\Documents -OutputDirectory .\PDF `
+  -CheckpointDirectory .\PDF-State -MaximumConcurrency 2
+Get-OfficePrinter
+Get-OfficePrinter -PaperSources 'Office printer'
+Send-OfficePdfPrinter -Path .\Report.pdf -PrinterName 'Office printer' `
+  -Pages '1-3' -PagesPerSheet 2 -Duplex LongEdge
+```
+
+Rerunning an archive verifies completed source and PDF hashes. Use `-RetryFailed` for corrected failed inputs. Completed inputs and outputs are never replaced automatically; changed settings or engine binaries require a new checkpoint and output directory. Source, output and state trees must be separate local folders. `-WhatIf` creates no PDF output, checkpoint state or print job. Known DOC import reductions require `-AllowLegacyImportLoss` and remain visible in diagnostics.
+
+The printer command returns a queue acceptance receipt, not a physical-delivery confirmation. Check the queue before retrying an interrupted submission. Windows file printers require `-OutputFilePath` naming a new file; macOS/Linux delivery uses CUPS command-line tools.
+
 ## Advanced document workflows
 
 Search a file, a PST/OST, several paths, or a whole mixed-format folder with ordinary PowerShell parameters. Registered formats are discovered automatically, individual unreadable files are reported without stopping the rest of the search, and each match includes its source path and document type:
