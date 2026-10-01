@@ -2,7 +2,7 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 3.0.8
+Help Version: 3.0.9
 Locale: en-US
 ---
 # PSWriteOffice Module
@@ -620,7 +620,7 @@ Runs a script block against editable worksheet rows.
 Exports objects or a CSV document to a CSV file.
 
 ### [Export-OfficeDocumentPdf](Export-OfficeDocumentPdf.md)
-Exports a Word, Excel, PowerPoint, Markdown, or RTF document to PDF.
+Exports Word, Excel, PowerPoint, HTML, Markdown, RTF, and literal text documents to PDF.
 
 ### [Export-OfficeExcel](Export-OfficeExcel.md)
 Exports PowerShell objects to an Excel workbook using an operator-friendly surface.
@@ -934,6 +934,9 @@ Reads high-level slide summaries from a presentation.
 ### [Get-OfficePowerPointTheme](Get-OfficePowerPointTheme.md)
 Gets theme information for a PowerPoint presentation master.
 
+### [Get-OfficePrinter](Get-OfficePrinter.md)
+Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.
+
 ### [Get-OfficeProtectionCapability](Get-OfficeProtectionCapability.md)
 Returns OfficeIMO's machine-readable protected-content support contract.
 
@@ -1129,6 +1132,9 @@ Creates discoverable sheet selection and rendering settings for Export-OfficeExc
 ### [New-OfficeHtmlConversionOptions](New-OfficeHtmlConversionOptions.md)
 Creates discoverable parsing, trust, and document settings for HTML conversion.
 
+### [New-OfficeHtmlPdfOptions](New-OfficeHtmlPdfOptions.md)
+Creates typed HTML rendering options for Export-OfficeDocumentPdf.
+
 ### [New-OfficeHtmlRenderOptions](New-OfficeHtmlRenderOptions.md)
 Creates discoverable layout, resource-limit, and rendering settings for HTML image export.
 
@@ -1197,6 +1203,9 @@ Creates an RTF document with plain paragraph content.
 
 ### [New-OfficeRtfPdfOptions](New-OfficeRtfPdfOptions.md)
 Creates discoverable RTF-to-PDF conversion options for Export-OfficeDocumentPdf.
+
+### [New-OfficeTextPdfOptions](New-OfficeTextPdfOptions.md)
+Creates literal text decoding and PDF layout settings for Export-OfficeDocumentPdf.
 
 ### [New-OfficeTextRun](New-OfficeTextRun.md)
 Creates a reusable rich text run specification for Word, Excel, PowerPoint, and PDF commands.
@@ -1317,6 +1326,9 @@ Searches one Reader result or every supported document below file and folder pat
 
 ### [Send-OfficeConfluenceAttachment](Send-OfficeConfluenceAttachment.md)
 Uploads or versions a Confluence page attachment.
+
+### [Send-OfficePdfPrinter](Send-OfficePdfPrinter.md)
+Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.
 
 ### [Set-OfficeConfluenceManagedSection](Set-OfficeConfluenceManagedSection.md)
 Safely replaces one marker-delimited section in a Confluence storage body.
