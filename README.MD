@@ -48,6 +48,8 @@ Use the [scenario-driven example library](Examples/README.md) for complete Word,
 
 `Export-OfficeDocumentPdf` accepts `.doc` and `.txt` files in Windows PowerShell 5.1 and PowerShell 7.4 or newer. TXT content is literal; Markdown and HTML syntax are retained as text. Legacy DOC conversion blocks known import loss unless explicitly accepted, and `-SourceConversionReportVariable` exposes the import reports separately from PDF rendering diagnostics.
 
+PDF export destinations must end in `.pdf`. Update scripts that previously used extensionless destinations or another extension before exporting.
+
 ```powershell
 Export-OfficeDocumentPdf -InputPath .\Archive.doc -Path .\Archive.pdf `
   -SourceConversionReportVariable ImportReports
