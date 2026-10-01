@@ -8,6 +8,48 @@ namespace PSWriteOffice.Tests;
 
 [Collection(PowerShellRunspaceCollection.Name)]
 public sealed class DocumentPdfCmdletTests {
+    [Fact]
+    public async Task StoppingDuringPdfGenerationDoesNotPublishTheDestination() {
+        string root = Path.Combine(Path.GetTempPath(), "pswriteoffice-pdf-stop-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        using var shaper = new PausedShaper();
+        try {
+            string font = new[] {
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf"),
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+            }.First(File.Exists);
+            var options = new PdfOptions { DefaultFont = PdfStandardFont.Courier, TextShapingProvider = shaper }
+                .EmbedStandardFont(PdfStandardFont.Courier, font);
+            var conversion = PdfPlainTextConverter.ToPdfDocumentResult("Stop during actual PDF generation", new PdfPlainTextOptions { PdfOptions = options });
+            string output = Path.Combine(root, "stopped.pdf");
+            var state = InitialSessionState.CreateDefault();
+            state.Commands.Add(new SessionStateCmdletEntry("Export-OfficeDocumentPdf", typeof(ExportOfficeDocumentPdfCommand), null));
+            using var runspace = RunspaceFactory.CreateRunspace(state); runspace.Open();
+            using var shell = PowerShell.Create(); shell.Runspace = runspace;
+            shell.AddCommand("Export-OfficeDocumentPdf").AddParameter("Document", conversion).AddParameter("Path", output);
+            IAsyncResult invocation = shell.BeginInvoke();
+            Assert.True(await Task.Run(() => shaper.Entered.Wait(TimeSpan.FromSeconds(15))), "The real font shaper was not reached during save.");
+            IAsyncResult stopping = shell.BeginStop(null, null);
+            Assert.True(SpinWait.SpinUntil(() => shell.InvocationStateInfo.State == PSInvocationState.Stopping, TimeSpan.FromSeconds(5)));
+            shaper.Release.Set();
+            await Task.Run(() => shell.EndStop(stopping));
+            Assert.Throws<PipelineStoppedException>(() => shell.EndInvoke(invocation));
+            Assert.False(File.Exists(output));
+            Assert.Empty(Directory.GetFiles(root, "*.tmp"));
+        } finally { shaper.Release.Set(); Directory.Delete(root, true); }
+    }
+
+    private sealed class PausedShaper : OfficeIMO.Drawing.IOfficeTextShapingProvider, IDisposable {
+        public ManualResetEventSlim Entered { get; } = new();
+        public ManualResetEventSlim Release { get; } = new();
+        public OfficeIMO.Drawing.OfficeTextShapingResult? ShapeText(OfficeIMO.Drawing.OfficeTextShapingRequest request) {
+            Entered.Set();
+            if (!Release.Wait(TimeSpan.FromSeconds(20))) throw new TimeoutException("Font shaping cancellation test timed out.");
+            return null;
+        }
+        public void Dispose() { Entered.Dispose(); Release.Dispose(); }
+    }
+
     [Theory]
     [InlineData(".txt")]
     [InlineData(".doc")]

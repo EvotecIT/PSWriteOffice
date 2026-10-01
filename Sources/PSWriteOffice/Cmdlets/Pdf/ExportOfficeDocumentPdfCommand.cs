@@ -213,17 +213,17 @@ public sealed class ExportOfficeDocumentPdfCommand : PSCmdlet {
     private PdfSaveResult SaveDocument(object document, string outputPath, string? sourcePath) {
         switch (document) {
             case PdfDocumentConversionResult converted:
-                return converted.SaveResult(outputPath);
+                return converted.SaveResult(outputPath, _cancellation.Token);
             case WordDocument word:
-                return word.SaveAsPdf(outputPath, WordOptions ?? new WordToPdfOptions());
+                return word.SaveAsPdf(outputPath, WordOptions ?? new WordToPdfOptions(), _cancellation.Token);
             case ExcelDocument excel:
-                return excel.SaveAsPdf(outputPath, ExcelOptions ?? new ExcelToPdfOptions());
+                return excel.SaveAsPdf(outputPath, ExcelOptions ?? new ExcelToPdfOptions(), _cancellation.Token);
             case PowerPointPresentation powerPoint:
-                return powerPoint.SaveAsPdf(outputPath, PowerPointOptions ?? new PowerPointToPdfOptions());
+                return powerPoint.SaveAsPdf(outputPath, PowerPointOptions ?? new PowerPointToPdfOptions(), _cancellation.Token);
             case MarkdownDoc markdown:
-                return markdown.SaveAsPdf(outputPath, PrepareMarkdownOptions(sourcePath));
+                return markdown.SaveAsPdf(outputPath, PrepareMarkdownOptions(sourcePath), _cancellation.Token);
             case RtfDocument rtf:
-                return rtf.SaveAsPdf(outputPath, RtfOptions ?? new RtfToPdfOptions());
+                return rtf.SaveAsPdf(outputPath, RtfOptions ?? new RtfToPdfOptions(), _cancellation.Token);
             default:
                 throw new PSArgumentException(
                     $"Document type '{document?.GetType().FullName ?? "<null>"}' cannot be exported to PDF. Use a WordDocument, ExcelDocument, PowerPointPresentation, MarkdownDoc, or RtfDocument.",
