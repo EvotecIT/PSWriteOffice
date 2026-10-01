@@ -592,6 +592,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 - `System.IO.FileInfo`
+- `OfficeIMO.Workflows.OfficeConversionBatchResult`
+- `OfficeIMO.Workflows.OfficeConversionBatchItemResult`
 
 ## RELATED LINKS
 
