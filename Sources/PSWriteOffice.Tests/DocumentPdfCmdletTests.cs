@@ -104,6 +104,31 @@ public sealed class DocumentPdfCmdletTests {
     }
 
     [Fact]
+    public void BatchExportsAndResumesNativeEncryptedOutputWithoutSourceCredentials() {
+        string root = Path.Combine(Path.GetTempPath(), "pswriteoffice-encrypted-batch-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try {
+            string input = Path.Combine(root, "one.txt"), output = Path.Combine(root, "output"), checkpoint = Path.Combine(root, "state");
+            File.WriteAllText(input, "Encrypted batch output");
+            var state = InitialSessionState.CreateDefault();
+            state.Commands.Add(new SessionStateCmdletEntry("Export-OfficeDocumentPdf", typeof(ExportOfficeDocumentPdfCommand), null));
+            using var runspace = RunspaceFactory.CreateRunspace(state); runspace.Open();
+            using var shell = PowerShell.Create(); shell.Runspace = runspace;
+            var settings = new PdfPlainTextOptions { PdfOptions = new PdfOptions().SetEncryption("Synthetic output reader", "Synthetic output owner") };
+            void AddCommand() => shell.AddCommand("Export-OfficeDocumentPdf").AddParameter("InputPaths", new[] { input })
+                .AddParameter("OutputDirectory", output).AddParameter("CheckpointDirectory", checkpoint).AddParameter("TextOptions", settings);
+            AddCommand();
+            var first = Assert.IsType<OfficeIMO.Workflows.OfficeConversionBatchResult>(Assert.Single(shell.Invoke()).BaseObject);
+            Assert.False(shell.HadErrors, string.Join("\n", shell.Streams.Error)); Assert.Equal(1, first.Completed); Assert.Equal(0, first.Failed);
+            var encrypted = PdfDocument.Load(Path.Combine(output, "one.txt.pdf"),
+                new PdfLoadOptions { Password = "Synthetic output reader" });
+            Assert.True(encrypted.Inspect().Security.HasEncryption); Assert.Single(encrypted.Read().Pages);
+            shell.Commands.Clear(); AddCommand();
+            Assert.Equal(1, Assert.IsType<OfficeIMO.Workflows.OfficeConversionBatchResult>(Assert.Single(shell.Invoke()).BaseObject).Reused);
+        } finally { Directory.Delete(root, true); }
+    }
+
+    [Fact]
     public void FileInfoPipelineStreamsMixedOutcomesAndRetainsSummaryAndNativeOptions() {
         string root = Path.Combine(Path.GetTempPath(), "pswriteoffice-batch-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
