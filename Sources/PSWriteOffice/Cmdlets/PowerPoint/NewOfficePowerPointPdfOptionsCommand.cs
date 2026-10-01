@@ -92,7 +92,7 @@ public sealed class NewOfficePowerPointPdfOptionsCommand : PSCmdlet {
     [Parameter]
     public SwitchParameter AllowSystemFontEmbedding { get; set; }
 
-    /// <summary>Allow embedding fonts stored in the presentation.</summary>
+    /// <summary>Allow embedding installed fonts selected by a trusted presentation. System-font embedding must also be enabled.</summary>
     [Parameter]
     public SwitchParameter AllowDocumentFontEmbedding { get; set; }
 

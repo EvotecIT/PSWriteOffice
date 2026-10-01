@@ -24,6 +24,20 @@ BeforeAll {
 }
 
 Describe 'Office document PDF exports' {
+    It 'preserves the caller font-embedding policy when constructing Word options' {
+        $balanced = New-OfficeWordPdfOptions
+        $balanced.ResourcePolicy.AllowSystemFontEmbedding | Should -BeTrue
+        $balanced.ResourcePolicy.AllowDocumentFontEmbedding | Should -BeFalse
+
+        $template = New-OfficeWordPdfOptions -AllowSystemFontEmbedding -AllowDocumentFontEmbedding
+        $template.ResourcePolicy.AllowSystemFontEmbedding | Should -BeTrue
+        $template.ResourcePolicy.AllowDocumentFontEmbedding | Should -BeTrue
+
+        $restricted = New-OfficeWordPdfOptions -AllowDocumentFontEmbedding -AllowSystemFontEmbedding:$false
+        $restricted.ResourcePolicy.AllowDocumentFontEmbedding | Should -BeTrue
+        $restricted.ResourcePolicy.AllowSystemFontEmbedding | Should -BeFalse
+    }
+
     It 'builds every format-specific PDF option through ordinary PowerShell parameters' {
         $word = New-OfficeWordPdfOptions `
             -Title 'Service report' `

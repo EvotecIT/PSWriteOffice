@@ -29,7 +29,7 @@ Export-OfficeDocumentPdf -InputPath .\Report.docx -Path .\Report.pdf -WordOption
 ## PARAMETERS
 
 ### -AllowDocumentFontEmbedding
-Allow embedding fonts stored in the Word document.
+Allow embedding installed fonts selected by a trusted Word document. System-font embedding must also be enabled.
 
 ```yaml
 Type: SwitchParameter

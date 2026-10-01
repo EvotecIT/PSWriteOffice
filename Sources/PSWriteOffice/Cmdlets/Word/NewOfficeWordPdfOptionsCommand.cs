@@ -92,7 +92,7 @@ public sealed class NewOfficeWordPdfOptionsCommand : PSCmdlet {
     [Parameter]
     public SwitchParameter AllowSystemFontEmbedding { get; set; }
 
-    /// <summary>Allow embedding fonts stored in the Word document.</summary>
+    /// <summary>Allow embedding installed fonts selected by a trusted Word document. System-font embedding must also be enabled.</summary>
     [Parameter]
     public SwitchParameter AllowDocumentFontEmbedding { get; set; }
 
