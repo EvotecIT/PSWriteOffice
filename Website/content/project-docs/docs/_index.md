@@ -50,7 +50,7 @@ PSWriteOffice is the PowerShell surface for OfficeIMO. Use these guides to choos
 - [Migrate from PSWriteWord](/docs/pswriteoffice/migrate-from-pswriteword/)
 - [Migrate from PSWriteExcel](/docs/pswriteoffice/migrate-from-pswriteexcel/)
 - [Migrate from PSWritePDF](/docs/pswriteoffice/migrate-from-pswritepdf/)
-- [PSWriteOffice product overview](/products/pswriteoffice/)
+- [PSWriteOffice project hub](https://evotec.xyz/projects/pswriteoffice/)
 
 ## Notes
 
