@@ -54,7 +54,7 @@ $familyDefinitions = @(
         id = 'reader'; title = 'Reader, extraction, and OCR'; description = 'Detect formats and extract normalized documents, chunks, tables, visuals, assets, OCR text, and ingest results.'
         docs = 'reader'; api = '/api/powershell/'; examples = 'https://github.com/EvotecIT/PSWriteOffice/tree/main/Examples/Reader'
         samples = @('New-OfficeDocumentReader', 'Get-OfficeDocumentChunk', 'Get-OfficeDocumentTable', 'Search-OfficeDocument')
-        match = { param($name) ($name -match 'OfficeDocument' -and $name -notin 'Get-OfficeDocumentPageMarkdown', 'Export-OfficeDocumentPdf') -or $name -match 'OfficeReader|OfficeImageText' }
+        match = { param($name) ($name -match 'OfficeDocument' -and $name -notin 'Get-OfficeDocumentPageMarkdown', 'Export-OfficeDocumentPdf') -or $name -match 'OfficeReader|OfficeImageText|OfficeImageDocument|^ConvertFrom-OfficeImage$' }
     }
     [ordered]@{
         id = 'archive-migration'; title = 'Archive migration and evidence'; description = 'Inspect package safety and provenance, convert iWork and offline OneNote content, and retain fidelity evidence.'

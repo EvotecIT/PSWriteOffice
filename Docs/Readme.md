@@ -2,7 +2,7 @@
 Module Name: PSWriteOffice
 Module Guid: d75a279d-30c2-4c2d-ae0d-12f1f3bf4d39
 Download Help Link: https://github.com/EvotecIT/PSWriteOffice
-Help Version: 3.0.8
+Help Version: 3.0.9
 Locale: en-US
 ---
 # PSWriteOffice Module
@@ -487,6 +487,9 @@ Converts Markdown to native AsciiDoc with fidelity diagnostics.
 ### [ConvertFrom-OfficeCsv](ConvertFrom-OfficeCsv.md)
 Converts CSV text to PSCustomObjects or dictionaries.
 
+### [ConvertFrom-OfficeImage](ConvertFrom-OfficeImage.md)
+Exports a recognized image as editable Excel, Word, text, Markdown, HTML, JSON, CSV or searchable PDF.
+
 ### [ConvertFrom-OfficeIWork](ConvertFrom-OfficeIWork.md)
 Converts Pages, Numbers, or Keynote into the matching editable Microsoft Office format.
 
@@ -813,6 +816,9 @@ Gets worksheet view settings such as frozen panes and gridline visibility.
 
 ### [Get-OfficeExcelWriteReservation](Get-OfficeExcelWriteReservation.md)
 Gets workbook write-reservation metadata.
+
+### [Get-OfficeImageDocument](Get-OfficeImageDocument.md)
+Recognizes an image as editable text, reading order and detected tables, with review evidence.
 
 ### [Get-OfficeImageText](Get-OfficeImageText.md)
 Recognizes text in an image with automatic local OCR runtime discovery.

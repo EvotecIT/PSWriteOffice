@@ -247,14 +247,17 @@ public sealed class ConfluenceCmdletTests
         Assert.True(attribute.SupportsShouldProcess);
     }
 
-    private static string FindRepositoryRoot()
+    private static string FindRepositoryRoot([System.Runtime.CompilerServices.CallerFilePath] string sourceFile = "")
     {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory != null)
+        foreach (string start in new[] { AppContext.BaseDirectory, Environment.CurrentDirectory, Path.GetDirectoryName(sourceFile)! })
         {
-            if (Directory.Exists(Path.Combine(directory.FullName, "Examples")) &&
-                Directory.Exists(Path.Combine(directory.FullName, "Sources"))) return directory.FullName;
-            directory = directory.Parent;
+            var directory = new DirectoryInfo(start);
+            while (directory != null)
+            {
+                if (Directory.Exists(Path.Combine(directory.FullName, "Examples")) &&
+                    Directory.Exists(Path.Combine(directory.FullName, "Sources"))) return directory.FullName;
+                directory = directory.Parent;
+            }
         }
         throw new DirectoryNotFoundException("PSWriteOffice repository root was not found.");
     }
