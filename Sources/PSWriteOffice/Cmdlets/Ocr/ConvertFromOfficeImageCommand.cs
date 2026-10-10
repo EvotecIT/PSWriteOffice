@@ -25,9 +25,7 @@ namespace PSWriteOffice.Cmdlets.Ocr;
 /// <example>
 /// <summary>Customize CSV formatting while retaining formula escaping.</summary>
 /// <prefix>PS&gt; </prefix>
-/// <code>$csv = [OfficeIMO.CSV.CsvSaveOptions]::new()
-/// $csv.Delimiter = ';'
-/// $csv.FormulaInjectionPolicy = 'Escape'
+/// <code>$csv = @{ Delimiter = ';'; FormulaInjectionPolicy = 'Escape' }
 /// $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.csv -CsvOptions $csv</code>
 /// <para>Supplied options are a complete policy. Set Escape explicitly when constructing custom options for spreadsheet consumption.</para>
 /// </example>
