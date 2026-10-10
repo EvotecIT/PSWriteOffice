@@ -60,7 +60,7 @@ public sealed class ConvertFromOfficeImageCommand : AsyncPSCmdlet
     [Parameter]
     public PdfToHtmlOptions? HtmlOptions { get; set; }
 
-    /// <summary>CSV field formatting and formula policy. When omitted, formula-like source text is escaped, including negative numeric text. Supplied options retain their FormulaInjectionPolicy; a new CsvSaveOptions object defaults to Preserve. Set Escape explicitly when customizing options for spreadsheet consumption.</summary>
+    /// <para>CSV field formatting and formula policy. When omitted, formula-like source text is escaped, including negative numeric text. Supplied options retain their FormulaInjectionPolicy; a new CsvSaveOptions object defaults to Preserve. Set Escape explicitly when customizing options for spreadsheet consumption.</para>
     /// <para>Every recognized table row is written as data without a synthesized header, regardless of IncludeHeader. This command controls UTF-8, uncompressed file output and replacement through Force; CsvOptions controls field formatting and formula handling.</para>
     [Parameter]
     public CsvSaveOptions? CsvOptions { get; set; }
