@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Get-OfficeOpenDocument
 ## SYNOPSIS
-Loads a native ODT, ODS, or ODP document.
+Loads a native ODT, ODS, ODP, or ODG document.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,7 +15,7 @@ Get-OfficeOpenDocument [-Path] <string> [-Options <OdfLoadOptions>] [-Password <
 ```
 
 ## DESCRIPTION
-Loads a native ODT, ODS, or ODP document.
+Loads a native ODT, ODS, ODP, or ODG document.
 
 ## EXAMPLES
 
@@ -204,7 +204,7 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-Path to an ODT, ODS, or ODP file.
+Path to an ODT, ODS, ODP, or ODG file.
 
 ```yaml
 Type: String
@@ -232,6 +232,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 - `OfficeIMO.OpenDocument.OdtDocument`
 - `OfficeIMO.OpenDocument.OdsDocument`
 - `OfficeIMO.OpenDocument.OdpPresentation`
+- `OfficeIMO.OpenDocument.OdgDocument`
 
 ## RELATED LINKS
 

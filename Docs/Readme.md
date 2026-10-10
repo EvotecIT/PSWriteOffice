@@ -848,7 +848,7 @@ Gets Markdown tables from a Markdown document.
 Reads an offline OneNote section, notebook hierarchy, or packaged notebook.
 
 ### [Get-OfficeOpenDocument](Get-OfficeOpenDocument.md)
-Loads a native ODT, ODS, or ODP document.
+Loads a native ODT, ODS, ODP, or ODG document.
 
 ### [Get-OfficePackageSecurity](Get-OfficePackageSecurity.md)
 Inspects an Open XML or compound Office package without opening active content.
@@ -1145,7 +1145,7 @@ Creates a Markdown document using a DSL scriptblock.
 Creates discoverable Markdown-to-PDF conversion options for Export-OfficeDocumentPdf.
 
 ### [New-OfficeOpenDocument](New-OfficeOpenDocument.md)
-Creates a native ODT, ODS, or ODP document.
+Creates a native ODT, ODS, ODP, or ODG document.
 
 ### [New-OfficePdf](New-OfficePdf.md)
 Creates a PDF document using the OfficeIMO.Pdf composition engine.

@@ -62839,7 +62839,7 @@ Excel and CSV contain detected tables only. CSV requires exactly one table. Empt
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>CsvOptions</maml:name>
           <maml:description>
-            <maml:para>CSV culture, delimiter, quoting and formula policy. The default escapes formula-like source text, including negative numeric text. Preserve requires an explicit option.</maml:para>
+            <maml:para>CSV culture, delimiter, quoting and formula policy. When omitted, formula-like source text is escaped, including negative numeric text. Supplied options retain their FormulaInjectionPolicy; a new CsvSaveOptions object defaults to Preserve. Set Escape explicitly when customizing options for spreadsheet consumption.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">CsvSaveOptions</command:parameterValue>
           <dev:type>
@@ -62950,7 +62950,7 @@ Excel and CSV contain detected tables only. CSV requires exactly one table. Empt
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>CsvOptions</maml:name>
         <maml:description>
-          <maml:para>CSV culture, delimiter, quoting and formula policy. The default escapes formula-like source text, including negative numeric text. Preserve requires an explicit option.</maml:para>
+          <maml:para>CSV culture, delimiter, quoting and formula policy. When omitted, formula-like source text is escaped, including negative numeric text. Supplied options retain their FormulaInjectionPolicy; a new CsvSaveOptions object defaults to Preserve. Set Escape explicitly when customizing options for spreadsheet consumption.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">CsvSaveOptions</command:parameterValue>
         <dev:type>
@@ -63094,6 +63094,19 @@ Excel and CSV contain detected tables only. CSV requires exactly one table. Empt
             $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.docx</dev:code>
         <dev:remarks>
           <maml:para>Excel receives caller-confirmed headers and typed columns. PassThru returns recognition evidence and the format conversion report.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Customize CSV formatting while retaining formula escaping.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$csv = [OfficeIMO.CSV.CsvSaveOptions]::new()&#xD;
+            $csv.Delimiter = ';'&#xD;
+            $csv.FormulaInjectionPolicy = 'Escape'&#xD;
+            $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.csv -CsvOptions $csv</dev:code>
+        <dev:remarks>
+          <maml:para>Supplied options are a complete policy. Set Escape explicitly when constructing custom options for spreadsheet consumption.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -115851,11 +115864,11 @@ extraction, hashing, and chunk shaping.</maml:para>
       <command:verb>Get</command:verb>
       <command:noun>OfficeOpenDocument</command:noun>
       <maml:description>
-        <maml:para>Loads a native ODT, ODS, or ODP document.</maml:para>
+        <maml:para>Loads a native ODT, ODS, ODP, or ODG document.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Loads a native ODT, ODS, or ODP document.</maml:para>
+      <maml:para>Loads a native ODT, ODS, ODP, or ODG document.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -115995,7 +116008,7 @@ extraction, hashing, and chunk shaping.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>Path</maml:name>
           <maml:description>
-            <maml:para>Path to an ODT, ODS, or ODP file.</maml:para>
+            <maml:para>Path to an ODT, ODS, ODP, or ODG file.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -116142,7 +116155,7 @@ extraction, hashing, and chunk shaping.</maml:para>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>Path</maml:name>
         <maml:description>
-          <maml:para>Path to an ODT, ODS, or ODP file.</maml:para>
+          <maml:para>Path to an ODT, ODS, ODP, or ODG file.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -116178,6 +116191,11 @@ extraction, hashing, and chunk shaping.</maml:para>
       <command:returnValue>
         <dev:type>
           <maml:name>OfficeIMO.OpenDocument.OdpPresentation</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.OpenDocument.OdgDocument</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -147566,11 +147584,11 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:verb>New</command:verb>
       <command:noun>OfficeOpenDocument</command:noun>
       <maml:description>
-        <maml:para>Creates a native ODT, ODS, or ODP document.</maml:para>
+        <maml:para>Creates a native ODT, ODS, ODP, or ODG document.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Creates a native ODT, ODS, or ODP document.</maml:para>
+      <maml:para>Creates a native ODT, ODS, ODP, or ODG document.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -147590,7 +147608,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
           <maml:name>Kind</maml:name>
           <maml:description>
-            <maml:para>OpenDocument text, spreadsheet, or presentation kind.</maml:para>
+            <maml:para>OpenDocument text, spreadsheet, presentation, or graphics kind.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">OdfDocumentKind</command:parameterValue>
           <command:parameterValueGroup>
@@ -147659,7 +147677,7 @@ This does not discover, bypass, or crack a missing password.</maml:para>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
         <maml:name>Kind</maml:name>
         <maml:description>
-          <maml:para>OpenDocument text, spreadsheet, or presentation kind.</maml:para>
+          <maml:para>OpenDocument text, spreadsheet, presentation, or graphics kind.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">OdfDocumentKind</command:parameterValue>
         <command:parameterValueGroup>
@@ -147745,6 +147763,18 @@ This does not discover, bypass, or crack a missing password.</maml:para>
                 Add-OfficeOpenDocumentHeading -Text 'Service report' -Level 1&#xD;
                 Add-OfficeOpenDocumentParagraph -Text 'Generated by PSWriteOffice.'&#xD;
             }</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Create an OpenDocument drawing through its native object model.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$drawing = New-OfficeOpenDocument -Kind Graphics&#xD;
+            $page = $drawing.AddPage('Overview')&#xD;
+            $drawing | Save-OfficeOpenDocument -Path .\Overview.odg</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>

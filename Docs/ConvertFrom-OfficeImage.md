@@ -29,10 +29,20 @@ $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.docx
 
 Excel receives caller-confirmed headers and typed columns. PassThru returns recognition evidence and the format conversion report.
 
+### EXAMPLE 2
+```powershell
+PS> $csv = [OfficeIMO.CSV.CsvSaveOptions]::new()
+$csv.Delimiter = ';'
+$csv.FormulaInjectionPolicy = 'Escape'
+$image | ConvertFrom-OfficeImage -OutputPath .\Ledger.csv -CsvOptions $csv
+```
+
+Supplied options are a complete policy. Set Escape explicitly when constructing custom options for spreadsheet consumption.
+
 ## PARAMETERS
 
 ### -CsvOptions
-CSV culture, delimiter, quoting and formula policy. The default escapes formula-like source text, including negative numeric text. Preserve requires an explicit option.
+CSV culture, delimiter, quoting and formula policy. When omitted, formula-like source text is escaped, including negative numeric text. Supplied options retain their FormulaInjectionPolicy; a new CsvSaveOptions object defaults to Preserve. Set Escape explicitly when customizing options for spreadsheet consumption.
 
 ```yaml
 Type: CsvSaveOptions

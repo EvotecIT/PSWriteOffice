@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # New-OfficeOpenDocument
 ## SYNOPSIS
-Creates a native ODT, ODS, or ODP document.
+Creates a native ODT, ODS, ODP, or ODG document.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,7 +15,7 @@ New-OfficeOpenDocument [-Kind] <OdfDocumentKind> [[-Path] <string>] [[-Content] 
 ```
 
 ## DESCRIPTION
-Creates a native ODT, ODS, or ODP document.
+Creates a native ODT, ODS, ODP, or ODG document.
 
 ## EXAMPLES
 
@@ -29,6 +29,14 @@ PS> New-OfficeOpenDocument -Kind Text -Path .\Report.odt -Content {
 
 
 ### EXAMPLE 2
+```powershell
+PS> $drawing = New-OfficeOpenDocument -Kind Graphics
+$page = $drawing.AddPage('Overview')
+$drawing | Save-OfficeOpenDocument -Path .\Overview.odg
+```
+
+
+### EXAMPLE 3
 ```powershell
 PS> New-OfficeOpenDocument -Kind Spreadsheet -Path .\Status.ods -Content {
     Add-OfficeOpenDocumentSheet -Name 'Services' -Content {
@@ -60,7 +68,7 @@ Accept wildcard characters: False
 ```
 
 ### -Kind
-OpenDocument text, spreadsheet, or presentation kind.
+OpenDocument text, spreadsheet, presentation, or graphics kind.
 
 ```yaml
 Type: OdfDocumentKind
