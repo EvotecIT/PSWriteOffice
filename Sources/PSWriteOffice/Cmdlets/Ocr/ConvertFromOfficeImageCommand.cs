@@ -22,6 +22,15 @@ namespace PSWriteOffice.Cmdlets.Ocr;
 /// $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.docx</code>
 /// <para>Excel receives caller-confirmed headers and typed columns. PassThru returns recognition evidence and the format conversion report.</para>
 /// </example>
+/// <example>
+/// <summary>Customize CSV formatting while retaining formula escaping.</summary>
+/// <prefix>PS&gt; </prefix>
+/// <code>$csv = [OfficeIMO.CSV.CsvSaveOptions]::new()
+/// $csv.Delimiter = ';'
+/// $csv.FormulaInjectionPolicy = 'Escape'
+/// $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.csv -CsvOptions $csv</code>
+/// <para>Supplied options are a complete policy. Set Escape explicitly when constructing custom options for spreadsheet consumption.</para>
+/// </example>
 [Cmdlet(VerbsData.ConvertFrom, "OfficeImage", SupportsShouldProcess = true)]
 [OutputType(typeof(FileInfo))]
 [OutputType(typeof(OfficeImageConversionResult))]
@@ -53,7 +62,7 @@ public sealed class ConvertFromOfficeImageCommand : AsyncPSCmdlet
     [Parameter]
     public PdfToHtmlOptions? HtmlOptions { get; set; }
 
-    /// <summary>CSV culture, delimiter, quoting and formula policy. The default escapes formula-like source text, including negative numeric text. Preserve requires an explicit option.</summary>
+    /// <summary>CSV culture, delimiter, quoting and formula policy. When omitted, formula-like source text is escaped, including negative numeric text. Supplied options retain their FormulaInjectionPolicy; a new CsvSaveOptions object defaults to Preserve. Set Escape explicitly when customizing options for spreadsheet consumption.</summary>
     [Parameter]
     public CsvSaveOptions? CsvOptions { get; set; }
 

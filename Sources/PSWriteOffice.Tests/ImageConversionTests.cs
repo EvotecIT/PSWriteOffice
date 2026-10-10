@@ -1,6 +1,7 @@
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using OfficeIMO.Drawing;
+using OfficeIMO.CSV;
 using OfficeIMO.Excel;
 using OfficeIMO.Excel.Pdf;
 using OfficeIMO.Ocr;
@@ -43,6 +44,46 @@ public sealed class ImageConversionTests
             Assert.True(csvOptions.IncludeHeader);
             OfficeImageExporter.Export(review, Path.Combine(directory, "ledger.json"), false, options, null, default);
             Assert.Equal(1, calls);
+        }
+        finally { Directory.Delete(directory, recursive: true); }
+    }
+
+    [Fact]
+    public async Task CsvDefaultsEscapeAndCompleteCallerOptionsRetainTheirPolicy()
+    {
+        string directory = NewDirectory();
+        try
+        {
+            var review = await Source().PrepareSearchableOcrAsync(new DelegateOcrEngine("formula-table", (_, _) => Task.FromResult(new OcrResult
+            {
+                Spans = new[] {
+                    Word("Value", 20, 20, 100), Word("Amount", 200, 20, 45),
+                    Word("=SUM(1+1)", 20, 40, 100), Word("1", 200, 40, 40),
+                    Word("+cmd", 20, 60, 100), Word("2", 200, 60, 40),
+                    Word("-13.50", 20, 80, 100), Word("3", 200, 80, 40),
+                    Word("@name", 20, 100, 100), Word("4", 200, 100, 40)
+                }
+            })));
+            var cases = new (string Name, CsvSaveOptions? Options, string Delimiter, bool Escape)[] {
+                ("default", null, ",", true),
+                ("custom-default", new CsvSaveOptions { Delimiter = ';' }, ";", false),
+                ("custom-escape", new CsvSaveOptions { Delimiter = ';', FormulaInjectionPolicy = CsvFormulaInjectionPolicy.Escape }, ";", true),
+                ("custom-preserve", new CsvSaveOptions { Delimiter = ';', FormulaInjectionPolicy = CsvFormulaInjectionPolicy.Preserve }, ";", false)
+            };
+            foreach (var item in cases)
+            {
+                string path = Path.Combine(directory, item.Name + ".csv");
+                OfficeImageExporter.Export(review, path, false, new(), null, default, csvOptions: item.Options);
+                string[] lines = File.ReadAllLines(path);
+                Assert.Equal(new[] { "Value" + item.Delimiter + "Amount" }
+                    .Concat(new[] { "=SUM(1+1)", "+cmd", "-13.50", "@name" }
+                        .Select((value, index) => (item.Escape ? "'" : "") + value + item.Delimiter + (index + 1))), lines);
+                if (item.Options != null)
+                {
+                    Assert.True(item.Options.IncludeHeader);
+                    Assert.Equal(item.Escape ? CsvFormulaInjectionPolicy.Escape : CsvFormulaInjectionPolicy.Preserve, item.Options.FormulaInjectionPolicy);
+                }
+            }
         }
         finally { Directory.Delete(directory, recursive: true); }
     }
