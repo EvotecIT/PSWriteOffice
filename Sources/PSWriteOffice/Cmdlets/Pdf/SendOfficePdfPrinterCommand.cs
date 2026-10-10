@@ -10,7 +10,7 @@ using PSWriteOffice.Services.Pdf;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
-/// <summary>Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.</summary>
+/// <summary>Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.4 or newer.</summary>
 /// <para>The returned receipt proves queue acceptance. It does not prove physical delivery. Check the queue after an interrupted submission before retrying.</para>
 /// <example><summary>Print selected PDF pages as two pages per sheet.</summary><prefix>PS&gt; </prefix>
 /// <code>Send-OfficePdfPrinter -Path .\Report.pdf -PrinterName 'Office printer' -Pages '1-3' -PagesPerSheet 2 -Duplex LongEdge</code></example>

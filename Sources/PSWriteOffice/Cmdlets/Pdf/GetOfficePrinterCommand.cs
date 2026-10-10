@@ -7,7 +7,7 @@ using OfficeIMO.Workflows;
 
 namespace PSWriteOffice.Cmdlets.Pdf;
 
-/// <summary>Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.</summary>
+/// <summary>Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.4 or newer.</summary>
 /// <example><summary>Discover queues and trays.</summary><prefix>PS&gt; </prefix>
 /// <code>Get-OfficePrinter
 /// Get-OfficePrinter -PaperSources 'Office printer'</code></example>
