@@ -115,15 +115,20 @@ public sealed class DocumentPdfCmdletTests {
         Directory.CreateDirectory(input);
         try {
             string[] paths = Enumerable.Range(0, 103).Select(index => Path.Combine(input, index + ".docx")).ToArray();
-            foreach (string path in paths) File.WriteAllText(path, "Malformed package fixture");
+            foreach (string path in paths) {
+                File.WriteAllText(path, "Malformed package fixture");
+            }
             var state = InitialSessionState.CreateDefault();
             state.Commands.Add(new SessionStateCmdletEntry("Export-OfficeDocumentPdf", typeof(ExportOfficeDocumentPdfCommand), null));
             using var runspace = RunspaceFactory.CreateRunspace(state); runspace.Open();
             using var shell = PowerShell.Create(); shell.Runspace = runspace;
             shell.AddCommand("Export-OfficeDocumentPdf").AddParameter("OutputDirectory", Path.Combine(root, "output"))
                 .AddParameter("MaximumConcurrency", 4).AddParameter("SummaryVariable", "summary");
-            if (itemResults) shell.AddParameter("InputPaths", paths).AddParameter("ItemResults");
-            else shell.AddParameter("InputDirectory", input);
+            if (itemResults) {
+                shell.AddParameter("InputPaths", paths).AddParameter("ItemResults");
+            } else {
+                shell.AddParameter("InputDirectory", input);
+            }
             var output = shell.Invoke();
             Assert.False(shell.HadErrors, string.Join("\n", shell.Streams.Error));
             var summary = Assert.IsType<OfficeIMO.Workflows.OfficeConversionBatchResult>(runspace.SessionStateProxy.GetVariable("summary"));

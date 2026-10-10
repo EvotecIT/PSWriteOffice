@@ -83,8 +83,9 @@ public sealed partial class ExportOfficeDocumentPdfCommand {
         if (!ShouldProcess(request.OutputDirectory, "Export selected documents to PDF")) return;
         var progress = new BatchProgress(this);
         var result = await new OfficeWorkflowRunner().RunBatchAsync(request, progress, CancelToken);
-        if (!ItemResults.IsPresent && progress.Failures > BatchProgress.MaximumFailureWarnings)
+        if (!ItemResults.IsPresent && progress.Failures > BatchProgress.MaximumFailureWarnings) {
             WriteWarning($"{progress.Failures - BatchProgress.MaximumFailureWarnings} further failure messages were suppressed. Use -ItemResults for structured per-file outcomes.");
+        }
         // Session variables are accessed on the captured pipeline context after the await.
         PdfCommandUtilities.SetVariable(this, SummaryVariable, result);
         if (!ItemResults.IsPresent) WriteObject(result);
@@ -96,9 +97,11 @@ public sealed partial class ExportOfficeDocumentPdfCommand {
         private int _failures;
         public int Failures => Volatile.Read(ref _failures);
         public void Report(OfficeConversionBatchItemResult item) {
-            if (command.ItemResults.IsPresent) command.WriteObject(item);
-            else if (item.Status == OfficeWorkflowStatus.Failed && Interlocked.Increment(ref _failures) <= MaximumFailureWarnings)
+            if (command.ItemResults.IsPresent) {
+                command.WriteObject(item);
+            } else if (item.Status == OfficeWorkflowStatus.Failed && Interlocked.Increment(ref _failures) <= MaximumFailureWarnings) {
                 command.WriteWarning(item.InputPath + ": " + item.Summary);
+            }
         }
     }
 #endif
