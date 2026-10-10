@@ -3,12 +3,12 @@ using OfficeIMO.OpenDocument;
 
 namespace PSWriteOffice.Cmdlets.OpenDocument;
 
-/// <summary>Loads a native ODT, ODS, or ODP document.</summary>
+/// <summary>Loads a native ODT, ODS, ODP, or ODG document.</summary>
 [Cmdlet(VerbsCommon.Get, "OfficeOpenDocument")]
-[OutputType(typeof(OdfDocument), typeof(OdtDocument), typeof(OdsDocument), typeof(OdpPresentation))]
+[OutputType(typeof(OdfDocument), typeof(OdtDocument), typeof(OdsDocument), typeof(OdpPresentation), typeof(OdgDocument))]
 public sealed class GetOfficeOpenDocumentCommand : PSCmdlet
 {
-    /// <summary>Path to an ODT, ODS, or ODP file.</summary>
+    /// <summary>Path to an ODT, ODS, ODP, or ODG file.</summary>
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
     public string Path { get; set; } = string.Empty;
 

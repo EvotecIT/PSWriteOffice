@@ -13,6 +13,7 @@ internal static class OpenDocumentCommandUtilities
             OdfDocumentKind.Text => ".odt",
             OdfDocumentKind.Spreadsheet => ".ods",
             OdfDocumentKind.Presentation => ".odp",
+            OdfDocumentKind.Graphics => ".odg",
             _ => throw new InvalidOperationException("Unsupported OpenDocument kind.")
         };
         ValidateExtension(path, expected, kind, parameterName);
