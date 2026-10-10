@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
+using System.Threading;
 using System.Threading.Tasks;
 #if !FRAMEWORK
 using OfficeIMO.Workflows;
@@ -50,7 +51,7 @@ public sealed partial class ExportOfficeDocumentPdfCommand {
     /// <summary>Retry recorded failures; completed items remain protected.</summary>
     [Parameter(ParameterSetName = ParameterSetDirectory)] [Parameter(ParameterSetName = ParameterSetFiles)]
     public SwitchParameter RetryFailed { get; set; }
-    /// <summary>Stream structured per-file outcomes instead of emitting the final summary.</summary>
+    /// <summary>Stream every structured per-file outcome instead of the final summary. Summary mode reports at most 100 detailed failure warnings and one suppressed-count warning.</summary>
     [Parameter(ParameterSetName = ParameterSetDirectory)] [Parameter(ParameterSetName = ParameterSetFiles)]
     public SwitchParameter ItemResults { get; set; }
     /// <summary>Variable receiving the bounded batch summary, including when ItemResults is selected.</summary>
@@ -80,7 +81,10 @@ public sealed partial class ExportOfficeDocumentPdfCommand {
             }
         };
         if (!ShouldProcess(request.OutputDirectory, "Export selected documents to PDF")) return;
-        var result = await new OfficeWorkflowRunner().RunBatchAsync(request, new BatchProgress(this), CancelToken);
+        var progress = new BatchProgress(this);
+        var result = await new OfficeWorkflowRunner().RunBatchAsync(request, progress, CancelToken);
+        if (!ItemResults.IsPresent && progress.Failures > BatchProgress.MaximumFailureWarnings)
+            WriteWarning($"{progress.Failures - BatchProgress.MaximumFailureWarnings} further failure messages were suppressed. Use -ItemResults for structured per-file outcomes.");
         // Session variables are accessed on the captured pipeline context after the await.
         PdfCommandUtilities.SetVariable(this, SummaryVariable, result);
         if (!ItemResults.IsPresent) WriteObject(result);
@@ -88,9 +92,13 @@ public sealed partial class ExportOfficeDocumentPdfCommand {
     }
 #if !FRAMEWORK
     private sealed class BatchProgress(ExportOfficeDocumentPdfCommand command) : IProgress<OfficeConversionBatchItemResult> {
+        internal const int MaximumFailureWarnings = 100;
+        private int _failures;
+        public int Failures => Volatile.Read(ref _failures);
         public void Report(OfficeConversionBatchItemResult item) {
             if (command.ItemResults.IsPresent) command.WriteObject(item);
-            else if (item.Status == OfficeWorkflowStatus.Failed) command.WriteWarning(item.InputPath + ": " + item.Summary);
+            else if (item.Status == OfficeWorkflowStatus.Failed && Interlocked.Increment(ref _failures) <= MaximumFailureWarnings)
+                command.WriteWarning(item.InputPath + ": " + item.Summary);
         }
     }
 #endif

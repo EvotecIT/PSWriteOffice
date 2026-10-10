@@ -106,6 +106,43 @@ public sealed class DocumentPdfCmdletTests {
         } finally { Directory.Delete(root, true); }
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void FailedBatchBoundsWarningsWithoutLosingSummaryOrStructuredOutcomes(bool itemResults) {
+        string root = Path.Combine(AppContext.BaseDirectory, "pswriteoffice-failed-batch-" + Guid.NewGuid().ToString("N"));
+        string input = Path.Combine(root, "source");
+        Directory.CreateDirectory(input);
+        try {
+            string[] paths = Enumerable.Range(0, 103).Select(index => Path.Combine(input, index + ".docx")).ToArray();
+            foreach (string path in paths) File.WriteAllText(path, "Malformed package fixture");
+            var state = InitialSessionState.CreateDefault();
+            state.Commands.Add(new SessionStateCmdletEntry("Export-OfficeDocumentPdf", typeof(ExportOfficeDocumentPdfCommand), null));
+            using var runspace = RunspaceFactory.CreateRunspace(state); runspace.Open();
+            using var shell = PowerShell.Create(); shell.Runspace = runspace;
+            shell.AddCommand("Export-OfficeDocumentPdf").AddParameter("OutputDirectory", Path.Combine(root, "output"))
+                .AddParameter("MaximumConcurrency", 4).AddParameter("SummaryVariable", "summary");
+            if (itemResults) shell.AddParameter("InputPaths", paths).AddParameter("ItemResults");
+            else shell.AddParameter("InputDirectory", input);
+            var output = shell.Invoke();
+            Assert.False(shell.HadErrors, string.Join("\n", shell.Streams.Error));
+            var summary = Assert.IsType<OfficeIMO.Workflows.OfficeConversionBatchResult>(runspace.SessionStateProxy.GetVariable("summary"));
+            Assert.Equal(103, summary.Selected); Assert.Equal(103, summary.Failed); Assert.Equal(0, summary.Completed);
+            if (itemResults) {
+                Assert.Equal(103, output.Count);
+                Assert.All(output, item => Assert.Equal(OfficeIMO.Workflows.OfficeWorkflowStatus.Failed,
+                    Assert.IsType<OfficeIMO.Workflows.OfficeConversionBatchItemResult>(item.BaseObject).Status));
+                Assert.Empty(shell.Streams.Warning);
+            } else {
+                Assert.Same(summary, Assert.Single(output).BaseObject);
+                Assert.Equal(101, shell.Streams.Warning.Count);
+                Assert.Equal(100, shell.Streams.Warning.Count(warning => warning.Message.Contains(".docx:")));
+                Assert.Equal("3 further failure messages were suppressed. Use -ItemResults for structured per-file outcomes.", shell.Streams.Warning[100].Message);
+            }
+            Assert.Empty(Directory.GetFiles(Path.Combine(root, "output")));
+        } finally { Directory.Delete(root, true); }
+    }
+
     [Fact]
     public void BatchExportsAndResumesNativeEncryptedOutputWithoutSourceCredentials() {
         string root = Path.Combine(AppContext.BaseDirectory, "pswriteoffice-encrypted-batch-" + Guid.NewGuid().ToString("N"));

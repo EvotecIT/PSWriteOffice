@@ -74,7 +74,7 @@ The default result is a bounded summary of selected, completed, reused, failed a
 
 ```powershell
 Get-OfficePrinter
-Send-OfficePdfPrinter -Path .\Report.pdf -PrinterName 'Office printer' -PassThru
+Send-OfficePdfPrinter -Path .\Report.pdf -PrinterName 'Office printer'
 ```
 
 A print receipt proves queue acceptance; physical delivery remains unconfirmed. Windows file printers require an explicit new output file. Check the queue after interrupted submission before retrying. Printing uses the shared OfficeIMO PDF/printer services and retains their platform requirements.
