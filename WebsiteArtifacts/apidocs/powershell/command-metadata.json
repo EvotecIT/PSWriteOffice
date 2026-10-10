@@ -3522,8 +3522,8 @@
         "OpenDocumentNew"
       ],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/OpenDocument/NewOfficeOpenDocumentCommand.cs",
-      "sourceLine": 32,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/OpenDocument/NewOfficeOpenDocumentCommand.cs#L32"
+      "sourceLine": 39,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/OpenDocument/NewOfficeOpenDocumentCommand.cs#L39"
     },
     {
       "name": "New-OfficePdf",
