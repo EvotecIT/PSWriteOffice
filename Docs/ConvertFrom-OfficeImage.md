@@ -31,9 +31,7 @@ Excel receives caller-confirmed headers and typed columns. PassThru returns reco
 
 ### EXAMPLE 2
 ```powershell
-PS> $csv = [OfficeIMO.CSV.CsvSaveOptions]::new()
-$csv.Delimiter = ';'
-$csv.FormulaInjectionPolicy = 'Escape'
+PS> $csv = @{ Delimiter = ';'; FormulaInjectionPolicy = 'Escape' }
 $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.csv -CsvOptions $csv
 ```
 

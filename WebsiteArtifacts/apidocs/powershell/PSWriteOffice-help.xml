@@ -63101,9 +63101,7 @@ Excel and CSV contain detected tables only. CSV requires exactly one table. Empt
         <maml:introduction>
           <maml:para>PS&gt; </maml:para>
         </maml:introduction>
-        <dev:code>$csv = [OfficeIMO.CSV.CsvSaveOptions]::new()&#xD;
-            $csv.Delimiter = ';'&#xD;
-            $csv.FormulaInjectionPolicy = 'Escape'&#xD;
+        <dev:code>$csv = @{ Delimiter = ';'; FormulaInjectionPolicy = 'Escape' }&#xD;
             $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.csv -CsvOptions $csv</dev:code>
         <dev:remarks>
           <maml:para>Supplied options are a complete policy. Set Escape explicitly when constructing custom options for spreadsheet consumption.</maml:para>
