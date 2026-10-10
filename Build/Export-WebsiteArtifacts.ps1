@@ -21,7 +21,7 @@ $expectedCommands = @($manifest.CmdletsToExport) |
 function Get-HelpCommandNames {
     param([Parameter(Mandatory)][string] $Path)
 
-    [xml] $help = Get-Content -LiteralPath $Path -Raw
+    [xml] $help = Get-Content -LiteralPath $Path -Raw -Encoding UTF8
     @($help.helpItems.command) |
         ForEach-Object { [string] $_.details.name } |
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
@@ -100,7 +100,7 @@ if (-not $builtModule) {
 $sourceFilesByType = @{}
 $sourceFilePriorityByType = @{}
 foreach ($sourceFile in Get-ChildItem -LiteralPath (Join-Path $RepositoryRoot 'Sources\PSWriteOffice\Cmdlets') -Recurse -Filter '*.cs' -File) {
-    $sourceText = Get-Content -LiteralPath $sourceFile.FullName -Raw
+    $sourceText = Get-Content -LiteralPath $sourceFile.FullName -Raw -Encoding UTF8
     $containsCmdletDeclaration = $sourceText -match '(?m)^\s*\[(?:System\.Management\.Automation\.)?Cmdlet(?:Attribute)?\s*\('
     $typeNames = @($sourceFile.BaseName) + @(
         [regex]::Matches($sourceText, '\b(?:sealed\s+)?(?:partial\s+)?class\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)\b') |
@@ -210,6 +210,33 @@ $metadata = [ordered]@{
     commands = @($commandMetadata)
 }
 $metadata | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $apiRoot 'command-metadata.json') -Encoding utf8
+
+& (Join-Path $PSScriptRoot 'Export-WebsiteDocumentationCatalog.ps1') `
+    -RepositoryRoot $RepositoryRoot `
+    -ManifestPath (Join-Path $apiRoot "$moduleName.psd1") `
+    -OutputPath (Join-Path $ArtifactsRoot 'documentation\command-catalog.json') | Out-Null
+
+$catalog = Get-Content -LiteralPath (Join-Path $ArtifactsRoot 'documentation\command-catalog.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+$projectManifestPath = Join-Path $ArtifactsRoot 'project-manifest.json'
+if (Test-Path -LiteralPath $projectManifestPath -PathType Leaf) {
+    $projectManifest = Get-Content -LiteralPath $projectManifestPath -Raw -Encoding UTF8
+    $projectManifest = [regex]::Replace($projectManifest, '("version"\s*:\s*")[^"]+("\s*[,}])', ('${1}' + $manifest.ModuleVersion + '${2}'))
+    [System.IO.File]::WriteAllText($projectManifestPath, $projectManifest, [System.Text.UTF8Encoding]::new($false))
+}
+
+foreach ($guideName in 'command-families.md', 'overview.md') {
+    $guidePath = Join-Path $RepositoryRoot "Website\content\project-docs\docs\$guideName"
+    if (-not (Test-Path -LiteralPath $guidePath -PathType Leaf)) {
+        continue
+    }
+    $guide = Get-Content -LiteralPath $guidePath -Raw -Encoding UTF8
+    foreach ($family in $catalog.families) {
+        $title = [regex]::Escape([string] $family.title)
+        $guide = [regex]::Replace($guide, "(?m)^(\|\s*$title\s*\|\s*)\d+(\s*\|)", ('${1}' + $family.commandCount + '${2}'))
+        $guide = [regex]::Replace($guide, "(?m)^(-\s+\*\*$title\s+\u2014\s+)\d+(\s+commands:)", ('${1}' + $family.commandCount + '${2}'))
+    }
+    [System.IO.File]::WriteAllText($guidePath, $guide, [System.Text.UTF8Encoding]::new($false))
+}
 
 [PSCustomObject]@{
     OutputPath = (Resolve-Path -LiteralPath $apiRoot).Path

@@ -91,13 +91,17 @@ Describe 'PSWriteOffice website documentation catalog' {
     }
 
     It 'accepts a filename-only catalog output path' {
+        $fileName = 'command-catalog-' + [guid]::NewGuid().ToString('N') + '.json'
+        $expectedPath = Join-Path $TestDrive $fileName
+        Test-Path -LiteralPath $expectedPath | Should -BeFalse
         Push-Location $TestDrive
         try {
-            & $script:catalogScript `
+            $result = & $script:catalogScript `
                 -RepositoryRoot $script:repoRoot `
-                -OutputPath 'command-catalog.json' | Out-Null
+                -OutputPath $fileName
 
-            Test-Path -LiteralPath (Join-Path $TestDrive 'command-catalog.json') | Should -BeTrue
+            $result.OutputPath | Should -Be $expectedPath
+            Test-Path -LiteralPath $expectedPath | Should -BeTrue
         } finally {
             Pop-Location
         }

@@ -21,7 +21,7 @@ Updates a single indirect PDF annotation.
 
 ### EXAMPLE 1
 ```powershell
-Set-OfficePdfAnnotation -ObjectNumber 1
+Set-OfficePdfAnnotation -Path 'C:\Path' -OutputPath 'C:\Path' -ObjectNumber 1
 ```
 
 

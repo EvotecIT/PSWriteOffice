@@ -12,7 +12,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | --- | ---: | --- |
 | Excel | 162 | [Excel automation](/docs/pswriteoffice/excel/) |
 | Word | 97 | [Word automation](/docs/pswriteoffice/word/) |
-| PDF | 93 | [PDF automation](/docs/pswriteoffice/pdf/) |
+| PDF | 96 | [PDF automation](/docs/pswriteoffice/pdf/) |
 | PowerPoint | 61 | [PowerPoint automation](/docs/pswriteoffice/powerpoint/) |
 | Markdown | 26 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | Visio | 24 | [Visio diagrams](/docs/pswriteoffice/visio/) |
@@ -25,7 +25,7 @@ The PSWriteOffice website catalog groups every exported cmdlet into exactly one 
 | Email | 9 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | AsciiDoc | 4 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | LaTeX | 4 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
-| HTML assets | 3 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
+| HTML assets | 4 | [Open and text formats](/docs/pswriteoffice/open-text-formats/) |
 | Cross-format visuals | 1 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |
 | Protection capabilities | 1 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |
 | Shared authoring primitives | 1 | [Automation patterns](/docs/pswriteoffice/automation-patterns/) |

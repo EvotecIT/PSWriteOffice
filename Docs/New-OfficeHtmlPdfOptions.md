@@ -4,50 +4,83 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Save-OfficeOpenDocument
+# New-OfficeHtmlPdfOptions
 ## SYNOPSIS
-Saves a native OpenDocument model with entry-level preservation diagnostics.
+Creates typed HTML rendering options for Export-OfficeDocumentPdf.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeOpenDocument [-Path] <string> -Document <OdfDocument> [-Options <OdfSaveOptions>] [-FailOnLoss] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeHtmlPdfOptions [-Options <HtmlToPdfOptions>] [-PdfOptions <PdfOptions>] [-FontFamily <string>] [-Margin <Double>] [-IncludeLocalResources] [-InteractiveFormControls <Boolean>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Saves a native OpenDocument model with entry-level preservation diagnostics.
+Creates typed HTML rendering options for Export-OfficeDocumentPdf.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Save-OfficeOpenDocument -Path 'C:\Path' -Document 'Value'
+PS> $options = New-OfficeHtmlPdfOptions -FontFamily Arial -IncludeLocalResources
+Export-OfficeDocumentPdf -InputPath .\Report.html -Path .\Report.pdf -HtmlOptions $options
 ```
 
 
 ## PARAMETERS
 
-### -Document
-OpenDocument model to save.
+### -FontFamily
+Default HTML font family.
 
 ```yaml
-Type: OdfDocument
+Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
-Required: True
+Required: False
 Position: named
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -FailOnLoss
-Throw when source entries cannot be preserved losslessly.
+### -IncludeLocalResources
+Allow bounded local images, stylesheets and fonts. Workflow batches constrain them to the source directory.
 
 ```yaml
 Type: SwitchParameter
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -InteractiveFormControls
+Render supported HTML form controls as interactive PDF fields.
+
+```yaml
+Type: Boolean
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Margin
+Uniform page margins in CSS pixels.
+
+```yaml
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -60,10 +93,10 @@ Accept wildcard characters: False
 ```
 
 ### -Options
-Optional package save and preservation settings.
+Existing options to clone before applying explicitly supplied values.
 
 ```yaml
-Type: OdfSaveOptions
+Type: HtmlToPdfOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
@@ -71,37 +104,21 @@ Possible values:
 Required: False
 Position: named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -PassThru
-Emit the save result, including preservation diagnostics.
+### -PdfOptions
+Underlying PDF writer settings, cloned before use.
 
 ```yaml
-Type: SwitchParameter
+Type: PdfOptions
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
 Required: False
 Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Path
-Destination path.
-
-```yaml
-Type: String
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: True
-Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -112,11 +129,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.OpenDocument.OdfDocument`
+- `OfficeIMO.Html.Pdf.HtmlToPdfOptions`
 
 ## OUTPUTS
 
-- `OfficeIMO.OpenDocument.OdfSaveResult`
+- `OfficeIMO.Html.Pdf.HtmlToPdfOptions`
 
 ## RELATED LINKS
 

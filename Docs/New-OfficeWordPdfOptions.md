@@ -99,7 +99,7 @@ Fallback Word page size for sections without page settings.
 Type: WordPageSize
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Unknown, Letter, Legal, Statement, Executive, A3, A4, A5, A6, B5
+Possible values: Unknown, Letter, Legal, Statement, Executive, A3, A4, A5, A6, B5, Tabloid, B4Jis, Envelope9, Envelope10, CSheet, EnvelopeDl, EnvelopeC5, EnvelopeC4, EnvelopeB5, EnvelopeMonarch
 
 Required: False
 Position: named

@@ -11,7 +11,7 @@
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <OfficeIMOVersion>3.4.4</OfficeIMOVersion>
+        <OfficeIMOVersion>3.4.5</OfficeIMOVersion>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -48,6 +48,7 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' == 'true'">
+        <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Workflows\OfficeIMO.Workflows.csproj" Condition="'$(TargetFramework)' != 'net472'" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Core\OfficeIMO.Core.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Adf\OfficeIMO.Adf.csproj" />
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Confluence\OfficeIMO.Confluence.csproj" />
@@ -104,6 +105,7 @@
         <ProjectReference Include="$(OfficeIMORoot)\OfficeIMO.Excel.GoogleSheets\OfficeIMO.Excel.GoogleSheets.csproj" />
     </ItemGroup>
     <ItemGroup Condition="'$(UseOfficeIMOProjectReferences)' != 'true'">
+        <PackageReference Include="OfficeIMO.Workflows" Version="$(OfficeIMOVersion)" Condition="'$(TargetFramework)' != 'net472'" />
         <PackageReference Include="OfficeIMO.Core" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Adf" Version="$(OfficeIMOVersion)" />
         <PackageReference Include="OfficeIMO.Confluence" Version="$(OfficeIMOVersion)" />

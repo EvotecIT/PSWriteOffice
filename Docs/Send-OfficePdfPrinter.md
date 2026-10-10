@@ -4,33 +4,111 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# New-OfficeWordImageOptions
+# Send-OfficePdfPrinter
 ## SYNOPSIS
-Creates discoverable page and rendering settings for Export-OfficeWordImage.
+Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.4 or newer.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-New-OfficeWordImageOptions [-IncludeDocumentContent] [-PageIndex <Int32>] [-PageCount <Int32>] [-Scale <Double>] [-MaximumOutputWidth <Int32>] [-MaximumOutputHeight <Int32>] [-BackgroundColor <string>] [-TargetDpi <Double>] [-MaximumRasterPixels <Int64>] [-RasterOverflowBehavior <OfficeRasterOverflowBehavior>] [-MaximumOutputCount <Int32>] [-MaximumTotalRasterPixels <Int64>] [-MaximumTotalEncodedBytes <Int64>] [-RenderTimeoutSeconds <Double>] [-MaximumDegreeOfParallelism <Int32>] [-TextShapingLanguage <string>] [<CommonParameters>]
+Send-OfficePdfPrinter [-Path] <string> -PrinterName <string> [-Pages <string>] [-PagesPerSheet <int>] [-Copies <int>] [-Duplex <string>] [-PaperSourceId <string>] [-OutputFilePath <string>] [-Dpi <double>] [-Margin <double>] [-Orientation <string>] [-ScaleMode <string>] [-PaperSize <PageSize>] [-Password <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Creates discoverable page and rendering settings for Export-OfficeWordImage.
+The returned receipt proves queue acceptance. It does not prove physical delivery. Check the queue after an interrupted submission before retrying.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-PS> $options = New-OfficeWordImageOptions -PageIndex 0 -PageCount 2 -TargetDpi 144 -IncludeDocumentContent
-Export-OfficeWordImage -Path .\Report.docx -OutputPath .\Pages -Options $options
+PS> Send-OfficePdfPrinter -Path .\Report.pdf -PrinterName 'Office printer' -Pages '1-3' -PagesPerSheet 2 -Duplex LongEdge
 ```
 
-Supplying PageCount selects batch export, so OutputPath is a folder. Use -AllPages on the export command for the complete document.
 
 ## PARAMETERS
 
-### -BackgroundColor
-Background color name or hex value.
+### -Copies
+Copies submitted to the queue.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Dpi
+Prepared sheet resolution.
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Duplex
+Duplex setting.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: PrinterDefault, SingleSided, LongEdge, ShortEdge
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Margin
+Printable margin in points.
+
+```yaml
+Type: Double
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Orientation
+Paper orientation.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Automatic, Portrait, Landscape
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -OutputFilePath
+New destination file for a Windows file printer.
 
 ```yaml
 Type: String
@@ -45,238 +123,126 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -IncludeDocumentContent
-Render document content.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -MaximumDegreeOfParallelism
-Maximum independent renders processed concurrently.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -MaximumOutputCount
-Maximum images accepted from one batch export.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -MaximumOutputHeight
-Maximum output height in pixels.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -MaximumOutputWidth
-Maximum output width in pixels.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -MaximumRasterPixels
-Maximum pixels allocated for one raster image.
-
-```yaml
-Type: Int64
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -MaximumTotalEncodedBytes
-Maximum aggregate encoded bytes accepted from one batch.
-
-```yaml
-Type: Int64
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -MaximumTotalRasterPixels
-Maximum aggregate raster pixels accepted from one batch.
-
-```yaml
-Type: Int64
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -PageCount
-Maximum pages exported. Supplying this value selects batch export.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -PageIndex
-Zero-based first page index.
-
-```yaml
-Type: Int32
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -RasterOverflowBehavior
-Reduce or reject oversized raster output.
-
-```yaml
-Type: OfficeRasterOverflowBehavior
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values: ReduceScale, Throw
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -RenderTimeoutSeconds
-Maximum seconds allowed for one render.
-
-```yaml
-Type: Double
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Scale
-Output scale multiplier.
-
-```yaml
-Type: Double
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -TargetDpi
-Target output density in dots per inch.
-
-```yaml
-Type: Double
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -TextShapingLanguage
-BCP 47 language hint for text shaping.
+### -Pages
+Page selection such as 1-3,last.
 
 ```yaml
 Type: String
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PagesPerSheet
+Source pages per sheet.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: 1, 2, 4
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PaperSize
+PDF paper size, default A4.
+
+```yaml
+Type: PageSize
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PaperSourceId
+Paper source identifier reported for this queue.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Password
+Password for an encrypted PDF; printing permissions remain enforced.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Local PDF source.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: True
+Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PrinterName
+Installed queue from Get-OfficePrinter.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: True
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ScaleMode
+Scaling of source pages.
+
+```yaml
+Type: String
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values: Fit, ActualSize, Fill
 
 Required: False
 Position: named
@@ -294,7 +260,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-- `OfficeIMO.Word.WordImageExportOptions`
+- `OfficeIMO.Workflows.PdfPrintSubmission`
 
 ## RELATED LINKS
 

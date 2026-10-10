@@ -802,7 +802,11 @@ Describe 'PDF cmdlets' {
         $outputs[0].Name | Should -Be 'page-001.pdf'
         $outputs[1].Name | Should -Be 'page-002.pdf'
         $outputs[2].Name | Should -Be 'page-003.pdf'
-        Get-OfficePdfText -Path $outputs[1].FullName | Should -Match 'Encrypted page two'
+        foreach ($output in $outputs) {
+            { Get-OfficePdfText -Path $output.FullName } | Should -Throw '*requires a password*'
+            (Get-OfficePdfInfo -Path $output.FullName -Password 'open').Security.HasEncryption | Should -BeTrue
+        }
+        Get-OfficePdfText -Path $outputs[1].FullName -Password 'open' | Should -Match 'Encrypted page two'
     }
 
     It 'does not replace an existing split destination' {

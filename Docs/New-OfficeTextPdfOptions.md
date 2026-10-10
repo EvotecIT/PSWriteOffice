@@ -4,95 +4,32 @@ Module Name: PSWriteOffice
 online version: https://github.com/EvotecIT/PSWriteOffice
 schema: 2.0.0
 ---
-# Save-OfficeOpenDocument
+# New-OfficeTextPdfOptions
 ## SYNOPSIS
-Saves a native OpenDocument model with entry-level preservation diagnostics.
+Creates literal text decoding and PDF layout settings for Export-OfficeDocumentPdf.
 
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Save-OfficeOpenDocument [-Path] <string> -Document <OdfDocument> [-Options <OdfSaveOptions>] [-FailOnLoss] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
+New-OfficeTextPdfOptions [-EncodingName <string>] [-TabSize <int>] [-MaximumCharacters <int>] [-MaximumPages <int>] [-PdfOptions <PdfOptions>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Saves a native OpenDocument model with entry-level preservation diagnostics.
+Creates literal text decoding and PDF layout settings for Export-OfficeDocumentPdf.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```powershell
-Save-OfficeOpenDocument -Path 'C:\Path' -Document 'Value'
+PS> $options = New-OfficeTextPdfOptions -EncodingName utf-16 -TabSize 4
+Export-OfficeDocumentPdf -InputPath .\Report.txt -Path .\Report.pdf -TextOptions $options
 ```
 
 
 ## PARAMETERS
 
-### -Document
-OpenDocument model to save.
-
-```yaml
-Type: OdfDocument
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: True
-Position: named
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
-```
-
-### -FailOnLoss
-Throw when source entries cannot be preserved losslessly.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Options
-Optional package save and preservation settings.
-
-```yaml
-Type: OdfSaveOptions
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -PassThru
-Emit the save result, including preservation diagnostics.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: __AllParameterSets
-Aliases: None
-Possible values:
-
-Required: False
-Position: named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Path
-Destination path.
+### -EncodingName
+Explicit encoding; otherwise use a Unicode BOM or strict UTF-8.
 
 ```yaml
 Type: String
@@ -100,8 +37,72 @@ Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:
 
-Required: True
-Position: 0
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaximumCharacters
+Maximum decoded and expanded characters.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaximumPages
+Maximum generated pages.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -PdfOptions
+PDF fonts and page geometry; default is ten-point Courier.
+
+```yaml
+Type: PdfOptions
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TabSize
+Source columns per tab stop.
+
+```yaml
+Type: Int32
+Parameter Sets: __AllParameterSets
+Aliases: None
+Possible values:
+
+Required: False
+Position: named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -112,11 +113,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-- `OfficeIMO.OpenDocument.OdfDocument`
+- `None`
 
 ## OUTPUTS
 
-- `OfficeIMO.OpenDocument.OdfSaveResult`
+- `OfficeIMO.Pdf.PdfPlainTextOptions`
 
 ## RELATED LINKS
 

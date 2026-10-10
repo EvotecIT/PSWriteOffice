@@ -23,7 +23,7 @@ The module manifest is the source of truth for exported cmdlets and aliases. The
 
 - **Excel — 162 commands:** authoring, reading, charts, pivots, validation, comments, templates, comparison, repair, accessibility, streaming, visual placement, and image export.
 - **Word — 97 commands:** sections, paragraphs, lists, tables, fields, content controls, review, mail merge, protection, merging, visual placement, and conversion.
-- **PDF — 93 commands:** composition, structured reading, explicit Word/Excel/PowerPoint/Markdown/RTF export, editable Office reconstruction, text and image extraction, searchable OCR output, merge/split, pages, forms, annotations, attachments, signatures, compliance, redaction, optimization, visual placement, and diagnostics.
+- **PDF — 96 commands:** composition, structured reading, explicit Word/Excel/PowerPoint/Markdown/RTF export, editable Office reconstruction, text and image extraction, searchable OCR output, merge/split, pages, forms, annotations, attachments, signatures, compliance, redaction, optimization, visual placement, and diagnostics.
 - **PowerPoint — 61 commands:** slides, sections, shapes, charts, tables, notes, themes, layouts, transitions, visual placement, import, inspection, and HTML review.
 - **Archive migration and evidence — 6 commands:** inspect package security and provenance, identify iWork files, and convert iWork and offline OneNote content with explicit fidelity evidence.
 - **Confluence Cloud — 7 commands:** plan, create, update, and remove pages; preserve managed sections; and list, upload, or download attachments.

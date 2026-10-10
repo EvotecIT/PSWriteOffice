@@ -200,7 +200,7 @@ Describe 'CSV and Excel mutation contracts' {
 
         $data = Import-OfficeExcel -Path $xlsx -WorksheetName Data
         $data.Count | Should -Be 2
-        $data[1].Name | Should -Be ''
+        ($null -eq $data[1].Name) | Should -BeTrue
         $data[1].Value | Should -Be 'Beta'
     }
 
@@ -230,7 +230,7 @@ Describe 'CSV and Excel mutation contracts' {
         $rows[0].Name | Should -Be 'Row1'
         $rows[0].Value | Should -Be 1
         $rows[1].Name | Should -Be 'Row2'
-        $rows[1].Value | Should -Be ''
+        ($null -eq $rows[1].Value) | Should -BeTrue
         $rows[1].Extra | Should -Be 'Ignored'
     }
 
