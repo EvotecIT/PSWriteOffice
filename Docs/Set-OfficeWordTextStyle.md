@@ -11,7 +11,7 @@ Updates styling on Word text.
 ## SYNTAX
 ### __AllParameterSets
 ```powershell
-Set-OfficeWordTextStyle [[-InputObject] <WordParagraph>] [-Text <string>] [-Style <WordCharacterStyles>] [-StyleId <string>] [-Bold <Boolean>] [-Italic <Boolean>] [-Underline <WordUnderlineStyle>] [-Color <string>] [-FontSize <Int32>] [-FontFamily <string>] [-Highlight <WordHighlightColor>] [-Strike <Boolean>] [-DoubleStrike <Boolean>] [-CapsStyle <WordCapsStyle>] [-Spacing <Int32>] [-Outline <Boolean>] [-Shadow <Boolean>] [-Emboss <Boolean>] [-PassThru] [<CommonParameters>]
+Set-OfficeWordTextStyle [[-InputObject] <WordParagraph>] [-Text <string>] [-Style <WordCharacterStyles>] [-StyleId <string>] [-Bold <Boolean>] [-Italic <Boolean>] [-Underline <WordUnderlineStyle>] [-Color <string>] [-FontSize <Double>] [-FontFamily <string>] [-Highlight <WordHighlightColor>] [-Strike <Boolean>] [-DoubleStrike <Boolean>] [-CapsStyle <WordCapsStyle>] [-Spacing <Int32>] [-Outline <Boolean>] [-Shadow <Boolean>] [-Emboss <Boolean>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -128,7 +128,7 @@ Accept wildcard characters: False
 Font size in points.
 
 ```yaml
-Type: Int32
+Type: Double
 Parameter Sets: __AllParameterSets
 Aliases: None
 Possible values:

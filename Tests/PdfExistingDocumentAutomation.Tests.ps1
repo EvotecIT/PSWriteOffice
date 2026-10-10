@@ -111,9 +111,13 @@ Describe 'Authenticated PDF automation' {
         $report.Sources[1].PermissionRestrictionsIgnored | Should -BeTrue
         $report.Sources[0].PasswordAuthenticationRole.ToString() | Should -Be 'User'
         $report.OutputPageCount | Should -Be 2
-        $report.OutputHasEncryption | Should -BeFalse
-        Get-OfficePdfText -Path $output | Should -Match 'Restricted source one'
-        Get-OfficePdfText -Path $output | Should -Match 'Restricted source two'
+        $report.OutputHasEncryption | Should -BeTrue
+        { Get-OfficePdfText -Path $output } | Should -Throw '*requires a password*'
+        { Get-OfficePdfText -Path $output -Password 'open-one' } | Should -Throw
+        { Get-OfficePdfText -Path $output -Password 'owner-two' } | Should -Throw
+        Get-OfficePdfText -Path $output -Password 'owner-one' | Should -Match 'Restricted source one'
+        Get-OfficePdfText -Path $output -Password 'open-one' -IgnorePermissionRestrictions |
+            Should -Match 'Restricted source two'
     }
 
     It 'executes page mutations through the authenticated document contract' {
@@ -140,11 +144,15 @@ Describe 'Authenticated PDF automation' {
             -Left 10 -Bottom 10 -Right 300 -Top 500 -OutputPath $boxed `
             -Password 'open' -IgnorePermissionRestrictions -PassThru | Should -BeOfType System.IO.FileInfo
 
-        $movedPages = @(Get-OfficePdfText -Path $moved -ByPage)
+        foreach ($output in @($moved, $removed, $rotated, $boxed)) {
+            { Get-OfficePdfText -Path $output } | Should -Throw '*requires a password*'
+            (Get-OfficePdfInfo -Path $output -Password 'owner').Security.HasEncryption | Should -BeTrue
+        }
+        $movedPages = @(Get-OfficePdfText -Path $moved -ByPage -Password 'owner')
         $movedPages[2].Text | Should -Match 'Restricted page one'
-        (Get-OfficePdfInfo -Path $removed).PageCount | Should -Be 2
-        (Get-OfficePdfInfo -Path $rotated).PageCount | Should -Be 3
-        (Get-OfficePdfInfo -Path $boxed).Pages[0].Geometry.CropBox.Width | Should -Be 290
+        (Get-OfficePdfInfo -Path $removed -Password 'owner').PageCount | Should -Be 2
+        (Get-OfficePdfInfo -Path $rotated -Password 'owner').PageCount | Should -Be 3
+        (Get-OfficePdfInfo -Path $boxed -Password 'owner').Pages[0].Geometry.CropBox.Width | Should -Be 290
     }
 
     It 'fills authenticated restricted forms through the shared read contract' {
@@ -172,11 +180,15 @@ Describe 'Authenticated PDF automation' {
         Import-OfficePdfXfdf -Path $source -Xfdf $xfdf -OutputPath $imported `
             -Password 'open' -IgnorePermissionRestrictions
 
-        (Get-OfficePdfFormField -Path $output -Name Name).Value | Should -Be 'Grace'
-        (Get-OfficePdfInfo -Path $flat).FormFieldCount | Should -Be 0
-        (Get-OfficePdfInfo -Path $filledAndFlat).FormFieldCount | Should -Be 0
+        foreach ($resultPath in @($output, $flat, $filledAndFlat, $incremental, $imported)) {
+            { Get-OfficePdfInfo -Path $resultPath } | Should -Throw '*requires a password*'
+            (Get-OfficePdfInfo -Path $resultPath -Password 'owner').Security.HasEncryption | Should -BeTrue
+        }
+        (Get-OfficePdfFormField -Path $output -Name Name -Password 'owner').Value | Should -Be 'Grace'
+        (Get-OfficePdfInfo -Path $flat -Password 'owner').FormFieldCount | Should -Be 0
+        (Get-OfficePdfInfo -Path $filledAndFlat -Password 'owner').FormFieldCount | Should -Be 0
         (Get-OfficePdfFormField -Path $incremental -Name Name -Password 'owner').Value | Should -Be 'Incremental'
-        (Get-OfficePdfFormField -Path $imported -Name Name).Value | Should -Be 'Imported'
+        (Get-OfficePdfFormField -Path $imported -Name Name -Password 'owner').Value | Should -Be 'Imported'
     }
 
     It 'sanitizes and updates metadata on authenticated restricted PDFs' {
@@ -192,9 +204,13 @@ Describe 'Authenticated PDF automation' {
         $sanitization = ConvertTo-OfficePdfSanitized -Path $source -OutputPath $sanitized `
             -Password 'open' -IgnorePermissionRestrictions
 
-        (Get-OfficePdfInfo -Path $metadata).Metadata.Title | Should -Be 'Authenticated metadata'
-        Get-OfficePdfText -Path $sanitized | Should -Match 'Restricted rewrite source'
-        $sanitization.MutationPlan.Warnings | Should -Contain 'Output.EncryptionWillBeRemoved'
+        foreach ($output in @($metadata, $sanitized)) {
+            { Get-OfficePdfInfo -Path $output } | Should -Throw '*requires a password*'
+            (Get-OfficePdfInfo -Path $output -Password 'owner').Security.HasEncryption | Should -BeTrue
+        }
+        (Get-OfficePdfInfo -Path $metadata -Password 'owner').Metadata.Title | Should -Be 'Authenticated metadata'
+        Get-OfficePdfText -Path $sanitized -Password 'owner' | Should -Match 'Restricted rewrite source'
+        $sanitization.MutationPlan.Warnings | Should -Contain 'Input.PermissionRestrictionsIgnored'
     }
 
     It 'proves rewrites between independently authenticated document instances' {

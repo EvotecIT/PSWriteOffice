@@ -21,7 +21,7 @@ Saves a native OpenDocument model with entry-level preservation diagnostics.
 
 ### EXAMPLE 1
 ```powershell
-Save-OfficeOpenDocument -Document 'Value'
+Save-OfficeOpenDocument -Path 'C:\Path' -Document 'Value'
 ```
 
 

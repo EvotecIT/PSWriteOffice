@@ -66,7 +66,7 @@ OpenDocument text, spreadsheet, or presentation kind.
 Type: OdfDocumentKind
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Text, Spreadsheet, Presentation
+Possible values: Text, Spreadsheet, Presentation, Graphics
 
 Required: True
 Position: 0

@@ -21,7 +21,7 @@ Creates a proof report for user-visible signals preserved by a PDF rewrite.
 
 ### EXAMPLE 1
 ```powershell
-Test-OfficePdfRewrite -DifferencePath 'C:\Path'
+Test-OfficePdfRewrite -ReferencePath 'C:\Path' -DifferencePath 'C:\Path'
 ```
 
 

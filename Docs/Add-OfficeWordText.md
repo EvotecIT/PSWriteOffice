@@ -11,12 +11,12 @@ Adds inline text to the current paragraph.
 ## SYNTAX
 ### Text (Default)
 ```powershell
-Add-OfficeWordText [-Text] <string[]> [-Paragraph <WordParagraph>] [-Bold] [-Italic] [-Underline <WordUnderlineStyle>] [-Color <string>] [-Strike] [-FontSize <Int32>] [-FontName <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordText [-Text] <string[]> [-Paragraph <WordParagraph>] [-Bold] [-Italic] [-Underline <WordUnderlineStyle>] [-Color <string>] [-Strike] [-FontSize <Double>] [-FontName <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ### Run
 ```powershell
-Add-OfficeWordText -Run <Object[]> [-Paragraph <WordParagraph>] [-Bold] [-Italic] [-Underline <WordUnderlineStyle>] [-Color <string>] [-Strike] [-FontSize <Int32>] [-FontName <string>] [-PassThru] [<CommonParameters>]
+Add-OfficeWordText -Run <Object[]> [-Paragraph <WordParagraph>] [-Bold] [-Italic] [-Underline <WordUnderlineStyle>] [-Color <string>] [-Strike] [-FontSize <Double>] [-FontName <string>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -92,7 +92,7 @@ Accept wildcard characters: False
 Font size in points.
 
 ```yaml
-Type: Int32
+Type: Double
 Parameter Sets: Text, Run
 Aliases: None
 Possible values:

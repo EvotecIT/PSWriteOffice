@@ -26,13 +26,13 @@ Imports bounded DTD-free XFDF through the validated PDF form filler.
 
 ### EXAMPLE 1
 ```powershell
-Import-OfficePdfXfdf -Xfdf 'Value' -OutputPath 'C:\Path'
+Import-OfficePdfXfdf -Path 'C:\Path' -Xfdf 'Value' -OutputPath 'C:\Path'
 ```
 
 
 ### EXAMPLE 2
 ```powershell
-Import-OfficePdfXfdf -XfdfPath 'C:\Path' -OutputPath 'C:\Path'
+Import-OfficePdfXfdf -Path 'C:\Path' -XfdfPath 'C:\Path' -OutputPath 'C:\Path'
 ```
 
 

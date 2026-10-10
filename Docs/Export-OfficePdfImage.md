@@ -35,7 +35,7 @@ Output image format.
 Type: OfficeImageExportFormat
 Parameter Sets: __AllParameterSets
 Aliases: None
-Possible values: Png, Svg, Jpeg, Tiff, Webp
+Possible values: Png, Svg, Jpeg, Tiff, Webp, Bmp, Pbm, Tga, Icon
 
 Required: False
 Position: named

@@ -21,7 +21,7 @@ Adds a ChartForgeX artifact, portable SVG, or converted Office visual to an Exce
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficeExcelVisual -Address 'Value'
+Add-OfficeExcelVisual -InputObject 'Value'
 ```
 
 

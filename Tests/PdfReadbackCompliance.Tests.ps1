@@ -106,7 +106,7 @@ Describe 'PDF readback and compliance cmdlets' {
         $updated = $document | PdfAttachment -Path $attachmentPath -Name 'explicit-payload.txt' -PassThru
         $updated | Save-OfficePdf -Path $pdfPath | Out-Null
 
-        $updated | Should -BeOfType OfficeIMO.Pdf.PdfDocument
+        $updated | Should -BeOfType ($document.GetType())
         (Get-OfficePdfAttachment -Path $pdfPath).FileName | Should -Be 'explicit-payload.txt'
     }
 
