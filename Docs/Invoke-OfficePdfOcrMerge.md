@@ -21,7 +21,7 @@ Runs an external OCR provider and merges recognized words with native PDF text.
 
 ### EXAMPLE 1
 ```powershell
-Invoke-OfficePdfOcrMerge -Provider 'Value'
+Invoke-OfficePdfOcrMerge -Path 'C:\Path' -Provider 'Value'
 ```
 
 

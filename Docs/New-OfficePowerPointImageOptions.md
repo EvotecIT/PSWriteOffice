@@ -29,7 +29,7 @@ Export-OfficePowerPointImage -Path .\Deck.pptx -OutputPath .\Slides -Options $op
 ## PARAMETERS
 
 ### -BackgroundColor
-Specifies a value for background color.
+Background color name or hex value.
 
 ```yaml
 Type: String
@@ -189,7 +189,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumDegreeOfParallelism
-Specifies a value for maximum degree of parallelism.
+Maximum independent renders processed concurrently.
 
 ```yaml
 Type: Int32
@@ -205,7 +205,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumOutputCount
-Specifies a value for maximum output count.
+Maximum images accepted from one batch export.
 
 ```yaml
 Type: Int32
@@ -221,7 +221,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumOutputHeight
-Specifies a value for maximum output height.
+Maximum output height in pixels.
 
 ```yaml
 Type: Int32
@@ -237,7 +237,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumOutputWidth
-Specifies a value for maximum output width.
+Maximum output width in pixels.
 
 ```yaml
 Type: Int32
@@ -253,7 +253,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumRasterPixels
-Specifies a value for maximum raster pixels.
+Maximum pixels allocated for one raster image.
 
 ```yaml
 Type: Int64
@@ -269,7 +269,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumTotalEncodedBytes
-Specifies a value for maximum total encoded bytes.
+Maximum aggregate encoded bytes accepted from one batch.
 
 ```yaml
 Type: Int64
@@ -285,7 +285,7 @@ Accept wildcard characters: False
 ```
 
 ### -MaximumTotalRasterPixels
-Specifies a value for maximum total raster pixels.
+Maximum aggregate raster pixels accepted from one batch.
 
 ```yaml
 Type: Int64
@@ -301,7 +301,7 @@ Accept wildcard characters: False
 ```
 
 ### -RasterOverflowBehavior
-Specifies a value for raster overflow behavior.
+Reduce or reject oversized raster output.
 
 ```yaml
 Type: OfficeRasterOverflowBehavior
@@ -317,7 +317,7 @@ Accept wildcard characters: False
 ```
 
 ### -RenderTimeoutSeconds
-Specifies a value for render timeout seconds.
+Maximum seconds allowed for one render.
 
 ```yaml
 Type: Double
@@ -333,7 +333,7 @@ Accept wildcard characters: False
 ```
 
 ### -Scale
-Specifies a value for scale.
+Output scale multiplier.
 
 ```yaml
 Type: Double
@@ -365,7 +365,7 @@ Accept wildcard characters: False
 ```
 
 ### -TargetDpi
-Specifies a value for target dpi.
+Target output density in dots per inch.
 
 ```yaml
 Type: Double
@@ -381,7 +381,7 @@ Accept wildcard characters: False
 ```
 
 ### -TextShapingLanguage
-Specifies a value for text shaping language.
+BCP 47 language hint for text shaping.
 
 ```yaml
 Type: String

@@ -21,7 +21,7 @@ Adds a ChartForgeX artifact, portable SVG, or converted Office visual to a Power
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePowerPointVisual -AlternativeText 'Value'
+Add-OfficePowerPointVisual -InputObject 'Value'
 ```
 
 

@@ -31,13 +31,13 @@ Adds a ChartForgeX artifact, portable SVG, or converted Office visual to PDF flo
 
 ### EXAMPLE 1
 ```powershell
-Add-OfficePdfVisual -Align 'Value'
+Add-OfficePdfVisual -InputObject 'Value'
 ```
 
 
 ### EXAMPLE 2
 ```powershell
-Add-OfficePdfVisual -Document 'Value'
+Add-OfficePdfVisual -InputObject 'Value' -Document 'Value'
 ```
 
 
