@@ -62839,7 +62839,7 @@ Excel and CSV contain detected tables only. CSV requires exactly one table. Empt
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>CsvOptions</maml:name>
           <maml:description>
-            <maml:para>CSV culture, delimiter, quoting and formula policy. When omitted, formula-like source text is escaped, including negative numeric text. Supplied options retain their FormulaInjectionPolicy; a new CsvSaveOptions object defaults to Preserve. Set Escape explicitly when customizing options for spreadsheet consumption.</maml:para>
+            <maml:para>Every recognized table row is written as data without a synthesized header, regardless of IncludeHeader. This command controls UTF-8, uncompressed file output and replacement through Force; CsvOptions controls field formatting and formula handling.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">CsvSaveOptions</command:parameterValue>
           <dev:type>
@@ -62950,7 +62950,7 @@ Excel and CSV contain detected tables only. CSV requires exactly one table. Empt
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>CsvOptions</maml:name>
         <maml:description>
-          <maml:para>CSV culture, delimiter, quoting and formula policy. When omitted, formula-like source text is escaped, including negative numeric text. Supplied options retain their FormulaInjectionPolicy; a new CsvSaveOptions object defaults to Preserve. Set Escape explicitly when customizing options for spreadsheet consumption.</maml:para>
+          <maml:para>Every recognized table row is written as data without a synthesized header, regardless of IncludeHeader. This command controls UTF-8, uncompressed file output and replacement through Force; CsvOptions controls field formatting and formula handling.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">CsvSaveOptions</command:parameterValue>
         <dev:type>
@@ -63104,7 +63104,7 @@ Excel and CSV contain detected tables only. CSV requires exactly one table. Empt
         <dev:code>$csv = @{ Delimiter = ';'; FormulaInjectionPolicy = 'Escape' }&#xD;
             $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.csv -CsvOptions $csv</dev:code>
         <dev:remarks>
-          <maml:para>Supplied options are a complete policy. Set Escape explicitly when constructing custom options for spreadsheet consumption.</maml:para>
+          <maml:para>Set Escape explicitly when customizing CSV formatting for spreadsheet consumption. Every recognized table row is written as data without a synthesized header, regardless of IncludeHeader.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

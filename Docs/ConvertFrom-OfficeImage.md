@@ -35,12 +35,12 @@ PS> $csv = @{ Delimiter = ';'; FormulaInjectionPolicy = 'Escape' }
 $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.csv -CsvOptions $csv
 ```
 
-Supplied options are a complete policy. Set Escape explicitly when constructing custom options for spreadsheet consumption.
+Set Escape explicitly when customizing CSV formatting for spreadsheet consumption. Every recognized table row is written as data without a synthesized header, regardless of IncludeHeader.
 
 ## PARAMETERS
 
 ### -CsvOptions
-CSV culture, delimiter, quoting and formula policy. When omitted, formula-like source text is escaped, including negative numeric text. Supplied options retain their FormulaInjectionPolicy; a new CsvSaveOptions object defaults to Preserve. Set Escape explicitly when customizing options for spreadsheet consumption.
+Every recognized table row is written as data without a synthesized header, regardless of IncludeHeader. This command controls UTF-8, uncompressed file output and replacement through Force; CsvOptions controls field formatting and formula handling.
 
 ```yaml
 Type: CsvSaveOptions
