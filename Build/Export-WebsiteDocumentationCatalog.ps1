@@ -189,7 +189,13 @@ $catalog = [ordered]@{
     families = @($families)
 }
 
-$resolvedOutputPath = [System.IO.Path]::GetFullPath($OutputPath)
+[System.Management.Automation.ProviderInfo] $outputProvider = $null
+[System.Management.Automation.PSDriveInfo] $outputDrive = $null
+$resolvedOutputPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
+    $OutputPath, [ref] $outputProvider, [ref] $outputDrive)
+if ($outputProvider.Name -ne 'FileSystem') {
+    throw 'OutputPath must use the FileSystem provider.'
+}
 $parent = [System.IO.Path]::GetDirectoryName($resolvedOutputPath)
 if (-not [string]::IsNullOrWhiteSpace($parent)) {
     New-Item -ItemType Directory -Path $parent -Force | Out-Null
