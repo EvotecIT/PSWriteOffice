@@ -84261,19 +84261,31 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
       <command:verb>Export</command:verb>
       <command:noun>OfficeDocumentPdf</command:noun>
       <maml:description>
-        <maml:para>Exports a Word, Excel, PowerPoint, Markdown, or RTF document to PDF.</maml:para>
+        <maml:para>Exports Word, Excel, PowerPoint, HTML, Markdown, RTF, and literal text documents to PDF.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Accepts either a live OfficeIMO document from the pipeline or a supported source file.</maml:para>
+      <maml:para>Accepts live OfficeIMO documents, individual files, directories, and selected file pipelines. Directory and file batches require PowerShell 7.4 or newer.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="Document">
         <maml:name>Export-OfficeDocumentPdf</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AllowLegacyImportLoss</maml:name>
+          <maml:description>
+            <maml:para>Accept reported legacy DOC import loss. Known loss otherwise blocks conversion.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
           <maml:name>Document</maml:name>
           <maml:description>
-            <maml:para>Live Word, Excel, PowerPoint, Markdown, or RTF document to export. Saved FileInfo and path strings from the pipeline are opened automatically.</maml:para>
+            <maml:para>Live Word, Excel, PowerPoint, HTML, Markdown, or RTF document to export. Saved FileInfo and path strings from the pipeline are opened automatically.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
@@ -84295,6 +84307,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>HtmlOptions</maml:name>
+          <maml:description>
+            <maml:para>HTML-specific PDF rendering options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">HtmlToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>HtmlToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>MarkdownOptions</maml:name>
           <maml:description>
             <maml:para>Markdown-specific PDF options.</maml:para>
@@ -84302,6 +84326,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <command:parameterValue required="false" variableLength="false">MarkdownToPdfOptions</command:parameterValue>
           <dev:type>
             <maml:name>MarkdownToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumInputBytes</maml:name>
+          <maml:description>
+            <maml:para>Maximum source bytes for DOC and TXT import.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <dev:type>
+            <maml:name>Int64</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84398,6 +84434,574 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <command:parameterValue required="false" variableLength="false">RtfToPdfOptions</command:parameterValue>
           <dev:type>
             <maml:name>RtfToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SourceConversionReportVariable</maml:name>
+          <maml:description>
+            <maml:para>Variable receiving source-stage reports separately from PDF rendering diagnostics.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TextOptions</maml:name>
+          <maml:description>
+            <maml:para>Literal text layout and strict decoding options. Applies only to TXT sources.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfPlainTextOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfPlainTextOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>WordOptions</maml:name>
+          <maml:description>
+            <maml:para>Word-specific PDF options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">WordToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>WordToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Directory">
+        <maml:name>Export-OfficeDocumentPdf</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AllowLegacyImportLoss</maml:name>
+          <maml:description>
+            <maml:para>Accept reported legacy DOC import loss. Known loss otherwise blocks conversion.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CheckpointDirectory</maml:name>
+          <maml:description>
+            <maml:para>Optional durable state directory. Completed sources and outputs are hash-verified on restart.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ConflictPolicy</maml:name>
+          <maml:description>
+            <maml:para>Destination conflict policy. Durable checkpoint jobs require Fail.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Fail</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Rename</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Replace</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ConversionRouteId</maml:name>
+          <maml:description>
+            <maml:para>Explicit executable conversion route, for example html-pdf for HTML stored in TXT files. By default the catalog selects each file's PDF route.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ExcelOptions</maml:name>
+          <maml:description>
+            <maml:para>Excel-specific PDF options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ExcelToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>ExcelToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>HtmlOptions</maml:name>
+          <maml:description>
+            <maml:para>HTML-specific PDF rendering options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">HtmlToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>HtmlToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>InputDirectory</maml:name>
+          <maml:description>
+            <maml:para>Source directory for mixed-format PDF export. Batch execution requires PowerShell 7.4 or newer.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ItemResults</maml:name>
+          <maml:description>
+            <maml:para>Stream every structured per-file outcome instead of the final summary. Summary mode reports at most 100 detailed failure warnings and one suppressed-count warning.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MarkdownOptions</maml:name>
+          <maml:description>
+            <maml:para>Markdown-specific PDF options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">MarkdownToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>MarkdownToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumConcurrency</maml:name>
+          <maml:description>
+            <maml:para>Concurrent conversions. Default two; bounds keep the batch resource budget explicit.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumFiles</maml:name>
+          <maml:description>
+            <maml:para>Maximum discovered or explicitly selected source files.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumInputBytes</maml:name>
+          <maml:description>
+            <maml:para>Maximum source bytes for DOC and TXT import.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <dev:type>
+            <maml:name>Int64</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumOutputBytes</maml:name>
+          <maml:description>
+            <maml:para>Maximum output bytes per document.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <dev:type>
+            <maml:name>Int64</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>NoRecurse</maml:name>
+          <maml:description>
+            <maml:para>Exclude descendants when selecting a directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>OutputDirectory</maml:name>
+          <maml:description>
+            <maml:para>PDF destination directory. Source names retain their extension plus .pdf.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Password</maml:name>
+          <maml:description>
+            <maml:para>Password used to open an encrypted Word, Excel, or PowerPoint source file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PowerPointOptions</maml:name>
+          <maml:description>
+            <maml:para>PowerPoint-specific PDF options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PowerPointToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PowerPointToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RetryFailed</maml:name>
+          <maml:description>
+            <maml:para>Retry recorded failures; completed items remain protected.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RtfOptions</maml:name>
+          <maml:description>
+            <maml:para>RTF-specific PDF options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">RtfToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>RtfToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SourceExtensions</maml:name>
+          <maml:description>
+            <maml:para>Restrict directory discovery to these source extensions. Other files are reported as skipped.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SummaryVariable</maml:name>
+          <maml:description>
+            <maml:para>Variable receiving the bounded batch summary, including when ItemResults is selected.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TextOptions</maml:name>
+          <maml:description>
+            <maml:para>Literal text layout and strict decoding options. Applies only to TXT sources.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfPlainTextOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfPlainTextOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>WordOptions</maml:name>
+          <maml:description>
+            <maml:para>Word-specific PDF options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">WordToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>WordToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem parameterSetName="Files">
+        <maml:name>Export-OfficeDocumentPdf</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AllowLegacyImportLoss</maml:name>
+          <maml:description>
+            <maml:para>Accept reported legacy DOC import loss. Known loss otherwise blocks conversion.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>CheckpointDirectory</maml:name>
+          <maml:description>
+            <maml:para>Optional durable state directory. Completed sources and outputs are hash-verified on restart.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ConflictPolicy</maml:name>
+          <maml:description>
+            <maml:para>Destination conflict policy. Durable checkpoint jobs require Fail.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Fail</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Rename</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Replace</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ConversionRouteId</maml:name>
+          <maml:description>
+            <maml:para>Explicit executable conversion route, for example html-pdf for HTML stored in TXT files. By default the catalog selects each file's PDF route.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ExcelOptions</maml:name>
+          <maml:description>
+            <maml:para>Excel-specific PDF options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">ExcelToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>ExcelToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>HtmlOptions</maml:name>
+          <maml:description>
+            <maml:para>HTML-specific PDF rendering options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">HtmlToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>HtmlToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue, ByPropertyName)" position="named" aliases="SourcePaths">
+          <maml:name>InputPaths</maml:name>
+          <maml:description>
+            <maml:para>Explicit source paths or FileInfo objects from Get-ChildItem.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+          <dev:type>
+            <maml:name>Object[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ItemResults</maml:name>
+          <maml:description>
+            <maml:para>Stream every structured per-file outcome instead of the final summary. Summary mode reports at most 100 detailed failure warnings and one suppressed-count warning.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MarkdownOptions</maml:name>
+          <maml:description>
+            <maml:para>Markdown-specific PDF options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">MarkdownToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>MarkdownToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumConcurrency</maml:name>
+          <maml:description>
+            <maml:para>Concurrent conversions. Default two; bounds keep the batch resource budget explicit.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumFiles</maml:name>
+          <maml:description>
+            <maml:para>Maximum discovered or explicitly selected source files.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumInputBytes</maml:name>
+          <maml:description>
+            <maml:para>Maximum source bytes for DOC and TXT import.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <dev:type>
+            <maml:name>Int64</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumOutputBytes</maml:name>
+          <maml:description>
+            <maml:para>Maximum output bytes per document.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <dev:type>
+            <maml:name>Int64</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>OutputDirectory</maml:name>
+          <maml:description>
+            <maml:para>PDF destination directory. Source names retain their extension plus .pdf.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Password</maml:name>
+          <maml:description>
+            <maml:para>Password used to open an encrypted Word, Excel, or PowerPoint source file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PowerPointOptions</maml:name>
+          <maml:description>
+            <maml:para>PowerPoint-specific PDF options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PowerPointToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PowerPointToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RetryFailed</maml:name>
+          <maml:description>
+            <maml:para>Retry recorded failures; completed items remain protected.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>RtfOptions</maml:name>
+          <maml:description>
+            <maml:para>RTF-specific PDF options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">RtfToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>RtfToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SummaryVariable</maml:name>
+          <maml:description>
+            <maml:para>Variable receiving the bounded batch summary, including when ItemResults is selected.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TextOptions</maml:name>
+          <maml:description>
+            <maml:para>Literal text layout and strict decoding options. Applies only to TXT sources.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfPlainTextOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfPlainTextOptions</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84418,6 +85022,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
       <command:syntaxItem parameterSetName="Path">
         <maml:name>Export-OfficeDocumentPdf</maml:name>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>AllowLegacyImportLoss</maml:name>
+          <maml:description>
+            <maml:para>Accept reported legacy DOC import loss. Known loss otherwise blocks conversion.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ExcelOptions</maml:name>
           <maml:description>
             <maml:para>Excel-specific PDF options.</maml:para>
@@ -84429,10 +85045,22 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>HtmlOptions</maml:name>
+          <maml:description>
+            <maml:para>HTML-specific PDF rendering options.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">HtmlToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>HtmlToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="SourcePath,FullName">
           <maml:name>InputPath</maml:name>
           <maml:description>
-            <maml:para>Source .docx, .xlsx, .pptx, .md, .markdown, or .rtf file.</maml:para>
+            <maml:para>Source .doc, .docx, .txt, .xlsx, .pptx, .html, .htm, .xhtml, .md, .markdown, or .rtf file.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -84449,6 +85077,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <command:parameterValue required="false" variableLength="false">MarkdownToPdfOptions</command:parameterValue>
           <dev:type>
             <maml:name>MarkdownToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumInputBytes</maml:name>
+          <maml:description>
+            <maml:para>Maximum source bytes for DOC and TXT import.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+          <dev:type>
+            <maml:name>Int64</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -84550,6 +85190,30 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>SourceConversionReportVariable</maml:name>
+          <maml:description>
+            <maml:para>Variable receiving source-stage reports separately from PDF rendering diagnostics.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TextOptions</maml:name>
+          <maml:description>
+            <maml:para>Literal text layout and strict decoding options. Applies only to TXT sources.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfPlainTextOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfPlainTextOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>WordOptions</maml:name>
           <maml:description>
             <maml:para>Word-specific PDF options.</maml:para>
@@ -84564,10 +85228,63 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>AllowLegacyImportLoss</maml:name>
+        <maml:description>
+          <maml:para>Accept reported legacy DOC import loss. Known loss otherwise blocks conversion.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>CheckpointDirectory</maml:name>
+        <maml:description>
+          <maml:para>Optional durable state directory. Completed sources and outputs are hash-verified on restart.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ConflictPolicy</maml:name>
+        <maml:description>
+          <maml:para>Destination conflict policy. Durable checkpoint jobs require Fail.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Fail</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Rename</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Replace</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ConversionRouteId</maml:name>
+        <maml:description>
+          <maml:para>Explicit executable conversion route, for example html-pdf for HTML stored in TXT files. By default the catalog selects each file's PDF route.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="None">
         <maml:name>Document</maml:name>
         <maml:description>
-          <maml:para>Live Word, Excel, PowerPoint, Markdown, or RTF document to export. Saved FileInfo and path strings from the pipeline are opened automatically.</maml:para>
+          <maml:para>Live Word, Excel, PowerPoint, HTML, Markdown, or RTF document to export. Saved FileInfo and path strings from the pipeline are opened automatically.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
         <dev:type>
@@ -84588,14 +85305,62 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="SourcePath,FullName">
-        <maml:name>InputPath</maml:name>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>HtmlOptions</maml:name>
         <maml:description>
-          <maml:para>Source .docx, .xlsx, .pptx, .md, .markdown, or .rtf file.</maml:para>
+          <maml:para>HTML-specific PDF rendering options.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">HtmlToPdfOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>HtmlToPdfOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>InputDirectory</maml:name>
+        <maml:description>
+          <maml:para>Source directory for mixed-format PDF export. Batch execution requires PowerShell 7.4 or newer.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="SourcePath,FullName">
+        <maml:name>InputPath</maml:name>
+        <maml:description>
+          <maml:para>Source .doc, .docx, .txt, .xlsx, .pptx, .html, .htm, .xhtml, .md, .markdown, or .rtf file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue, ByPropertyName)" position="named" aliases="SourcePaths">
+        <maml:name>InputPaths</maml:name>
+        <maml:description>
+          <maml:para>Explicit source paths or FileInfo objects from Get-ChildItem.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Object[]</command:parameterValue>
+        <dev:type>
+          <maml:name>Object[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ItemResults</maml:name>
+        <maml:description>
+          <maml:para>Stream every structured per-file outcome instead of the final summary. Summary mode reports at most 100 detailed failure warnings and one suppressed-count warning.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -84612,6 +85377,66 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaximumConcurrency</maml:name>
+        <maml:description>
+          <maml:para>Concurrent conversions. Default two; bounds keep the batch resource budget explicit.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaximumFiles</maml:name>
+        <maml:description>
+          <maml:para>Maximum discovered or explicitly selected source files.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaximumInputBytes</maml:name>
+        <maml:description>
+          <maml:para>Maximum source bytes for DOC and TXT import.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+        <dev:type>
+          <maml:name>Int64</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaximumOutputBytes</maml:name>
+        <maml:description>
+          <maml:para>Maximum output bytes per document.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+        <dev:type>
+          <maml:name>Int64</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>NoRecurse</maml:name>
+        <maml:description>
+          <maml:para>Exclude descendants when selecting a directory.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="Show">
         <maml:name>Open</maml:name>
         <maml:description>
@@ -84620,6 +85445,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>OutputDirectory</maml:name>
+        <maml:description>
+          <maml:para>PDF destination directory. Source names retain their extension plus .pdf.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -84697,6 +85534,18 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>RetryFailed</maml:name>
+        <maml:description>
+          <maml:para>Retry recorded failures; completed items remain protected.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>RtfOptions</maml:name>
         <maml:description>
           <maml:para>RTF-specific PDF options.</maml:para>
@@ -84704,6 +85553,54 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <command:parameterValue required="false" variableLength="false">RtfToPdfOptions</command:parameterValue>
         <dev:type>
           <maml:name>RtfToPdfOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SourceConversionReportVariable</maml:name>
+        <maml:description>
+          <maml:para>Variable receiving source-stage reports separately from PDF rendering diagnostics.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SourceExtensions</maml:name>
+        <maml:description>
+          <maml:para>Restrict directory discovery to these source extensions. Other files are reported as skipped.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>SummaryVariable</maml:name>
+        <maml:description>
+          <maml:para>Variable receiving the bounded batch summary, including when ItemResults is selected.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TextOptions</maml:name>
+        <maml:description>
+          <maml:para>Literal text layout and strict decoding options. Applies only to TXT sources.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfPlainTextOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfPlainTextOptions</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
@@ -84724,6 +85621,11 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
     <command:inputTypes>
       <command:inputType>
         <dev:type>
+          <maml:name>System.Object[]</maml:name>
+        </dev:type>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
           <maml:name>System.Object</maml:name>
         </dev:type>
       </command:inputType>
@@ -84737,6 +85639,16 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
       <command:returnValue>
         <dev:type>
           <maml:name>System.IO.FileInfo</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Workflows.OfficeConversionBatchResult</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Workflows.OfficeConversionBatchItemResult</maml:name>
         </dev:type>
       </command:returnValue>
     </command:returnValues>
@@ -84774,7 +85686,27 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <dev:code>$options = New-OfficeMarkdownPdfOptions -Title 'Service report' -IncludeLocalImages -BaseDirectory .\Assets&#xD;
             Export-OfficeDocumentPdf -InputPath .\Report.md -Path .\Report.pdf -MarkdownOptions $options</dev:code>
         <dev:remarks>
-          <maml:para>The New-Office*PdfOptions commands build every format-specific options object; no hashtable or .NET constructor is required.</maml:para>
+          <maml:para>Typed conversion options also apply to the matching formats in a mixed batch.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Export a directory with optional checkpoints.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Export-OfficeDocumentPdf -InputDirectory .\Documents -OutputDirectory .\PDF -CheckpointDirectory .\PDF-State</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Stream selected file outcomes and retain the final summary.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-ChildItem .\Documents -File | Export-OfficeDocumentPdf -OutputDirectory .\PDF -ItemResults -SummaryVariable summary</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -121797,6 +122729,88 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>Get-OfficePrinter</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>OfficePrinter</command:noun>
+      <maml:description>
+        <maml:para>Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.4 or newer.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.4 or newer.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Get-OfficePrinter</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PaperSources</maml:name>
+          <maml:description>
+            <maml:para>Named printer whose paper sources should be listed.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PaperSources</maml:name>
+        <maml:description>
+          <maml:para>Named printer whose paper sources should be listed.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Workflows.PdfPrinterInfo</maml:name>
+        </dev:type>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Workflows.PdfPaperSourceInfo</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Discover queues and trays.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Get-OfficePrinter&#xD;
+            Get-OfficePrinter -PaperSources 'Office printer'</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>Get-OfficeProtectionCapability</command:name>
       <command:verb>Get</command:verb>
       <command:noun>OfficeProtectionCapability</command:noun>
@@ -145938,6 +146952,203 @@ This does not discover, bypass, or crack a missing password.</maml:para>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
     <command:details>
+      <command:name>New-OfficeHtmlPdfOptions</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>OfficeHtmlPdfOptions</command:noun>
+      <maml:description>
+        <maml:para>Creates typed HTML rendering options for Export-OfficeDocumentPdf.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Creates typed HTML rendering options for Export-OfficeDocumentPdf.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>New-OfficeHtmlPdfOptions</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>FontFamily</maml:name>
+          <maml:description>
+            <maml:para>Default HTML font family.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>IncludeLocalResources</maml:name>
+          <maml:description>
+            <maml:para>Allow bounded local images, stylesheets and fonts. Workflow batches constrain them to the source directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>InteractiveFormControls</maml:name>
+          <maml:description>
+            <maml:para>Render supported HTML form controls as interactive PDF fields.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
+          <dev:type>
+            <maml:name>Boolean</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Margin</maml:name>
+          <maml:description>
+            <maml:para>Uniform page margins in CSS pixels.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Existing options to clone before applying explicitly supplied values.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">HtmlToPdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>HtmlToPdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PdfOptions</maml:name>
+          <maml:description>
+            <maml:para>Underlying PDF writer settings, cloned before use.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>FontFamily</maml:name>
+        <maml:description>
+          <maml:para>Default HTML font family.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>IncludeLocalResources</maml:name>
+        <maml:description>
+          <maml:para>Allow bounded local images, stylesheets and fonts. Workflow batches constrain them to the source directory.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>InteractiveFormControls</maml:name>
+        <maml:description>
+          <maml:para>Render supported HTML form controls as interactive PDF fields.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
+        <dev:type>
+          <maml:name>Boolean</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Margin</maml:name>
+        <maml:description>
+          <maml:para>Uniform page margins in CSS pixels.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="None">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Existing options to clone before applying explicitly supplied values.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">HtmlToPdfOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>HtmlToPdfOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PdfOptions</maml:name>
+        <maml:description>
+          <maml:para>Underlying PDF writer settings, cloned before use.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>OfficeIMO.Html.Pdf.HtmlToPdfOptions</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Html.Pdf.HtmlToPdfOptions</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Export HTML with local resources and a chosen font.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$options = New-OfficeHtmlPdfOptions -FontFamily Arial -IncludeLocalResources&#xD;
+            Export-OfficeDocumentPdf -InputPath .\Report.html -Path .\Report.pdf -HtmlOptions $options</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
       <command:name>New-OfficeHtmlRenderOptions</command:name>
       <command:verb>New</command:verb>
       <command:noun>OfficeHtmlRenderOptions</command:noun>
@@ -155804,6 +157015,179 @@ Use -NoSave or omit -Path when a document object should be returned for further 
         </maml:introduction>
         <dev:code>$options = New-OfficeRtfPdfOptions -IncludeImages -IncludeTables -IncludeHeaderFooters -MaximumSystemFontFamilies 32&#xD;
             Export-OfficeDocumentPdf -InputPath .\Report.rtf -Path .\Report.pdf -RtfOptions $options</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>New-OfficeTextPdfOptions</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>OfficeTextPdfOptions</command:noun>
+      <maml:description>
+        <maml:para>Creates literal text decoding and PDF layout settings for Export-OfficeDocumentPdf.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Creates literal text decoding and PDF layout settings for Export-OfficeDocumentPdf.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>New-OfficeTextPdfOptions</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>EncodingName</maml:name>
+          <maml:description>
+            <maml:para>Explicit encoding; otherwise use a Unicode BOM or strict UTF-8.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumCharacters</maml:name>
+          <maml:description>
+            <maml:para>Maximum decoded and expanded characters.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>MaximumPages</maml:name>
+          <maml:description>
+            <maml:para>Maximum generated pages.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PdfOptions</maml:name>
+          <maml:description>
+            <maml:para>PDF fonts and page geometry; default is ten-point Courier.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PdfOptions</command:parameterValue>
+          <dev:type>
+            <maml:name>PdfOptions</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>TabSize</maml:name>
+          <maml:description>
+            <maml:para>Source columns per tab stop.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>EncodingName</maml:name>
+        <maml:description>
+          <maml:para>Explicit encoding; otherwise use a Unicode BOM or strict UTF-8.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaximumCharacters</maml:name>
+        <maml:description>
+          <maml:para>Maximum decoded and expanded characters.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>MaximumPages</maml:name>
+        <maml:description>
+          <maml:para>Maximum generated pages.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PdfOptions</maml:name>
+        <maml:description>
+          <maml:para>PDF fonts and page geometry; default is ten-point Courier.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PdfOptions</command:parameterValue>
+        <dev:type>
+          <maml:name>PdfOptions</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>TabSize</maml:name>
+        <maml:description>
+          <maml:para>Source columns per tab stop.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Pdf.PdfPlainTextOptions</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Read UTF-16 text with four-column tabs.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>$options = New-OfficeTextPdfOptions -EncodingName utf-16 -TabSize 4&#xD;
+            Export-OfficeDocumentPdf -InputPath .\Report.txt -Path .\Report.pdf -TextOptions $options</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -167980,6 +169364,436 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
         <dev:code>Send-OfficeConfluenceAttachment -Session $session -PageId 12345 -Path .\report.xlsx -Comment 'Daily refresh'</dev:code>
         <dev:remarks>
           <maml:para>Uses Confluence's multipart attachment endpoint without automatically retrying the write.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks />
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10">
+    <command:details>
+      <command:name>Send-OfficePdfPrinter</command:name>
+      <command:verb>Send</command:verb>
+      <command:noun>OfficePdfPrinter</command:noun>
+      <maml:description>
+        <maml:para>Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.4 or newer.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The returned receipt proves queue acceptance. It does not prove physical delivery. Check the queue after an interrupted submission before retrying.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem parameterSetName="__AllParameterSets">
+        <maml:name>Send-OfficePdfPrinter</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Copies</maml:name>
+          <maml:description>
+            <maml:para>Copies submitted to the queue.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Dpi</maml:name>
+          <maml:description>
+            <maml:para>Prepared sheet resolution.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Duplex</maml:name>
+          <maml:description>
+            <maml:para>Duplex setting.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">PrinterDefault</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">SingleSided</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">LongEdge</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ShortEdge</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Margin</maml:name>
+          <maml:description>
+            <maml:para>Printable margin in points.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+          <dev:type>
+            <maml:name>Double</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Orientation</maml:name>
+          <maml:description>
+            <maml:para>Paper orientation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Automatic</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Portrait</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Landscape</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>OutputFilePath</maml:name>
+          <maml:description>
+            <maml:para>New destination file for a Windows file printer.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Pages</maml:name>
+          <maml:description>
+            <maml:para>Page selection such as 1-3,last.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PagesPerSheet</maml:name>
+          <maml:description>
+            <maml:para>Source pages per sheet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">1</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">2</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">4</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PaperSize</maml:name>
+          <maml:description>
+            <maml:para>PDF paper size, default A4.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PageSize</command:parameterValue>
+          <dev:type>
+            <maml:name>PageSize</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PaperSourceId</maml:name>
+          <maml:description>
+            <maml:para>Paper source identifier reported for this queue.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>Password</maml:name>
+          <maml:description>
+            <maml:para>Password for an encrypted PDF; printing permissions remain enforced.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Local PDF source.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>PrinterName</maml:name>
+          <maml:description>
+            <maml:para>Installed queue from Get-OfficePrinter.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+          <maml:name>ScaleMode</maml:name>
+          <maml:description>
+            <maml:para>Scaling of source pages.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" variableLength="false">Fit</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">ActualSize</command:parameterValue>
+            <command:parameterValue required="false" variableLength="false">Fill</command:parameterValue>
+          </command:parameterValueGroup>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Copies</maml:name>
+        <maml:description>
+          <maml:para>Copies submitted to the queue.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Dpi</maml:name>
+        <maml:description>
+          <maml:para>Prepared sheet resolution.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Duplex</maml:name>
+        <maml:description>
+          <maml:para>Duplex setting.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">PrinterDefault</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">SingleSided</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">LongEdge</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ShortEdge</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Margin</maml:name>
+        <maml:description>
+          <maml:para>Printable margin in points.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Double</command:parameterValue>
+        <dev:type>
+          <maml:name>Double</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Orientation</maml:name>
+        <maml:description>
+          <maml:para>Paper orientation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Automatic</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Portrait</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Landscape</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>OutputFilePath</maml:name>
+        <maml:description>
+          <maml:para>New destination file for a Windows file printer.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Pages</maml:name>
+        <maml:description>
+          <maml:para>Page selection such as 1-3,last.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PagesPerSheet</maml:name>
+        <maml:description>
+          <maml:para>Source pages per sheet.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">1</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">2</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">4</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PaperSize</maml:name>
+        <maml:description>
+          <maml:para>PDF paper size, default A4.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">PageSize</command:parameterValue>
+        <dev:type>
+          <maml:name>PageSize</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PaperSourceId</maml:name>
+        <maml:description>
+          <maml:para>Paper source identifier reported for this queue.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>Password</maml:name>
+        <maml:description>
+          <maml:para>Password for an encrypted PDF; printing permissions remain enforced.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="0" aliases="None">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Local PDF source.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>PrinterName</maml:name>
+        <maml:description>
+          <maml:para>Installed queue from Get-OfficePrinter.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
+        <maml:name>ScaleMode</maml:name>
+        <maml:description>
+          <maml:para>Scaling of source pages.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        <command:parameterValueGroup>
+          <command:parameterValue required="false" variableLength="false">Fit</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">ActualSize</command:parameterValue>
+          <command:parameterValue required="false" variableLength="false">Fill</command:parameterValue>
+        </command:parameterValueGroup>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>OfficeIMO.Workflows.PdfPrintSubmission</maml:name>
+        </dev:type>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>Print selected PDF pages as two pages per sheet.</maml:title>
+        <maml:introduction>
+          <maml:para>PS&gt; </maml:para>
+        </maml:introduction>
+        <dev:code>Send-OfficePdfPrinter -Path .\Report.pdf -PrinterName 'Office printer' -Pages '1-3' -PagesPerSheet 2 -Duplex LongEdge</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

@@ -1983,8 +1983,8 @@
       "kind": "Cmdlet",
       "aliases": [],
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/ExportOfficeDocumentPdfCommand.cs",
-      "sourceLine": 44,
-      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ExportOfficeDocumentPdfCommand.cs#L44"
+      "sourceLine": 62,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/ExportOfficeDocumentPdfCommand.cs#L62"
     },
     {
       "name": "Export-OfficeExcel",
@@ -2891,6 +2891,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/PowerPoint/GetOfficePowerPointThemeCommand.cs#L22"
     },
     {
+      "name": "Get-OfficePrinter",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePrinterCommand.cs",
+      "sourceLine": 18,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/GetOfficePrinterCommand.cs#L18"
+    },
+    {
       "name": "Get-OfficeProtectionCapability",
       "kind": "Cmdlet",
       "aliases": [],
@@ -3488,6 +3496,14 @@
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Html/NewOfficeHtmlConversionOptionsCommand.cs#L16"
     },
     {
+      "name": "New-OfficeHtmlPdfOptions",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficeHtmlPdfOptionsCommand.cs",
+      "sourceLine": 14,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficeHtmlPdfOptionsCommand.cs#L14"
+    },
+    {
       "name": "New-OfficeHtmlRenderOptions",
       "kind": "Cmdlet",
       "aliases": [],
@@ -3700,6 +3716,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Rtf/NewOfficeRtfPdfOptionsCommand.cs",
       "sourceLine": 15,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Rtf/NewOfficeRtfPdfOptionsCommand.cs#L15"
+    },
+    {
+      "name": "New-OfficeTextPdfOptions",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficeTextPdfOptionsCommand.cs",
+      "sourceLine": 12,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/NewOfficeTextPdfOptionsCommand.cs#L12"
     },
     {
       "name": "New-OfficeTextRun",
@@ -4052,6 +4076,14 @@
       "sourcePath": "Sources/PSWriteOffice/Cmdlets/Confluence/SendOfficeConfluenceAttachmentCommand.cs",
       "sourceLine": 17,
       "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Confluence/SendOfficeConfluenceAttachmentCommand.cs#L17"
+    },
+    {
+      "name": "Send-OfficePdfPrinter",
+      "kind": "Cmdlet",
+      "aliases": [],
+      "sourcePath": "Sources/PSWriteOffice/Cmdlets/Pdf/SendOfficePdfPrinterCommand.cs",
+      "sourceLine": 21,
+      "sourceUrl": "https://github.com/EvotecIT/PSWriteOffice/blob/main/Sources/PSWriteOffice/Cmdlets/Pdf/SendOfficePdfPrinterCommand.cs#L21"
     },
     {
       "name": "Set-OfficeConfluenceManagedSection",
