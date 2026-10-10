@@ -487,6 +487,9 @@ Converts Markdown to native AsciiDoc with fidelity diagnostics.
 ### [ConvertFrom-OfficeCsv](ConvertFrom-OfficeCsv.md)
 Converts CSV text to PSCustomObjects or dictionaries.
 
+### [ConvertFrom-OfficeImage](ConvertFrom-OfficeImage.md)
+Exports a recognized image as editable Excel, Word, text, Markdown, HTML, JSON, CSV or searchable PDF.
+
 ### [ConvertFrom-OfficeIWork](ConvertFrom-OfficeIWork.md)
 Converts Pages, Numbers, or Keynote into the matching editable Microsoft Office format.
 
@@ -813,6 +816,9 @@ Gets worksheet view settings such as frozen panes and gridline visibility.
 
 ### [Get-OfficeExcelWriteReservation](Get-OfficeExcelWriteReservation.md)
 Gets workbook write-reservation metadata.
+
+### [Get-OfficeImageDocument](Get-OfficeImageDocument.md)
+Recognizes an image as editable text, reading order and detected tables, with review evidence.
 
 ### [Get-OfficeImageText](Get-OfficeImageText.md)
 Recognizes text in an image with automatic local OCR runtime discovery.

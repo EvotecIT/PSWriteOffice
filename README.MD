@@ -233,6 +233,29 @@ Get-OfficePdfText -Path .\Scanned-Report-Searchable.pdf
 
 Use `-PassThru` on either OCR command when you need confidence, word geometry, modified pages, provider/model provenance, or diagnostics. Use `-TesseractPath` or `-TessdataDirectory` for an explicitly managed runtime, and `-NoLanguageDownload` when the machine must remain offline. PSWriteOffice does not install native OCR executables or place community native binaries in the module.
 
+### Convert an image to editable Excel, Word, and other outputs
+
+Recognize the image once and inspect its reconstructed tables and confidence evidence before exporting:
+
+```powershell
+$image = Get-OfficeImageDocument -Path .\Ledger.png -Language English
+$image.Ocr.Document.Tables
+$image.Ocr.Pages | Select-Object @{ Name = 'AcceptedWords'; Expression = { $_.Words.Count } }, RejectedLowConfidenceCount, ProviderDiagnostics
+
+# Confirm the first row as column headers after inspecting the table.
+$excel = $image | ConvertFrom-OfficeImage -OutputPath .\Ledger.xlsx -FirstRowIsHeader -PassThru
+$excel.ConversionReport
+$image | ConvertFrom-OfficeImage -OutputPath .\Ledger.docx
+$image | ConvertFrom-OfficeImage -OutputPath .\Ledger-searchable.pdf
+$image | ConvertFrom-OfficeImage -OutputPath .\Ledger.json
+```
+
+The output extension selects `.xlsx`, `.docx`, `.pdf`, `.txt`, `.md`, `.html`, `.json`, or `.csv`. Word and HTML default to editable recognized content; adapter options can include the original scan. Searchable PDF preserves the image. Excel contains detected tables, with numeric, Boolean, date and percentage typing when the column values support it. `-FirstRowIsHeader` confirms the first row of each table without established schema; otherwise every source row is retained under generated column names. `-ExcelOptions` exposes typing, culture, row-limit and formatting controls. CSV requires exactly one table. When `-CsvOptions` is omitted, formula-like source text is escaped, including negative numeric text. Supplied `CsvSaveOptions` retain the selected field formatting and `FormulaInjectionPolicy`. A new options object defaults to `FormulaInjectionPolicy = Preserve`, so spreadsheet applications can interpret those values as formulas. Set `FormulaInjectionPolicy = Escape` explicitly when customizing delimiters, culture or quoting for spreadsheet consumption. Every recognized table row is written as data without a synthesized header, regardless of `IncludeHeader`. This command controls UTF-8, uncompressed file output and replacement through `-Force`; `-CsvOptions` controls field formatting and formula handling. JSON includes canonical page text and detected table rows alongside positioned lines.
+
+`Get-OfficeImageDocument` returns the shared OfficeIMO review object. `-RecognitionOptions` controls layout reconstruction, orientation, scan preparation, confidence and resource limits; `-Provider` accepts an engine-neutral OCR provider instead of the default Tesseract session. `-PassThru` on conversion returns the output file, reusable review, adapter report and table-projection scope. Excluded words and format losses produce warnings. Empty recognition and missing table output fail without replacing a destination; successful conversion replaces an existing file only with `-Force`. `-WhatIf` checks the export without writing it.
+
+Animated or multi-page images are rejected so frames are not silently dropped. OCR quality depends on the image, language and provider. Hidden formulas, original Excel formatting and content absent from the pixels cannot be recovered. Verify amounts and table boundaries before using the result. The opt-in `Build/Test-ImageConversion.ps1` runner checks the independently labelled OfficeIMO English layout fixtures with a real installed Tesseract runtime, then reopens saved Excel, Word, CSV and searchable PDF artifacts. Run it with `-FixtureDirectory` pointing to `OfficeIMO.TestAssets/EnglishLayout` and a task-owned `-OutputDirectory`.
+
 ### Inspect and convert mixed archives
 
 Inspect active-content indicators before opening an incoming Office package:
