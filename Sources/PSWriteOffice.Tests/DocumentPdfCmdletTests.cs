@@ -10,13 +10,16 @@ namespace PSWriteOffice.Tests;
 public sealed class DocumentPdfCmdletTests {
     [Fact]
     public async Task StoppingDuringPdfGenerationDoesNotPublishTheDestination() {
-        string root = Path.Combine(Path.GetTempPath(), "pswriteoffice-pdf-stop-" + Guid.NewGuid().ToString("N"));
+        string root = Path.Combine(AppContext.BaseDirectory, "pswriteoffice-pdf-stop-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         using var shaper = new PausedShaper();
         try {
             string font = new[] {
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf"),
-                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+                "/Library/Fonts/Arial.ttf",
+                "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+                "/System/Library/Fonts/Supplemental/Arial.ttf"
             }.First(File.Exists);
             var options = new PdfOptions { DefaultFont = PdfStandardFont.Courier, TextShapingProvider = shaper }
                 .EmbedStandardFont(PdfStandardFont.Courier, font);
@@ -54,7 +57,7 @@ public sealed class DocumentPdfCmdletTests {
     [InlineData(".txt")]
     [InlineData(".doc")]
     public void FileExportProducesReopenablePdfAndWhatIfPreservesTheDestination(string extension) {
-        string root = Path.Combine(Path.GetTempPath(), "pswriteoffice-pdf-" + Guid.NewGuid().ToString("N"));
+        string root = Path.Combine(AppContext.BaseDirectory, "pswriteoffice-pdf-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         try {
             string input = Path.Combine(root, "source" + extension), output = Path.Combine(root, "output.pdf");
@@ -82,7 +85,7 @@ public sealed class DocumentPdfCmdletTests {
 
     [Fact]
     public void DirectoryBatchResumesAndWhatIfCreatesNoState() {
-        string root = Path.Combine(Path.GetTempPath(), "pswriteoffice-archive-" + Guid.NewGuid().ToString("N"));
+        string root = Path.Combine(AppContext.BaseDirectory, "pswriteoffice-archive-" + Guid.NewGuid().ToString("N"));
         string input = Path.Combine(root, "source"), output = Path.Combine(root, "output"), checkpoint = Path.Combine(root, "checkpoint");
         Directory.CreateDirectory(input);
         try {
@@ -105,7 +108,7 @@ public sealed class DocumentPdfCmdletTests {
 
     [Fact]
     public void BatchExportsAndResumesNativeEncryptedOutputWithoutSourceCredentials() {
-        string root = Path.Combine(Path.GetTempPath(), "pswriteoffice-encrypted-batch-" + Guid.NewGuid().ToString("N"));
+        string root = Path.Combine(AppContext.BaseDirectory, "pswriteoffice-encrypted-batch-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         try {
             string input = Path.Combine(root, "one.txt"), output = Path.Combine(root, "output"), checkpoint = Path.Combine(root, "state");
@@ -130,7 +133,7 @@ public sealed class DocumentPdfCmdletTests {
 
     [Fact]
     public void FileInfoPipelineStreamsMixedOutcomesAndRetainsSummaryAndNativeOptions() {
-        string root = Path.Combine(Path.GetTempPath(), "pswriteoffice-batch-" + Guid.NewGuid().ToString("N"));
+        string root = Path.Combine(AppContext.BaseDirectory, "pswriteoffice-batch-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         try {
             File.WriteAllText(Path.Combine(root, "one.txt"), "<h1>literal pipeline text</h1>");
