@@ -130,16 +130,20 @@ Describe 'Expanded OfficeIMO support' {
         $latexText | Should -Not -Match "`r`n"
     }
 
-    It 'creates and reloads native ODT, ODS, and ODP packages' {
+    It 'creates and reloads native ODT, ODS, ODP, and ODG packages' {
         $cases = @(
             @{ Kind = 'Text'; Extension = 'odt'; Type = 'OfficeIMO.OpenDocument.OdtDocument' },
             @{ Kind = 'Spreadsheet'; Extension = 'ods'; Type = 'OfficeIMO.OpenDocument.OdsDocument' },
-            @{ Kind = 'Presentation'; Extension = 'odp'; Type = 'OfficeIMO.OpenDocument.OdpPresentation' }
+            @{ Kind = 'Presentation'; Extension = 'odp'; Type = 'OfficeIMO.OpenDocument.OdpPresentation' },
+            @{ Kind = 'Graphics'; Extension = 'odg'; Type = 'OfficeIMO.OpenDocument.OdgDocument' }
         )
 
         foreach ($case in $cases) {
             $path = Join-Path $TestDrive "native.$($case.Extension)"
             $document = New-OfficeOpenDocument -Kind $case.Kind
+            if ($case.Kind -eq 'Graphics') {
+                $null = $document.AddPage('Overview')
+            }
             $save = $document | Save-OfficeOpenDocument -Path $path -FailOnLoss -PassThru
             $save.HasLoss | Should -BeFalse
             Test-Path -LiteralPath $path | Should -BeTrue
@@ -148,6 +152,25 @@ Describe 'Expanded OfficeIMO support' {
 
         { Get-OfficeOpenDocument -Path $path -MaxPackageBytes 1 -ErrorAction Stop } |
             Should -Throw '*package*'
+    }
+
+    It 'saves native drawings directly and rejects mismatched drawing extensions before output' {
+        $path = Join-Path $TestDrive 'direct.odg'
+        $saved = New-OfficeOpenDocument -Kind Graphics -Path $path -PassThru
+        $saved.FullName | Should -Be $path
+        $drawing = Get-OfficeOpenDocument -Path $path
+        $drawing.GetType().FullName | Should -Be 'OfficeIMO.OpenDocument.OdgDocument'
+
+        $wrongPath = Join-Path $TestDrive 'drawing.odt'
+        { New-OfficeOpenDocument -Kind Graphics -Path $wrongPath -ErrorAction Stop } |
+            Should -Throw '*must use the .odg extension*'
+        { $drawing | Save-OfficeOpenDocument -Path $wrongPath -ErrorAction Stop } |
+            Should -Throw '*must use the .odg extension*'
+        Test-Path -LiteralPath $wrongPath | Should -BeFalse
+
+        $whatIfPath = Join-Path $TestDrive 'preview.odg'
+        New-OfficeOpenDocument -Kind Graphics -Path $whatIfPath -WhatIf | Out-Null
+        Test-Path -LiteralPath $whatIfPath | Should -BeFalse
     }
 
     It 'authors ODT, ODS, and ODP content through PowerShell-native DSL and object surfaces' {
