@@ -935,7 +935,7 @@ Reads high-level slide summaries from a presentation.
 Gets theme information for a PowerPoint presentation master.
 
 ### [Get-OfficePrinter](Get-OfficePrinter.md)
-Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.
+Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.4 or newer.
 
 ### [Get-OfficeProtectionCapability](Get-OfficeProtectionCapability.md)
 Returns OfficeIMO's machine-readable protected-content support contract.
@@ -1328,7 +1328,7 @@ Searches one Reader result or every supported document below file and folder pat
 Uploads or versions a Confluence page attachment.
 
 ### [Send-OfficePdfPrinter](Send-OfficePdfPrinter.md)
-Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.
+Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.4 or newer.
 
 ### [Set-OfficeConfluenceManagedSection](Set-OfficeConfluenceManagedSection.md)
 Safely replaces one marker-delimited section in a Confluence storage body.

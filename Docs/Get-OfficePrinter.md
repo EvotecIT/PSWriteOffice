@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Get-OfficePrinter
 ## SYNOPSIS
-Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.
+Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.4 or newer.
 
 ## SYNTAX
 ### __AllParameterSets
@@ -15,7 +15,7 @@ Get-OfficePrinter [-PaperSources <string>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.
+Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.4 or newer.
 
 ## EXAMPLES
 

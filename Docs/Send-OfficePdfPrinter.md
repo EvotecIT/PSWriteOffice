@@ -6,7 +6,7 @@ schema: 2.0.0
 ---
 # Send-OfficePdfPrinter
 ## SYNOPSIS
-Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.
+Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.4 or newer.
 
 ## SYNTAX
 ### __AllParameterSets

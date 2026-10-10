@@ -229,7 +229,7 @@ Accept wildcard characters: False
 ```
 
 ### -ItemResults
-Stream structured per-file outcomes instead of emitting the final summary.
+Stream every structured per-file outcome instead of the final summary. Summary mode reports at most 100 detailed failure warnings and one suppressed-count warning.
 
 ```yaml
 Type: SwitchParameter

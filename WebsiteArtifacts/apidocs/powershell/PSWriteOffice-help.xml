@@ -84279,7 +84279,7 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ItemResults</maml:name>
           <maml:description>
-            <maml:para>Stream structured per-file outcomes instead of emitting the final summary.</maml:para>
+            <maml:para>Stream every structured per-file outcome instead of the final summary. Summary mode reports at most 100 detailed failure warnings and one suppressed-count warning.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -84563,7 +84563,7 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
         <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
           <maml:name>ItemResults</maml:name>
           <maml:description>
-            <maml:para>Stream structured per-file outcomes instead of emitting the final summary.</maml:para>
+            <maml:para>Stream every structured per-file outcome instead of the final summary. Summary mode reports at most 100 detailed failure warnings and one suppressed-count warning.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
           <dev:type>
@@ -85066,7 +85066,7 @@ such as a rich generated header or footer. Styling remains owned by New-OfficeTe
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="False" position="named" aliases="None">
         <maml:name>ItemResults</maml:name>
         <maml:description>
-          <maml:para>Stream structured per-file outcomes instead of emitting the final summary.</maml:para>
+          <maml:para>Stream every structured per-file outcome instead of the final summary. Summary mode reports at most 100 detailed failure warnings and one suppressed-count warning.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -122090,11 +122090,11 @@ Certificate-chain trust, revocation, digest, and CMS cryptographic verification 
       <command:verb>Get</command:verb>
       <command:noun>OfficePrinter</command:noun>
       <maml:description>
-        <maml:para>Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.</maml:para>
+        <maml:para>Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.4 or newer.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.</maml:para>
+      <maml:para>Lists system printer queues, or the paper sources of a named queue. Requires PowerShell 7.4 or newer.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem parameterSetName="__AllParameterSets">
@@ -168732,7 +168732,7 @@ The document is saved through the normal OfficeIMO.Pdf save path.</maml:para>
       <command:verb>Send</command:verb>
       <command:noun>OfficePdfPrinter</command:noun>
       <maml:description>
-        <maml:para>Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.</maml:para>
+        <maml:para>Prepares PDF sheets and submits them to an explicitly named printer. Requires PowerShell 7.4 or newer.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
