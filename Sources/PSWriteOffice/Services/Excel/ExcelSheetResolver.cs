@@ -36,9 +36,14 @@ internal static class ExcelSheetResolver
             throw new ArgumentNullException(nameof(document));
         }
 
-        if (!string.IsNullOrWhiteSpace(sheetName))
+        if (sheetName != null)
         {
-            return document[sheetName!];
+            if (string.IsNullOrWhiteSpace(sheetName))
+            {
+                throw new PSArgumentException("Sheet cannot be empty or whitespace. Omit -Sheet to use the default worksheet.", "Sheet");
+            }
+
+            return document[sheetName];
         }
 
         if (sheetIndex.HasValue)
@@ -61,7 +66,7 @@ internal static class ExcelSheetResolver
 
     public static ExcelSheet? ResolveOptional(ExcelDocument document, string? sheetName, int? sheetIndex)
     {
-        if (string.IsNullOrWhiteSpace(sheetName) && !sheetIndex.HasValue)
+        if (sheetName == null && !sheetIndex.HasValue)
         {
             return null;
         }

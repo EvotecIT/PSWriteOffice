@@ -79,6 +79,30 @@ Describe 'Excel worksheet editing' {
         }
     }
 
+    It 'rejects blank worksheet names without editing the first sheet for <Command>' -ForEach @(
+        @{ Command = 'Set-OfficeExcelCell'; Options = @{ Address = 'A1'; Value = 'Changed' } }
+        @{ Command = 'Set-OfficeExcelRow'; Options = @{ Row = 1; Values = @('Changed') } }
+        @{ Command = 'Set-OfficeExcelColumn'; Options = @{ Column = 1; Values = @('Changed') } }
+    ) {
+        $workbook = New-OfficeExcel -Path (Join-Path $TestDrive 'BlankSheet.xlsx') -NoSave
+        try {
+            $sheet = $workbook | Add-OfficeExcelSheet -Name 'Data' -PassThru
+            $workbook | Add-OfficeExcelSheet -Name 'Review'
+            foreach ($name in '', '   ') {
+                { & $Command -Document $workbook -Sheet $name @Options } | Should -Throw '*Sheet cannot be empty or whitespace*'
+            }
+            $text = $null
+            $sheet.TryGetCellText(1, 1, [ref] $text) | Should -BeFalse
+
+            # Omitting the selector still intentionally chooses the first worksheet.
+            & $Command -Document $workbook @Options
+            $sheet.TryGetCellText(1, 1, [ref] $text) | Should -BeTrue
+            $text | Should -Be 'Changed'
+        } finally {
+            $workbook | Close-OfficeExcel
+        }
+    }
+
     It 'preserves scalar Excel types through the <Target> command' -ForEach @(
         @{ Target = 'Cell' }
         @{ Target = 'Row' }
