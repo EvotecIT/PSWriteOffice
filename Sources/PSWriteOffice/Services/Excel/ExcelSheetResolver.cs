@@ -1,10 +1,34 @@
 using System;
+using System.Management.Automation;
 using OfficeIMO.Excel;
 
 namespace PSWriteOffice.Services.Excel;
 
 internal static class ExcelSheetResolver
 {
+    /// <summary>Resolves an explicit worksheet, workbook selection, or the active PowerShell composition scope.</summary>
+    public static ExcelSheet ResolveTarget(PSCmdlet cmdlet, ExcelSheet? worksheet, ExcelDocument? document, string? sheetName, int? sheetIndex)
+    {
+        if (worksheet != null && document != null)
+        {
+            throw new PSArgumentException("Use either -Worksheet or -Document, not both.");
+        }
+
+        if (sheetName != null && sheetIndex.HasValue)
+        {
+            throw new PSArgumentException("Use either -Sheet or -SheetIndex, not both.");
+        }
+
+        if (document == null && (sheetName != null || sheetIndex.HasValue))
+        {
+            throw new PSArgumentException("Use -Sheet or -SheetIndex together with -Document, or pipe a workbook to the command.");
+        }
+
+        return worksheet ?? (document != null
+            ? Resolve(document, sheetName, sheetIndex)
+            : ExcelDslContext.Require(cmdlet).RequireSheet());
+    }
+
     public static ExcelSheet Resolve(ExcelDocument document, string? sheetName, int? sheetIndex)
     {
         if (document == null)
